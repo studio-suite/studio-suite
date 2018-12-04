@@ -29,6 +29,7 @@ module.exports = {
   */
   css: [
       '@/assets/scss/main.scss',
+      '@/assets/fontawesome-pro/css/all.css',
       //'fortawesome/fontawesome-pro/css/all.css'
   ],
 

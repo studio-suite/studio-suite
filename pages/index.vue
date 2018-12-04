@@ -16,7 +16,6 @@
 <script>
 import Logo from '~/components/Logo.vue'
 import _ from 'lodash'
-import '@fortawesome/fontawesome-pro/css/all.css';
 
 export default {
   components: {

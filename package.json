@@ -22,7 +22,6 @@
     "vue-select": "^2.5.1"
   },
   "devDependencies": {
-    "@fortawesome/fontawesome-pro": "^5.5.0",
     "node-sass": "^4.10.0",
     "nodemon": "^1.11.0",
     "sass-loader": "^7.1.0"
