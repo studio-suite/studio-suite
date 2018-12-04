@@ -1,0 +1,81 @@
+.schedules-list{
+  display: flex;
+  flex-wrap: wrap;
+  margin: 0 -1.5rem;
+
+  &__item{
+    flex-basis: 50%;
+    padding: 0 1.5rem;
+    margin-bottom: 3rem;
+    cursor: pointer;
+    transition: all 120ms ease;
+
+    &:hover{
+      transform: scale(1.05);
+    }
+
+    h2{
+      margin: 0;
+      align-self: flex-start;
+      flex-basis: 100%;
+    }
+
+    p{
+      font-weight: 500;
+    }
+
+    &__inner{
+      padding: 2rem;
+      background-color: $color-bg-box;
+      min-height: 12.5rem;
+      border-radius: 3px;
+      position: relative;
+
+      &::before{
+        content: '';
+        display: block;
+        position: absolute;
+        top: 0;
+        right: 0;
+        bottom: 0;
+        left: 0;
+        opacity: 0.1;
+        box-shadow: .5rem .5rem 5rem currentColor;
+      }
+    }
+
+    &__link{
+      color: $color-primary;
+      display: inline-block;
+      position: absolute;
+      right: 2rem;
+      bottom: 2rem;
+    }
+
+    &__meta{
+      margin: .5rem 0 0 0;
+      opacity: 0.65;
+      flex-basis: 100%;
+
+      span{
+        display: inline-block;
+
+        & + span{
+          margin-left: 1rem;
+
+          &::before{
+            content: '';
+            display: inline-block;
+            position: relative;
+            width: .75rem;
+            height: .75rem;
+            border-radius: 100rem;
+            margin-right: 1rem;
+            background-color: currentColor;
+            opacity: 0.5;
+          }
+        }
+      }
+    }
+  }
+}

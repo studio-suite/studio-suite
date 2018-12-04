@@ -1,0 +1,34 @@
+@import '_normalize.scss';
+@import '_header.scss';
+
+body{
+  font-family: 'Muli', sans-serif;
+  background-color: $color-bg;
+  font-size: 100%;
+}
+
+a{
+  text-decoration: none;
+}
+
+
+.container{
+  width: 100%;
+  max-width: 1076px;
+  margin: 6rem auto;
+}
+
+h1{
+  font-size: 3rem;
+  font-weight: 700;
+}
+
+*{
+  box-sizing: border-box;
+}
+
+
+@import '_page.schedules.scss';
+
+
+@import '_filters';

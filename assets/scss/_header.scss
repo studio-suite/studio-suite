@@ -1,0 +1,17 @@
+.header{
+  background-color: $color-bg-box;
+  text-align: center;
+  padding: 1rem;
+
+  &--without-logo{
+    padding-top: 2rem;
+    padding-bottom: 2rem;
+    font-size: 2rem;
+    color: $color-black;
+    font-weight: 600;
+  }
+
+  a{
+    color: inherit;
+  }
+}

@@ -1,0 +1,50 @@
+<template>
+  <div>
+      <div class="header" :class="header_classes">
+          <nuxt-link to="/" :title="tenant_name">
+              <template v-if="logo">
+                  <img :src="getImgSrc({w: 200}, logo.url)" :alt="tenant_name">
+              </template>
+              <template v-else>{{tenant_name}}</template>
+          </nuxt-link>
+      </div>
+    <nuxt/>
+  </div>
+</template>
+
+<style>
+</style>
+
+<script>
+
+    export default {
+        computed: {
+            tenant_name: function(){
+              try{
+                  return this.$store.state.tenant.name
+              } catch (e) {
+                  return ''
+              }
+            },
+            logo: function(){
+              try{
+                  return this.$store.getters.logo
+              } catch (e) {
+                  return ''
+              }
+            },
+            header_classes: function(){
+                let classes = {}
+                if( this.logo ){
+                    classes['header--with-logo'] = true
+                    classes['logo--aspect-landscape'] = this.logo.aspect === 'landscape'
+                    classes['logo--aspect-portrait'] = this.logo.aspect === 'portrait'
+                    classes['logo--aspect-square'] = this.logo.aspect === 'square'
+                } else {
+                    classes['header--without-logo'] = true
+                }
+                return classes
+            }
+        }
+    }
+</script>

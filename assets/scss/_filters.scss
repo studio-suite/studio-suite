@@ -1,0 +1,19 @@
+.filter{
+
+  &__label{
+    display: block;
+    background-color: $color-bg-box;
+    border: 1px solid $color-border;
+    font-size: 1rem;
+    line-height: 2rem;
+    padding: .75rem 1.25rem;
+    width: 100%;
+    border-radius: 2px;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    color: $color-gray
+  }
+  &__dropdown{
+
+  }
+}
