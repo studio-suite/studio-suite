@@ -1,4 +1,6 @@
 const pkg = require('./package')
+import axios from 'axios'
+import _ from 'lodash'
 
 module.exports = {
   mode: 'universal',
@@ -15,7 +17,7 @@ module.exports = {
     ],
     link: [
       { rel: 'icon', type: 'image/x-icon', href: '/favicon.ico' },
-        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Muli:300,400,600,700' },
+        { rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Muli:300,400,600,700' }
     ]
   },
 
@@ -57,7 +59,18 @@ module.exports = {
 
 
     generate:{
-      routes: []
+      routes: function(){
+          let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || 'auth0|5bacbeb4654f067ba253ddbd'
+          let VUE_APP_API_URL_SCHEDULES = process.env.VUE_APP_API_URL_SCHEDULES || 'https://o6rowv78y6.execute-api.us-east-1.amazonaws.com/dev/schedules'
+          return axios.get(`${VUE_APP_API_URL_SCHEDULES}?tenantId=${VUE_APP_TENANT_ID}`).then(function(r){
+              return _.map(r.data, function(i){
+                  return `/s/${i.id}`
+              })
+          }).catch(function(e){
+              console.log(e)
+              return []
+          })
+      }
     },
 
   /*
