@@ -16,7 +16,7 @@ const getters = {
 const actions = {
     list: async function({commit}){
         try{
-            let schedules = await axios.get(`${process.env.VUE_APP_API_URL_SCHEDULES}?tenantId=${process.env.VUE_APP_TENANT_ID}`)
+            let schedules = await axios.get(`${process.env.VUE_APP_API_BASE}/schedules?tenantId=${process.env.VUE_APP_TENANT_ID}`)
             commit('SET', schedules.data )
 
         } catch (e) {

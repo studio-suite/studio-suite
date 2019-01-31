@@ -8,6 +8,9 @@ import actions from './actions'
 
 import schedules from './schedules'
 import class_types from './class_types'
+import instructors from './instructors'
+import locations from './locations'
+import seasons from './seasons'
 
 import _ from 'lodash'
 
@@ -37,7 +40,10 @@ const store = () => {
         modules:{
             namespaced: true,
             schedules,
-            class_types
+            class_types,
+            instructors,
+            locations,
+            seasons
         }
     })
 }

@@ -4,7 +4,7 @@ import _ from 'lodash'
 export default {
     async nuxtServerInit ({ dispatch, commit }) {
         try{
-            let tenant = await axios.get( `${process.env.VUE_APP_API_URL_TENANT}?id=${process.env.VUE_APP_TENANT_ID}`)
+            let tenant = await axios.get( `${process.env.VUE_APP_API_BASE}/tenant?id=${process.env.VUE_APP_TENANT_ID}`)
             commit('SET_TENANT', tenant.data)
             if( ! _.isUndefined(tenant.data.logo) && tenant.data.logo.length > 0 ){
                 let logo = await axios.get(encodeURI(`https://${process.env.VUE_APP_IMGIX_URL}/${tenant.data.logo}?fm=json`))
@@ -12,6 +12,9 @@ export default {
             }
             await dispatch('schedules/list')
             await dispatch('class_types/list')
+            await dispatch('instructors/list')
+            await dispatch('locations/list')
+            await dispatch('seasons/list')
         } catch (e) {
             console.log(e)
         }

@@ -19,7 +19,8 @@
     "npm": "^6.4.1",
     "nuxt": "^2.0.0",
     "popper.js": "^1.14.6",
-    "vue-select": "^2.5.1"
+    "vue-select": "^2.5.1",
+    "moment": "^2.22.2"
   },
   "devDependencies": {
     "node-sass": "^4.10.0",

@@ -31,15 +31,12 @@ module.exports = {
   */
   css: [
       '@/assets/scss/main.scss',
-      '@/assets/fontawesome-pro/css/all.css',
-      //'fortawesome/fontawesome-pro/css/all.css'
+      '@/assets/fontawesome-pro/css/all.css'
   ],
 
     env: {
         VUE_APP_TENANT_ID: process.env.VUE_APP_TENANT_ID || 'auth0|5bacbeb4654f067ba253ddbd',
-        VUE_APP_API_URL_TENANT: process.env.VUE_APP_API_URL_TENANT || 'https://o6rowv78y6.execute-api.us-east-1.amazonaws.com/dev/tenant',
-        VUE_APP_API_URL_SCHEDULES: process.env.VUE_APP_API_URL_SCHEDULES || 'https://o6rowv78y6.execute-api.us-east-1.amazonaws.com/dev/schedules',
-        VUE_APP_API_URL_CLASS_TYPES: process.env.VUE_APP_API_URL_CLASS_TYPES || 'https://o6rowv78y6.execute-api.us-east-1.amazonaws.com/dev/class-types',
+        VUE_APP_API_BASE: process.env.VUE_APP_API_BASE || 'https://z0emvvonp3.execute-api.us-east-1.amazonaws.com/dev',
         VUE_APP_IMGIX_URL: process.env.VUE_APP_IMGIX_URL || 'mystudiosuite.imgix.net'
     },
 
@@ -61,8 +58,8 @@ module.exports = {
     generate:{
       routes: function(){
           let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || 'auth0|5bacbeb4654f067ba253ddbd'
-          let VUE_APP_API_URL_SCHEDULES = process.env.VUE_APP_API_URL_SCHEDULES || 'https://o6rowv78y6.execute-api.us-east-1.amazonaws.com/dev/schedules'
-          return axios.get(`${VUE_APP_API_URL_SCHEDULES}?tenantId=${VUE_APP_TENANT_ID}`).then(function(r){
+          let VUE_APP_API_URL_SCHEDULES = process.env.VUE_APP_API_BASE || 'https://irxg3zag65.execute-api.us-east-1.amazonaws.com/dev'
+          return axios.get(`${VUE_APP_API_URL_SCHEDULES}/schedules?tenantId=${VUE_APP_TENANT_ID}`).then(function(r){
               return _.map(r.data, function(i){
                   return `/s/${i.id}`
               })

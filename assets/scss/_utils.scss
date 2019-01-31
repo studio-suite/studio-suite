@@ -1,0 +1,196 @@
+@mixin breakpoint($point) {
+  @if $point == large-desktop {
+    @media (min-width: 92em) { @content ; }
+  }
+  @else if $point == desktop {
+    @media (min-width: 70em) { @content ; }
+  }
+  @else if $point == laptop {
+    @media (min-width: 64em) { @content ; }
+  }
+  @else if $point == tablet {
+    @media (min-width: 50em) { @content ; }
+  }
+  @else if $point == phablet {
+    @media (min-width: 37.5em)  { @content ; }
+  }
+  @else if $point == mobileonly {
+    @media (max-width: 37.5em)  { @content ; }
+
+  }
+}
+
+
+$directions: ( top, right, bottom, left);
+
+.text-align{
+  &--right{
+    text-align: right !important;
+  }
+  &--center{
+    text-align: center !important;
+  }
+  &--left{
+    text-align: left !important;
+  }
+}
+
+.margin{
+  @each $direction in $directions{
+    &-#{$direction}--025{
+      margin-#{$direction}: 0.25rem;
+    }
+    &-#{$direction}--05{
+      margin-#{$direction}: 0.5rem / 2;
+
+      @include breakpoint(tablet) {
+        margin-#{$direction}: 0.5rem / 1.5;
+      }
+
+      @include breakpoint(desktop) {
+        margin-#{$direction}: 0.5rem;
+      }
+    }
+    &-#{$direction}--075{
+      margin-#{$direction}: 0.75rem;
+    }
+    @for $i from 0 through 10{
+      &-#{$direction}--#{$i}{
+        margin-#{$direction}: $i * 1rem / 2;
+
+        @include breakpoint(tablet) {
+          margin-#{$direction}: $i * 1rem / 1.5;
+        }
+
+        @include breakpoint(desktop) {
+          margin-#{$direction}: $i * 1rem;
+        }
+      }
+    }
+  }
+}
+
+.padding{
+  @each $direction in $directions{
+    &-#{$direction}--025{
+      padding-#{$direction}: 0.25rem !important;
+    }
+    &-#{$direction}--05{
+      padding-#{$direction}: 0.5rem / 2 !important;
+
+      @include breakpoint(tablet) {
+        padding-#{$direction}: 0.5rem / 1.5 !important;
+      }
+
+      @include breakpoint(desktop) {
+        padding-#{$direction}: 0.5rem !important;
+      }
+    }
+    @for $i from 0 through 10{
+      &-#{$direction}--#{$i}{
+        padding-#{$direction}: $i * 1rem / 2 !important;
+
+        @include breakpoint(tablet) {
+          padding-#{$direction}: $i * 1rem / 1.5 !important;
+        }
+
+        @include breakpoint(desktop) {
+          padding-#{$direction}: $i * 1rem !important;
+        }
+      }
+    }
+  }
+}
+
+.no-padding{
+  padding: 0 !important;
+}
+.no-margin{
+  margin: 0 !important;
+}
+
+.float{
+  &--right{
+    float: right !important;
+  }
+  &--left{
+    float: left !important;
+  }
+}
+
+.text--muted{
+  //opacity: 0.65;
+}
+
+.font-weight{
+  &--200{
+    font-weight: 200;
+  }
+  &--300{
+    font-weight: 300;
+  }
+  &--normal{
+    font-weight: 400;
+  }
+  &--500{
+    font-weight: 500;
+  }
+  &--600{
+    font-weight: 600;
+  }
+  &--700{
+    font-weight: 700;
+  }
+}
+
+img{
+  display: block;
+}
+
+.text-size{
+  &--small{
+    font-size: .875rem;
+  }
+}
+
+
+.display{
+  &--inline-block{
+    display: inline-block;
+  }
+}
+
+.line-height{
+  &--15{
+    line-height: 1.5;
+  }
+}
+
+
+.max-width--3{
+  max-width: 3rem;
+}
+
+.text-overflow{
+  text-overflow: ellipsis;
+  white-space: nowrap;
+  overflow-x: hidden;
+  max-width: 550px;
+  display: inline-block;
+}
+
+
+.border-radius--3{
+  border-radius: 3px;
+}
+.cursor--pointer{
+  cursor: pointer;
+}
+
+.opacity{
+  @for $i from 0 through 100{
+    &--#{$i}{
+      opacity: $i / 100;
+    }
+  }
+}

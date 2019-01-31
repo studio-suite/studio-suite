@@ -1,44 +1,51 @@
 <template>
     <section class="container">
         <h1>{{schedule.title}}</h1>
-        <div v-if="hasFilters">
-            <FilterClassTypes v-if="hasFilter('filterClassTypes')" v-model="filters.classTypes"></FilterClassTypes>
-        </div>
+        <Filters v-if="hasFilters" v-model="filters" :schedule="schedule"></Filters>
+        <Schedule :schedule="schedule" :filters="filters" :classes="classes" class="margin-top--2"></Schedule>
     </section>
 </template>
 
 <script>
-    import FilterClassTypes from "@/components/FilterClassTypes"
+    import Filters from '@/components/Filters'
+    import Schedule from '@/components/Schedule'
+    import axios from 'axios'
     import _ from 'lodash'
     export default {
         data: function(){
             return {
                 filters: {
-                    classTypes: ''
+                    classTypes: '',
+                    instructors: '',
+                    days: '',
+                    filterTimes: '',
+                    age: ''
                 }
             }
         },
         components: {
-            FilterClassTypes
+            Filters,
+            Schedule
+        },
+        asyncData: async function(context){
+            try{
+                let { data } = await axios.get(`${process.env.VUE_APP_API_BASE}/classes?tenantId=${process.env.VUE_APP_TENANT_ID}`)
+                return { classes: data }
+            } catch (e) {
+                return { classes: [] }
+            }
         },
         async fetch (context) {
             const { store, params } = context
             await store.dispatch('schedules/get', params.id)
         },
         methods: {
-            hasFilter: function(f){
-                let vm = this
-              if(f === 'filterClassTypes'){
-                  if( ! _.isUndefined(vm.schedule[f]) && parseInt(vm.schedule[f][0]) === -1 ){
-                      return true
-                  } else if(! _.isUndefined(vm.schedule[f]) && parseInt(vm.schedule[f][0]) !== 0 ){
-                      return true
-                  }
-              }
-              return false
-            },
           hasFilters: function(){
-
+              if( this.schedule.filterAge === 1 ) return true;
+              if( this.schedule.filterClassTypes.length > 0 ) return true;
+              if( this.schedule.filterDays.length > 0 ) return true;
+              if( this.schedule.filterInstructors.length > 0 ) return true;
+              if( this.schedule.filterClassTimes.length > 0 ) return true;
               return false
           }
         },

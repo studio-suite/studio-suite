@@ -1,19 +1,48 @@
 .filter{
+  .v-select{
+    .dropdown-toggle{
+      background-color: $color-bg-box;
+      border: 1px solid $color-border-field;
+      font-size: 1rem;
+      line-height: 2rem;
+      padding: .5rem .75rem;
+      width: 100%;
+      border-radius: 2px;
+      color: $color-gray
+    }
 
-  &__label{
-    display: block;
-    background-color: $color-bg-box;
-    border: 1px solid $color-border;
-    font-size: 1rem;
-    line-height: 2rem;
-    padding: .75rem 1.25rem;
-    width: 100%;
-    border-radius: 2px;
-    -webkit-appearance: none;
-    -moz-appearance: none;
-    color: $color-gray
+    &.open .dropdown-toggle{
+      border-top: 1px solid $color-border-field;
+      border-right: 1px solid $color-border-field;
+      border-left: 1px solid $color-border-field;
+      border-bottom: 1px solid transparent;
+    }
+    .dropdown-menu{
+      border-bottom-left-radius: 2px;
+      border-bottom-right-radius: 2px;
+      border-bottom: 1px solid $color-border-field;
+      border-right: 1px solid $color-border-field;
+      border-left: 1px solid $color-border-field;
+      box-shadow: .5rem 2rem 5rem rgba($color-black, 0.1);
+
+      > li.highlight > a{
+        background-color: $color-primary;
+        color: $color-bg-box
+      }
+      > li.active > a{
+        background-color: $color-bg;
+      }
+    }
   }
-  &__dropdown{
+}
 
+.filters{
+  display: flex;
+  width: 100%;
+  margin: 0 -0.5rem;
+
+  .filter{
+    padding: 0 .5rem;
+    flex-grow: 1;
   }
 }
