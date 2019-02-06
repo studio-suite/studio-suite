@@ -31,4 +31,47 @@ h1{
 @import '_page.schedules.scss';
 
 
+
 @import '_filters';
+
+
+.page--single-class{
+  .left{
+    max-width: 38.5rem;
+  }
+  .short-description{
+    font-size: 1.35rem;
+    line-height: 1.8;
+    margin-bottom: 4rem;
+  }
+  .title{
+    margin-bottom: .5rem;
+  }
+  .meta{
+    font-size: 1.35rem;
+    opacity: 0.41;
+    font-weight: 500;
+    margin-bottom: 2rem;
+
+    .fa-users-class{
+      margin-right: .75rem;
+    }
+    .middot{
+      display: inline-block;
+      font-style: normal;
+      margin: 0 0.35rem 0 0.75rem;
+      &::before{
+        content: "\F111";
+        font-family: 'Font Awesome 5 Pro';
+        font-weight: 900;
+        transform: scale(0.5) translateY(2px);
+        display: inline-block;
+        opacity: 0.7
+      }
+    }
+  }
+  .content{
+    font-size: 1rem;
+    line-height: 1.5;
+  }
+}

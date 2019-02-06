@@ -35,6 +35,9 @@ const store = () => {
                     url: state.tenant.logo,
                     aspect: state.logo.PixelHeight > state.logo.PixelWidth ? 'portrait' : ( state.logo.PixelHeight === state.logo.PixelWidth ? 'square' : 'landscape' )
                 }
+            },
+            class_types: function(state, getters){
+                return getters['class_types/all']
             }
         },
         modules:{
