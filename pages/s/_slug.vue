@@ -2,7 +2,7 @@
     <section class="container">
         <h1>{{schedule.title}}</h1>
         <Filters v-if="hasFilters" v-model="filters" :schedule="schedule"></Filters>
-        <Schedule :schedule="schedule" :filters="filters" :classes="classes" class="margin-top--2"></Schedule>
+        <!--<Schedule :schedule="schedule" :filters="filters" :classes="classes" class="margin-top&#45;&#45;2"></Schedule>-->
     </section>
 </template>
 
@@ -29,15 +29,15 @@
         },
         asyncData: async function(context){
             try{
-                let { data } = await axios.get(`${process.env.VUE_APP_API_BASE}/classes?tenantId=${process.env.VUE_APP_TENANT_ID}`)
-                return { classes: data }
+                let { data } = await axios.get(`${process.env.VUE_APP_API_BASE}/classes?tenantId=${process.env.VUE_APP_TENANT_ID}&`)
+                return { classes: [] }
             } catch (e) {
                 return { classes: [] }
             }
         },
         async fetch (context) {
             const { store, params } = context
-            await store.dispatch('schedules/get', params.id)
+            await store.dispatch('schedules/get', params.slug )
         },
         methods: {
           hasFilters: function(){

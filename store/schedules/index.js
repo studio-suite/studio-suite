@@ -24,7 +24,7 @@ const actions = {
         }
     },
     get: async function({commit, getters}, id){
-        return commit('SET_SCHEDULE', _.find( getters.list, {id: id} ) )
+        return commit('SET_SCHEDULE', _.find( getters.list, {slug: id} ) )
     }
 }
 
