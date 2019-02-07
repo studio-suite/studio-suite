@@ -6,7 +6,9 @@ const state = {
 }
 
 const getters = {
-
+    all: function(state){
+        return state.list
+    }
 }
 
 const actions = {

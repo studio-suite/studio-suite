@@ -16,11 +16,13 @@
     "i": "^0.3.6",
     "imgix-core-js": "^1.2.0",
     "lodash": "^4.17.11",
+    "marked": "^0.6.0",
+    "moment": "^2.22.2",
     "npm": "^6.4.1",
     "nuxt": "^2.0.0",
+    "nuxt-google-maps-module": "^1.6.0",
     "popper.js": "^1.14.6",
-    "vue-select": "^2.5.1",
-    "moment": "^2.22.2"
+    "vue-select": "^2.5.1"
   },
   "devDependencies": {
     "node-sass": "^4.10.0",

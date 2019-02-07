@@ -20,7 +20,6 @@ const store = () => {
         actions,
         mutations: {
             SET_TENANT: function(state, t){
-                console.log('mutation')
                 state.tenant = t
             },
             SET_LOGO: function(state, l){
@@ -29,7 +28,7 @@ const store = () => {
         },
         getters: {
             logo: function(state){
-                return false
+
                 if( _.isUndefined( state.tenant ) || _.isUndefined( state.tenant.logo ) || state.tenant.logo.length === 0 ) return false
                 return {
                     url: state.tenant.logo,
@@ -38,6 +37,12 @@ const store = () => {
             },
             class_types: function(state, getters){
                 return getters['class_types/all']
+            },
+            instructors: function(state, getters){
+                return getters['instructors/all']
+            },
+            locations: function(state, getters){
+                return getters['locations/all']
             }
         },
         modules:{

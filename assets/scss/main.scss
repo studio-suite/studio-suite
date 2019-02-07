@@ -22,6 +22,11 @@ h1{
   font-size: 3rem;
   font-weight: 700;
 }
+img{
+  width: 100%;
+  max-width: 100%;
+  height: auto;
+}
 
 *{
   box-sizing: border-box;
@@ -35,6 +40,8 @@ h1{
 @import '_filters';
 
 
+
+
 .page--single-class{
   .left{
     max-width: 38.5rem;
@@ -45,13 +52,13 @@ h1{
     margin-bottom: 4rem;
   }
   .title{
-    margin-bottom: .5rem;
+    margin-bottom: .75rem;
   }
   .meta{
     font-size: 1.35rem;
     opacity: 0.41;
     font-weight: 500;
-    margin-bottom: 2rem;
+    margin-bottom: 4rem;
 
     .fa-users-class{
       margin-right: .75rem;
@@ -60,6 +67,7 @@ h1{
       display: inline-block;
       font-style: normal;
       margin: 0 0.35rem 0 0.75rem;
+
       &::before{
         content: "\F111";
         font-family: 'Font Awesome 5 Pro';
@@ -73,5 +81,200 @@ h1{
   .content{
     font-size: 1rem;
     line-height: 1.5;
+    margin-bottom: 6rem;
+    color: lighten($color-black, 0.42);
+    font-weight: 400;
+  }
+  .image{
+    margin-bottom: 4rem;
+    position: relative;
+
+    &::before{
+      content: '';
+      display: block;
+      position: absolute;
+      top: 0;
+      right: 0;
+      bottom: 0;
+      left: 0;
+      box-shadow: .5rem 3rem 6.25rem darken($color-bg, 20);
+      opacity: 1;
+    }
+  }
+  h3{
+    letter-spacing: 2px;
+    text-transform: uppercase;
+    font-size: 1rem;
+    position: relative;
+    margin-bottom: 2rem;
+    text-align: left;
+
+  }
+  h4{
+    font-size: 1.35rem;
+    margin-bottom: 0;
+  }
+  .location{
+    text-align: center;
+
+  }
+  .map{
+    min-height: 20rem;
+    border-radius: 5px;
+    margin-bottom: 4rem;
+    box-shadow: .5rem 3rem 6.25rem darken($color-bg, 15);
+  }
+  .instructors{
+    margin-bottom: 6rem;
+
+    p{
+      margin-top: 0;
+      margin-bottom: 2rem;
+
+      &:last-child{
+        margin-bottom: 0;
+      }
+    }
+
+    .instructor{
+      display: flex;
+      padding: 4rem 0;
+      position: relative;
+
+      &:nth-child(odd){
+        flex-direction: row-reverse;
+      }
+
+      &::before{
+        content: '';
+        display: block;
+        position: absolute;
+        left: 0;
+        right: 0;
+        top: 0;
+        z-index: -1;
+        border-bottom: 1px solid;
+        opacity: 0.1;
+      }
+
+      &::after{
+        content: '';
+        display: block;
+        position: absolute;
+        bottom: 0;
+        left: 0;
+        right: 0;
+        z-index: -1;
+        border-bottom: 1px solid;
+        opacity: 0.1;
+      }
+
+      .left,
+      .right{
+        flex-basis: 100%;
+        flex-grow: 1;
+      }
+
+      .left{
+        text-align: center;
+
+        &:not(:nth-last-child){
+          max-width: 45%;
+        }
+
+
+        img{
+          border-radius: 10000px
+        }
+      }
+      .initials{
+        width: 8rem;
+        height: 8rem;
+        display: inline-flex;
+        justify-content: center;
+        align-items: center;
+        font-size: 3rem;
+        letter-spacing: -4px;
+        line-height: 1em;
+        font-weight: 600;
+        background-color: $color-primary;
+        border-radius: 10000px;
+        color: $color-bg;
+        text-transform: uppercase;
+        text-shadow: 0 0 1rem rgba($color-black, 0.6);
+        position: relative;
+
+        &::before{
+          content: '';
+          display: block;
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          box-shadow: .5rem 1.5rem 2.5rem darken($color-bg, 20);
+          border-radius: 10000px;
+        }
+      }
+      .avatar{
+        position: relative;
+        max-width: 8rem;
+        margin: 0 auto;
+
+        &::before{
+          content: '';
+          display: block;
+          position: absolute;
+          top: 0;
+          right: 0;
+          bottom: 0;
+          left: 0;
+          box-shadow: .5rem 1.5rem 2.5rem darken($color-bg, 20);
+          border-radius: 10000px
+        }
+      }
+      .right{
+        line-height: 1.7;
+        padding-left: 2rem;
+        color: rgba($color-black, 0.7);
+        font-weight: 300;
+      }
+
+      &__social-links{
+        margin-top: 1rem;
+
+        > a {
+          margin: 0 .5rem;
+          opacity: 0.4;
+          cursor: pointer;
+          transition: all 120ms ease;
+          color: rgba($color-black, 0.7);
+
+          &:hover{
+            opacity: 1;
+
+            &.fb{
+              color:#4168B2
+            }
+            &.tw{
+              color: #1CA1F3
+            }
+            &.in{
+              color: #C3039C
+            }
+          }
+        }
+      }
+    }
+  }
+}
+
+
+.page--single-class{
+  .location{
+    .address{
+      margin-top: .5rem;
+      opacity: 0.5;
+    }
   }
 }

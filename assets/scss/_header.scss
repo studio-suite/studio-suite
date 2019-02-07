@@ -14,4 +14,35 @@
   a{
     color: inherit;
   }
+
+  &--with-logo{
+
+    img{
+      max-width: 10rem;
+      margin: 0 auto;
+    }
+
+    &.logo{
+      &--aspect{
+        &-square{
+          img{
+            max-width: 5rem;
+          }
+        }
+        &-landscape{
+          img{
+            max-width: 15rem;
+          }
+        }
+        &-portrait{
+          img{
+            max-width: 4rem;
+          }
+        }
+      }
+    }
+  }
+
+
 }
+

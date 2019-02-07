@@ -43,46 +43,6 @@ async function getRoutes(){
             classesAll = _.concat( classesAll, classes )
         }
         return classesAll
-
-
-    /*        let classes = await axios.get(url).then(function(r){
-            if( ! _.isUndefined( r.data.LastEvaluatedKey ) ){
-                lastId = r.data.LastEvaluatedKey.id
-            }
-            return _.map(r.data.Items, function(i){
-                return `/${i.slug}`
-            })
-        })*/
-
-        // let schedules = getSchedules()
-        // console.log('schedules', schedules)
-
-        /*  let routes = []
-          let classes = getRoutes()
-          console.log('my classes', classes)
-              routes = _.map(classes, function(i){
-                  return '/' + i.slug
-              })
-          return routes*/
-
-
-    /*return new Promise(function (resolve, reject) {
-        let url = `${VUE_APP_API_URL_SCHEDULES}/get-routes?id=${VUE_APP_TENANT_ID}`
-        while( ! finished ){
-            axios.get(url).then(function(r){
-                classesAll.push(r.data.Item)
-                if( ! _.isUndefined(r.data.LastEvaluatedKey) ){
-                    finised = true
-                    resolve(classesAll)
-                } else {
-                    let newUrl = url + '&ExclusiveStartKey=' + r.data.LastEvaluatedKey
-                    return getRoutes()
-                }
-            }).catch(function (e) {
-                console.log(e)
-            })
-        }
-    })*/
 }
 
 
@@ -122,7 +82,7 @@ module.exports = {
     env: {
         VUE_APP_TENANT_ID: process.env.VUE_APP_TENANT_ID || 'auth0|5bdae2a63fd53b44339f6ab4',
         VUE_APP_API_BASE: process.env.VUE_APP_API_BASE || 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod',
-        VUE_APP_IMGIX_URL: process.env.VUE_APP_IMGIX_URL || 'mystudiosuite.imgix.net'
+        VUE_APP_IMGIX_URL: process.env.VUE_APP_IMGIX_URL || 'my-getstudiosuite.imgix.net'
     },
 
     /*
@@ -137,7 +97,6 @@ module.exports = {
     ** Nuxt.js modules
     */
     modules: [],
-
 
     generate: {
         subFolders: false,
