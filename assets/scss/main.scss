@@ -43,8 +43,135 @@ img{
 
 
 .page--single-class{
-  .left{
-    max-width: 38.5rem;
+  display: flex;
+
+  .social-link{
+    display: inline-flex;
+    margin: 0 .5rem;
+    border-radius: 5rem;
+    width: 2.7rem;
+    height: 2.7rem;
+    line-height: 1;
+    align-items: center;
+    justify-content: center;
+    background-color: rgba($color-black, 0.25);
+    color: $color-bg
+  }
+
+  .left-col{
+    flex-basis: 60%;
+
+    h1{
+      margin-top: 0;
+    }
+  }
+  .sticker{
+    position: sticky;
+    top: 2rem;
+  }
+  .right-col{
+    text-align: center;
+    padding-left: 6.25rem;
+    flex-basis: 40%;
+    position: relative;
+
+    h3{
+      text-align: center;
+      opacity: 0.4;
+      margin-bottom: 1rem;
+    }
+  }
+  .booking-box{
+    background-color: $color-bg-box;
+    border-radius: 5px;
+    box-shadow: .5rem 3rem 6.25rem darken($color-bg, 20);
+    padding: 3rem 2rem;
+    margin-bottom: 4rem;
+
+    &__pre-title{
+      letter-spacing: 3px;
+      font-weight: 400;
+      text-transform: uppercase;
+      font-size: .85rem;
+      opacity: 0.5;
+      display: block;
+    }
+    &__date{
+      display: block;
+      font-weight: 800;
+      font-size: 1.625rem;
+      margin: 1.5rem 0 0.5rem;
+    }
+    &__time{
+      display: inline-flex;
+      justify-content: center;
+      font-size: 1.3rem;
+      opacity: 0.5;
+
+      .spacer{
+        margin: 0 .5rem;
+      }
+    }
+    &__price{
+      font-size: 5rem;
+      letter-spacing: -5px;
+      font-weight: 600;
+      line-height: 2;
+      display: block;
+      margin: 1rem 0;
+    }
+    &__availability{
+      text-transform: uppercase;
+      font-size: 0.75rem;
+      letter-spacing: 2px;
+      opacity: 0.4;
+      margin-bottom: 2rem;
+      display: block;
+      font-weight: 600;
+    }
+    &__booking-button{
+      display: block;
+      border-radius: 5px;
+      background-color: $color-green;
+      box-shadow: .25rem 1.25rem 3rem $color-green;
+      padding: 1rem 0;
+      color: $color-bg-box;
+      font-weight: 800;
+      font-size: 1.1rem;
+      transition: all 120ms ease;
+      margin-bottom: 4rem;
+
+      &:hover{
+        background-color: darken($color-green, 10);
+      }
+    }
+    &__or{
+      position: relative;
+      display: block;
+
+      &::before,
+      &::after{
+        content: '';
+        display: inline-block;
+        width: 40%;
+        border-bottom: 1px solid rgba($color-black, 0.1);
+        position: absolute;
+        top: 50%;
+      }
+      &::before{
+        left: 0;
+      }
+      &::after{
+        right: 0
+      }
+    }
+    &__choose{
+      text-decoration: underline;
+      cursor: pointer;
+      display: inline-block;
+      margin-top: 2rem;
+      font-weight:600;
+    }
   }
   .short-description{
     font-size: 1.35rem;

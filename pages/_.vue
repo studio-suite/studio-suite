@@ -1,6 +1,6 @@
 <template>
     <section class="container page--single-class">
-        <div class="left">
+        <div class="left-col">
             <h1 class="title">{{classObject.title}}</h1>
             <div class="meta">
                 <i class="fal fa-users-class"></i> {{classAgeInterval}} <!--<i class="fas fa-circle"></i>--><i
@@ -41,7 +41,29 @@
                 </div>
             </div>
         </div>
-
+        <aside class="right-col">
+            <div class="sticker">
+                <div class="booking-box">
+                    <span class="booking-box__pre-title">Next Class</span>
+                    <span class="booking-box__date">August 23, 2018</span>
+                    <span class="booking-box__time">
+                        <span>4:00am</span>
+                        <span class="spacer">-</span>
+                        <span>4:40am</span>
+                    </span>
+                    <span class="booking-box__price">$10</span>
+                    <span class="booking-box__availability">2 spots available</span>
+                    <a class="booking-box__booking-button" href="#">Book Trial Class</a>
+                    <span class="booking-box__or">or</span>
+                    <span class="booking-box__choose">Choose a different date</span>
+                </div>
+                <h3>Share</h3>
+                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
+                <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+            </div>
+        </aside>
         <!--<pre>{{classObject}}</pre>-->
     </section>
 </template>
