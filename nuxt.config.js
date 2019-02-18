@@ -62,8 +62,11 @@ module.exports = {
         ],
         link: [
             {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'},
-            {rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Muli:300,400,600,700'}
-        ]
+            {rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Muli:300,400,600,700,800,900'}
+        ],
+        script: [{
+            src: 'https://js.stripe.com/v3/'
+        }]
     },
 
     /*
@@ -82,7 +85,8 @@ module.exports = {
     env: {
         VUE_APP_TENANT_ID: process.env.VUE_APP_TENANT_ID || 'auth0|5bdae2a63fd53b44339f6ab4',
         VUE_APP_API_BASE: process.env.VUE_APP_API_BASE || 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod',
-        VUE_APP_IMGIX_URL: process.env.VUE_APP_IMGIX_URL || 'my-getstudiosuite.imgix.net'
+        VUE_APP_IMGIX_URL: process.env.VUE_APP_IMGIX_URL || 'my-getstudiosuite.imgix.net',
+        VUE_APP_BOOKINGS_API_BASE: process.env.VUE_APP_BOOKINGS_API_BASE || 'https://3h737nakvh.execute-api.us-east-2.amazonaws.com/prod'
     },
 
     /*
@@ -90,7 +94,8 @@ module.exports = {
     */
     plugins: [
         {src: '~/plugins/main.js', ssr: true},
-        {src: '~/plugins/vue-select.js', ssr: false}
+        {src: '~/plugins/vue-select.js', ssr: false},
+        {src: '~/plugins/currency', ssr: true }
     ],
 
     /*

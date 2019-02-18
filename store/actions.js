@@ -9,6 +9,7 @@ export default {
             if( ! _.isUndefined(tenant.data.logo) && !_.isEmpty(tenant.data.logo) ){
                 await dispatch('getLogo', tenant.data.logo)
             }
+            await dispatch('getIntegrations')
             await dispatch('schedules/list')
             await dispatch('class_types/list')
             await dispatch('instructors/list')
@@ -16,6 +17,14 @@ export default {
             await dispatch('seasons/list')
         } catch (e) {
             console.log(e)
+        }
+    },
+    getIntegrations: async function({commit}){
+        try{
+            let integrations = await axios.get( `${process.env.VUE_APP_API_BASE}/integrations?tenantId=${process.env.VUE_APP_TENANT_ID}` )
+            commit( 'SET_INTEGRATIONS', integrations.data )
+        } catch (e) {
+            console.log("integrations", e)
         }
     },
     getLogo: async function({commit}, logo){

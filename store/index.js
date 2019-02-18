@@ -24,6 +24,14 @@ const store = () => {
             },
             SET_LOGO: function(state, l){
                 state.logo = l
+            },
+            SET_INTEGRATIONS: function(state, i){
+                let stripe = _.find( i, function(s){
+                    return s.type === 'stripe'
+                })
+                if( ! _.isUndefined( stripe )){
+                    state.stripePublic = stripe.clientId
+                }
             }
         },
         getters: {
@@ -43,6 +51,12 @@ const store = () => {
             },
             locations: function(state, getters){
                 return getters['locations/all']
+            },
+            tenant: function(state){
+                return state.tenant
+            },
+            stripePublicApiKey: function(state){
+                return state.stripePublic
             }
         },
         modules:{

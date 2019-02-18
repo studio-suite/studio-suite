@@ -5,6 +5,7 @@ body{
   font-family: 'Muli', sans-serif;
   background-color: $color-bg;
   font-size: 100%;
+  color: $color-black;
 }
 
 a{
@@ -34,6 +35,7 @@ img{
 
 @import '_utils';
 @import '_page.schedules.scss';
+@import '_booking-modal.scss';
 
 
 
@@ -55,7 +57,12 @@ img{
     align-items: center;
     justify-content: center;
     background-color: rgba($color-black, 0.25);
-    color: $color-bg
+    color: $color-bg;
+    transition: all 120ms ease;
+
+    &:hover{
+      background-color: rgba($color-black, 0.45);
+    }
   }
 
   .left-col{
@@ -87,7 +94,45 @@ img{
     box-shadow: .5rem 3rem 6.25rem darken($color-bg, 20);
     padding: 3rem 2rem;
     margin-bottom: 4rem;
+    position: relative;
 
+    &__dates-list{
+      font-size: .875rem;
+      margin-top: 2rem;
+
+      &-item{
+        cursor: pointer;
+        padding: 1rem .5rem;
+
+        &:hover{
+          background-color: $color-bg;
+        }
+
+        & + .booking-box__dates-list-item{
+          border-top: 1px solid rgba($color-black, 0.1)
+        }
+      }
+    }
+
+    &__sold-out{
+      position: absolute;
+      top: 0;
+      right: 0;
+      left: 0;
+      bottom: 0;
+      background-color: rgba($color-bg-box, 0.95);
+      border-radius: 5px;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+
+      & > i{
+        font-weight: 700;
+        font-size: 6rem;
+        color: $color-red;
+        letter-spacing: -2px;
+      }
+    }
     &__pre-title{
       letter-spacing: 3px;
       font-weight: 400;
