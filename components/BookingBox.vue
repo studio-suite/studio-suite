@@ -1,5 +1,8 @@
 <template>
     <div class="booking-box">
+        <div class="loading" v-if="!availabilityRequest">
+            <div class="loader"></div>
+        </div>
         <template v-if="dates.length > 0">
             <span class="booking-box__pre-title">Next Class</span>
             <span class="booking-box__date">{{next_class.ts | moment_ts( getClassDateFormat() ) }}</span>
@@ -10,7 +13,7 @@
             </span>
             <span class="booking-box__price"><template v-if="price  === 0">Free</template><template v-else>{{price | currency(tenantCurrency)}}</template></span>
             <span class="booking-box__availability"><template v-if="next_class_capacity > 1">{{next_class_capacity}} spots available</template><template v-else-if="next_class_capacity > 0">{{next_class_capacity}} spot available</template><template v-else>No Spots available</template></span>
-            <a class="booking-box__booking-button" href="#" v-on:click.prevent="openModal(next_class.ts)">Book Trial Class</a>
+            <a class="booking-box__booking-button" href="#" v-on:click.prevent="openModal(next_class.ts)" :disabled="isSaveDisabled">Book Trial Class</a>
             <template v-if="dates.length > 1 && !sold_out">
                 <span class="booking-box__or">or</span>
                 <span class="booking-box__choose" v-on:click.prevent="chooseDate = !chooseDate">Choose a different date</span>
@@ -39,9 +42,12 @@
               if( ! this.sold_out && this.dates_type ){
                   this.$emit('openModal', ts)
               }
-          }
+          },
+            isSaveDisabled: function(){
+              return ! this.availabilityRequest
+            }
         },
-        props: [ 'dates_next', 'dates_available', 'capacity', 'classNextDates', 'price', 'availability' ],
+        props: [ 'dates_next', 'dates_available', 'capacity', 'classNextDates', 'price', 'availability', 'availabilityRequest' ],
         computed: {
             sold_out: function(){
               return  ! _.isUndefined( this.dates_available ) && _.isEmpty( this.dates_available )

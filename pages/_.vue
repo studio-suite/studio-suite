@@ -4,8 +4,7 @@
             <div class="left-col">
                 <h1 class="title">{{classObject.title}}</h1>
                 <div class="meta">
-                    <i class="fal fa-users-class"></i> {{classAgeInterval}} <!--<i class="fas fa-circle"></i>--><i
-                        class="middot"></i> {{classTypes}}
+                    <i class="fal fa-users-class"></i> {{classAgeInterval}} <!--<i class="fas fa-circle"></i>--><i class="middot" v-if="classTypes"></i> {{classTypes}}
                 </div>
                 <div v-if="classObject.image" class="image">
                     <img :src="getImgSrc({w: 1300}, classObject.image)">
@@ -48,8 +47,9 @@
                             :price="classObject.price"
                             :capacity="classObject.capacity"
                             :availability="availability"
-                            :dates_available="classNextAvailableDates"
-                            :dates_next="classNextDates"
+                            :dates_available="classNextAvailableDates()"
+                            :dates_next="classNextDates()"
+                            :availabilityRequest="availabilityRequest"
                             @openModal="openModal">
                     </BookingBox>
                     <h3>Share</h3>
@@ -60,7 +60,7 @@
                 </div>
             </aside>
         </div>
-        <BookingModal :classObject="classObject" :ts="classNextTs" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="blockDate"></BookingModal>
+        <BookingModal :classObject="classObject" :ts="classNextTs" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="updateAvailability"></BookingModal>
     </section>
 </template>
 
@@ -101,7 +101,8 @@
               showModal: false,
               availability: [],
               chooseDate: false,
-              classObject: {}
+              classObject: {},
+              availabilityRequest: false
           }
         },
         mounted: function(){
@@ -111,22 +112,24 @@
                 let map = new google.maps.Map(this.$refs.map, {zoom: 16, center: uluru});
                 new google.maps.Marker({position: uluru, map: map});
             }
-            let tss = _.map( this.classNextDates, function(i){
+            let tss = _.map( this.classNextDates(), function(i){
                 return i.ts
             })
-            let min = 1//_.min( tss )
+            let min = _.min( tss )
             let max = _.max( tss )
             let id = this.classObject.id
             axios.get(`https://3h737nakvh.execute-api.us-east-2.amazonaws.com/prod/availability?id=${id}&min=${min}&max=${max}`).then(function(r){
+                vm.availabilityRequest = true
                 if( ! _.isNull( r.data ) ){
                     vm.availability = r.data
                 }
             }).catch(function(r){
+                vm.availabilityRequest = true
             })
         },
         methods: {
-            blockDate: function(v){
-                this.availability[v.toString()] = 99999
+            updateAvailability: function(v){
+                this.availability[v.ts] = _.isUndefined( this.availability[v.ts] ) ? parseInt( v.qty ) : ( this.availability[v.ts] + parseInt( v.qty ) )
             },
             openModal: function(p){
                 this.classNextTs = p
@@ -152,14 +155,14 @@
             getInstructorInitials: function(id){
                 let vm = this
                 return _.join( _.map( vm.getInstructorName(id).split(' '), function(i){ return i[0] }), ' ')
-            }
-        },
-        computed: {
+            },
             classNextAvailableDates: function(){
                 let vm = this
-                return _.filter( this.classNextDates, function(i){
-                    return vm.classObject.capacity - ( 1 + ( ! _.isUndefined( vm.availability[i.ts] ) ? vm.availability[i.ts] : 0) ) >= 0
+                let filtered = _.filter( this.classNextDates(), function(i){
+                    return vm.classObject.capacity - ( ! _.isUndefined( vm.availability[i.ts] ) ? vm.availability[i.ts] : 0) > 0
                 })
+                console.log('filtered', filtered)
+                return filtered
             },
             classNextDates: function(){
                 let vm = this
@@ -209,7 +212,11 @@
                 dates = _.orderBy( dates, function(i){ return i.d } )
 
                 return dates
-            },
+            }
+        },
+        computed: {
+
+
             classLocationCoords: function(){
                 if( !_.isUndefined( this.classLocation ) && ! _.isUndefined( this.classLocation.coords ) ){
                     let coords = _.map(_.split(this.classLocation.coords, '|'), Number)

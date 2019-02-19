@@ -48,7 +48,7 @@
                             </div>
                         </div>
                         <a href="#" v-on:click.prevent="addChild" class="add-child" v-if="attendees.length < 3 && capacity >= attendees.length + 1"><i class="far fa-user-plus margin-right--05"></i> Add Another Child</a>
-                        <div class="next margin-top--3">
+                        <div class="next margin-top--6">
                             <a href="#" class="next-button" v-on:click.prevent="saveChildren">Next</a>
                         </div>
                     </div>
@@ -74,8 +74,8 @@
                 <!-- P A Y M E N T -->
                 <div v-if="step === 2">
                     <h2>Trial Class Registration</h2>
-                    <h3>Please provide payment details below</h3>
-                    <form method="post" id="payment-form" ref="paymentForm" class="margin-top--4">
+                    <h3><template v-if="classObject.price > 0">Please provide payment details below</template><template v-else>Please review your registration</template></h3>
+                    <form method="post" id="payment-form" ref="paymentForm" class="margin-top--3" v-if="classObject.price > 0">
                         <div class="form-row">
                             <label for="card-element">Credit or debit card</label>
                             <div id="card-element" ref="cardElement"></div>
@@ -91,7 +91,7 @@
                         </div>
                         <div class="total">Total <span>{{ formSubmit.attendees.length * formSubmit.price | currency }}</span></div>
                     </div>
-                    <div class="next margin-top--3">
+                    <div class="next margin-top--6">
                         <a href="#" class="next-button" v-on:click.prevent="completeBooking">Complete Booking</a>
                     </div>
                 </div>
@@ -100,7 +100,7 @@
                 <div v-if="step === 3" class="confirmation">
                     <h2>Registration Confirmation</h2>
                     <img src="~/assets/ok.svg">
-                    <p class="text-align--center margin-top--4">Your payment of <strong>{{ formSubmit.attendees.length * formSubmit.price | currency }}</strong> processed successfully. We sent you an email confirmation.</p>
+                    <p class="text-align--center margin-top--4"><template v-if="classObject.price > 0">Your payment of <strong>{{ formSubmit.attendees.length * formSubmit.price | currency(tenantCurrency) }}</strong> processed successfully.</template> We sent you an email confirmation.</p>
                 </div>
 
 
@@ -163,6 +163,24 @@
             }
         },
         computed: {
+            default_form: function(){
+              return {
+                  firstName: '',
+                  lastName: '',
+                  phone: '',
+                  email: ''
+              }
+            },
+            default_attendees: function(){
+              return  [{
+                  name: '',
+                  dob: {
+                      y: '',
+                      m: '',
+                      d: ''
+                  }
+              }]
+            },
             capacity: function(){
                 let vm = this
                 let cap = this.classObject.capacity || 0
@@ -348,8 +366,12 @@
             },
             completeBooking: function () {
                 let vm = this
-                let form = vm.$refs.paymentForm;
-                form.dispatchEvent(new Event('submit'))
+                if( vm.classObject.price > 0 ){
+                    let form = vm.$refs.paymentForm;
+                    form.dispatchEvent(new Event('submit'))
+                } else {
+                    vm.requestBooking()
+                }
                 vm.loaders = true
             },
             checkForPayment: function(){
@@ -370,6 +392,29 @@
                         vm.stok = null
                     })
                 }
+            },
+            requestBooking: function(stok){
+                let vm = this
+                axios.post(`${process.env.VUE_APP_BOOKINGS_API_BASE}/booking?id=${vm.classObject.id}&ts=${vm.ts}&stok=${stok}`, vm.formSubmit, {
+                    headers: {
+                        'Content-Type': 'application/json'
+                    }
+                }).then(function (r) {
+                    if ( ! _.isNull(r.data) && ! _.isEmpty(r.data) ) {
+                        vm.booking = r.data
+                    } else if( ! _.isNull(r.data) && parseInt( r.data ) === -1 ) {
+                        vm.errorsPayment.push( 'Could not communicate with server. Please try again.' )
+                        vm.stok = null
+                    } else {
+                        vm.errorsPayment.push( 'Unfortunately there are no more spots available for this date.' )
+                        vm.stok = null
+                        vm.step = 4
+                    }
+                }).catch(function (e) {
+                    console.log('err', e)
+                    vm.stok = null
+                    vm.errorsPayment.push( 'Could not communicate with server. Please try again.' )
+                })
             }
         },
         watch: {
@@ -387,29 +432,7 @@
             stok: function (n) {
                 let vm = this
                 if (  !_.isNull(n) ) {
-                    axios.post(`${process.env.VUE_APP_BOOKINGS_API_BASE}/booking?id=${vm.classObject.id}&ts=${vm.ts}&stok=${n}`, vm.formSubmit, {
-                        headers: {
-                            'Content-Type': 'application/json'
-                        }
-                    }).then(function (r) {
-                        vm.$emit('blockDate', vm.ts)
-                        if ( ! _.isNull(r.data) && ! _.isEmpty(r.data) ) {
-                            vm.booking = r.data
-                        } else if( ! _.isNull(r.data) && parseInt( r.data ) === -1 ) {
-                            vm.errorsPayment.push( 'Could not communicate with server. Please try again.' )
-                            vm.stok = null
-                        } else {
-                            vm.$emit('blockDate', vm.ts)
-                            vm.errorsPayment.push( 'Unfortunately there are no more spots available for this date.' )
-                            vm.stok = null
-                            vm.step = 4
-                        }
-                    }).catch(function (e) {
-                        console.log('err', e)
-                        vm.stok = null
-                        vm.errorsPayment.push( 'Could not communicate with server. Please try again.' )
-                    })
-
+                    vm.requestBooking(n)
                 } else {
                     vm.loaders = true
                 }
@@ -432,6 +455,13 @@
             },
             visible: function (n) {
                 if (n) {
+                    this.step = 0
+                    this.form = JSON.parse( JSON.stringify( this.default_form ) ),
+                    this.attendees = JSON.parse( JSON.stringify( this.default_attendees ) ),
+                    this.stok = null,
+                    this.booking = null
+                    this.bookingConfirmation = null
+                    this.loaders = false
                     this.showModal()
                 } else {
                     this.hideModal()
@@ -492,6 +522,14 @@
                         });
 
                     })
+                } else if( n >= 3 ){
+                    vm.loaders = false
+                    if( n === 3 ){
+                        vm.$emit('blockDate', { ts: vm.ts, qty: vm.attendees.length })
+                    } else {
+                        vm.$emit('blockDate', { ts: vm.ts, qty: 999999 })
+                    }
+
                 }
             }
         }
