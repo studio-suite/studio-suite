@@ -86,7 +86,8 @@ module.exports = {
         VUE_APP_TENANT_ID: process.env.VUE_APP_TENANT_ID || 'auth0|5bdae2a63fd53b44339f6ab4',
         VUE_APP_API_BASE: process.env.VUE_APP_API_BASE || 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod',
         VUE_APP_IMGIX_URL: process.env.VUE_APP_IMGIX_URL || 'my-getstudiosuite.imgix.net',
-        VUE_APP_BOOKINGS_API_BASE: process.env.VUE_APP_BOOKINGS_API_BASE || 'https://3h737nakvh.execute-api.us-east-2.amazonaws.com/prod'
+        VUE_APP_BOOKINGS_API_BASE: process.env.VUE_APP_BOOKINGS_API_BASE || 'https://3h737nakvh.execute-api.us-east-2.amazonaws.com/prod',
+        VUE_APP_GMAPS_PUBLIC_API: process.env.VUE_APP_GMAPS_PUBLIC_API || 'AIzaSyC3L1qXi0y98JfUIrEh0_cP8ZGjeOye1EM'
     },
 
     /*
