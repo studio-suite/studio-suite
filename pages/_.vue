@@ -161,7 +161,6 @@
                 let filtered = _.filter( this.classNextDates(), function(i){
                     return vm.classObject.capacity - ( ! _.isUndefined( vm.availability[i.ts] ) ? vm.availability[i.ts] : 0) > 0
                 })
-                console.log('filtered', filtered)
                 return filtered
             },
             classNextDates: function(){
