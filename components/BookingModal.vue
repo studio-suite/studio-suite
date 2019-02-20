@@ -411,7 +411,6 @@
                         vm.step = 4
                     }
                 }).catch(function (e) {
-                    console.log('err', e)
                     vm.stok = null
                     vm.errorsPayment.push( 'Could not communicate with server. Please try again.' )
                 })

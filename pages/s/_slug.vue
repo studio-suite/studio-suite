@@ -1,6 +1,6 @@
 <template>
     <section class="container page--schedule">
-        <h1 class="page-title">{{schedule.title}}</h1>
+        <h1 class="page-title" v-if="schedule">{{schedule.title}}</h1>
         <Filters v-if="hasFilters" v-model="filters" :schedule="schedule"></Filters>
         <Schedule :schedule="schedule" :filters="filters" :classes="classes" class="margin-top--2"></Schedule>
     </section>
@@ -29,9 +29,8 @@
         },
         asyncData: async function({params, $axios}){
             try{
-                console.log('async')
-                let r = await $axios.get(`${process.env.VUE_APP_API_BASE}/classes?tenantId=${process.env.VUE_APP_TENANT_ID}&scheduleSlug=${params.slug}`)
-                console.log('err', r)
+                console.log('params', params)
+                let r = await $axios.get(`${process.env.VUE_APP_API_BASE}/classes?tenantId=${process.env.VUE_APP_TENANT_ID}&scheduleSlug=${params.slug}`, { crossdomain: true })
                 return { classes: r.data || [] }
             } catch (e) {
                 return { classes: [] }

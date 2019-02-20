@@ -94,7 +94,6 @@
             let coords = this.classLocationCoords()
             if( coords !== false && this.isModal !== true && ! _.isUndefined( google ) && _.isArray( coords ) && coords.length === 2 ){
                 let uluru = { lat: coords[0], lng: coords[1] };
-                console.log('map', vm.$refs.map)
                 let map = new google.maps.Map( vm.$refs.map, { zoom: 16, center: uluru });
                 new google.maps.Marker({position: uluru, map: map});
             }

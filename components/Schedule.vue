@@ -67,7 +67,6 @@
         },
         methods: {
             openClassModal: function(v){
-                console.log('open', v)
                 if( ! _.isNull( v ) ){
                     this.classId = v.classId
                     this.ts = v.ts

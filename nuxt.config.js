@@ -5,44 +5,58 @@ import _ from 'lodash'
 let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || 'auth0|5bdae2a63fd53b44339f6ab4'
 let VUE_APP_API_URL_SCHEDULES = process.env.VUE_APP_API_BASE || 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod'
 
-async function getClassesRoutes(LastEvaluatedKey){
-    return new Promise(function (resolve, reject) {
-        let url = `${VUE_APP_API_URL_SCHEDULES}/get-routes?id=${VUE_APP_TENANT_ID}`
-        if( !_.isUndefined(LastEvaluatedKey) && !_.isNull(LastEvaluatedKey) ){
-            url += '&ExclusiveStartKey=' + LastEvaluatedKey
-        }
-
-    })
-
+async function getClassesRoutes(){
+    let classesAll = []
+    let lastId = false
+    let baseUrl = `${VUE_APP_API_URL_SCHEDULES}/get-routes?id=${VUE_APP_TENANT_ID}`
+    while( ! _.isNull( lastId ) || lastId === false ){
+        let url = ! _.isNull(lastId) && lastId !== false ? baseUrl + '&ExclusiveStartKey=' + lastId : baseUrl
+        let classes = await axios.get(url).then(function(r){
+            if( ! _.isUndefined( r.data.LastEvaluatedKey ) ){
+                lastId = r.data.LastEvaluatedKey.id
+            } else {
+                lastId = null
+            }
+            return _.map(r.data.Items, function(i){
+                return {
+                    route: `/${i.slug}`,
+                    payload: i
+                }
+            })
+        })
+        classesAll = _.concat( classesAll, classes )
+    }
+    return classesAll
 }
-
-function resolveClasses(r, resolve){
-    resolve(r.data)
+async function getSchedulesRoutes(){
+    let classesAll = []
+    let lastId = false
+    let baseUrl = `${VUE_APP_API_URL_SCHEDULES}/get-routes?type=schedule&id=${VUE_APP_TENANT_ID}`
+    while( ! _.isNull( lastId ) || lastId === false ){
+        let url = ! _.isNull(lastId) && lastId !== false ? baseUrl + '&ExclusiveStartKey=' + lastId : baseUrl
+        let classes = await axios.get(url).then(function(r){
+            if( ! _.isUndefined( r.data.LastEvaluatedKey ) ){
+                lastId = r.data.LastEvaluatedKey.id
+            } else {
+                lastId = null
+            }
+            return _.map(r.data.Items, function(i){
+                return {
+                    route: `/s/${i.slug}`,
+                    payload: i
+                }
+            })
+        })
+        classesAll = _.concat( classesAll, classes )
+    }
+    console.log('schedules', classesAll)
+    return classesAll
 }
-
 
 async function getRoutes(){
-        let classesAll = []
-        let lastId = false
-        let baseUrl = `${VUE_APP_API_URL_SCHEDULES}/get-routes?id=${VUE_APP_TENANT_ID}`
-        while( ! _.isNull( lastId ) || lastId === false ){
-            let url = ! _.isNull(lastId) && lastId !== false ? baseUrl + '&ExclusiveStartKey=' + lastId : baseUrl
-            let classes = await axios.get(url).then(function(r){
-                if( ! _.isUndefined( r.data.LastEvaluatedKey ) ){
-                    lastId = r.data.LastEvaluatedKey.id
-                } else {
-                    lastId = null
-                }
-                return _.map(r.data.Items, function(i){
-                    return {
-                        route: `/${i.slug}`,
-                        payload: i
-                    }
-                })
-            })
-            classesAll = _.concat( classesAll, classes )
-        }
-        return classesAll
+    let classes = await getClassesRoutes()
+    let schedules = await getSchedulesRoutes()
+    return _.concat( schedules, classes )
 }
 
 
