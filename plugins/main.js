@@ -137,6 +137,19 @@ Vue.mixin({
             } catch (e) {
                 return 'MMMM D, YYYY'
             }
+        },
+        getClassClassTypes: function(classTypes){
+            let vm = this
+            classTypes = _.map(classTypes, function (i) {
+                return _.find(vm.$store.getters.class_types, function (j) {
+                    return j.id === i
+                })
+            })
+            classTypes = _.map(classTypes, function (i) {
+                return !_.isUndefined(i) && !_.isUndefined(i.name) ? i.name : ''
+            })
+
+            return _.join(classTypes, ", ")
         }
     }
 })

@@ -11,6 +11,7 @@ import class_types from './class_types'
 import instructors from './instructors'
 import locations from './locations'
 import seasons from './seasons'
+import classes from './classes'
 
 import _ from 'lodash'
 
@@ -52,6 +53,9 @@ const store = () => {
             locations: function(state, getters){
                 return getters['locations/all']
             },
+            classes: function(state, getters){
+                return getters['classes/all']
+            },
             tenant: function(state){
                 return state.tenant
             },
@@ -65,7 +69,8 @@ const store = () => {
             class_types,
             instructors,
             locations,
-            seasons
+            seasons,
+            classes
         }
     })
 }

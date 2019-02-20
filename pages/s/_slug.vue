@@ -1,8 +1,8 @@
 <template>
-    <section class="container">
-        <h1>{{schedule.title}}</h1>
+    <section class="container page--schedule">
+        <h1 class="page-title">{{schedule.title}}</h1>
         <Filters v-if="hasFilters" v-model="filters" :schedule="schedule"></Filters>
-        <!--<Schedule :schedule="schedule" :filters="filters" :classes="classes" class="margin-top&#45;&#45;2"></Schedule>-->
+        <Schedule :schedule="schedule" :filters="filters" :classes="classes" class="margin-top--2"></Schedule>
     </section>
 </template>
 
@@ -27,10 +27,12 @@
             Filters,
             Schedule
         },
-        asyncData: async function(context){
+        asyncData: async function({params, $axios}){
             try{
-                let { data } = await axios.get(`${process.env.VUE_APP_API_BASE}/classes?tenantId=${process.env.VUE_APP_TENANT_ID}&`)
-                return { classes: [] }
+                console.log('async')
+                let r = await $axios.get(`${process.env.VUE_APP_API_BASE}/classes?tenantId=${process.env.VUE_APP_TENANT_ID}&scheduleSlug=${params.slug}`)
+                console.log('err', r)
+                return { classes: r.data || [] }
             } catch (e) {
                 return { classes: [] }
             }

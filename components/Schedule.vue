@@ -1,6 +1,7 @@
 <template>
     <div class="schedule" :class="schedule_classes">
-        <SchedulePlainList v-if="schedule.style === 0" :classes="classes_list"></SchedulePlainList>
+        <SchedulePlainList v-if="schedule.style === 0" :classes="classes_list" :schedule="schedule" @openClassModal="openClassModal"></SchedulePlainList>
+        <ClassModal :visible="showModal" :ts="ts" :classId="classId" @closeModal="showModal = false"></ClassModal>
     </div>
 </template>
 
@@ -8,11 +9,20 @@
     import _ from 'lodash'
     import moment from 'moment'
     import SchedulePlainList from '@/components/SchedulePlainList'
+    import ClassModal from '@/components/ClassModal'
     export default {
         name: "Schedule",
         props: ['schedule', 'filters', 'classes'],
         components: {
-            SchedulePlainList
+            SchedulePlainList,
+            ClassModal
+        },
+        data: function(){
+          return {
+              showModal: false,
+              classId: null,
+              ts: null
+          }
         },
         computed: {
             classes_list: function(){
@@ -31,10 +41,6 @@
                         }
                         /*if( i.schedule.empty.indexOf(date) === 0 && ( _.isUndefined( i.schedule.specific ) || _.isUndefined( _.find(i.schedule.specific, {d: date } ) ) ) ){
                             _.each(i.schedule.days)
-
-
-
-
                         }*/
                     })
 
@@ -60,6 +66,18 @@
             }
         },
         methods: {
+            openClassModal: function(v){
+                console.log('open', v)
+                if( ! _.isNull( v ) ){
+                    this.classId = v.classId
+                    this.ts = v.ts
+                    this.showModal = true
+                } else {
+                    this.classId = null
+                    this.ts = null
+                    this.showModal = false
+                }
+            },
             buildInstances: function(classObj, date){
                 let instances = []
                 let dayIntervals = _.find(classObj.schedule.days, {d: parseInt(moment(date).format('e'))})
@@ -74,16 +92,20 @@
                         instances.push([ (i[0]/60).toString().replace('.',':'), (i[1]/60).toString().replace('.',':') ])
                     })
                 }*/
-                console.log('class', classObj)
                 instances = _.map(instances, function(i){
-                    let starting_time = parseInt(i.s / 60) + ':' + i.s % 60
+                    let h = parseInt( i.s / 60 )
+                        h = h < 10 ? `0${h}` : h
+                    let starting_time = h + ':' + i.s % 60
+                        h = parseInt( i.e / 60 )
+                    h = h < 10 ? `0${h}` : h
+                    let ending_time = h + ':' + i.e % 60
                     return {
                         ...classObj,
                         duration: i.e - i.s,
-                        starting_time: `${date}T${starting_time}`,
+                        starting_time: `${date}T${starting_time}Z`,
+                        ending_time: `${date}T${ending_time}Z`,
                     }
                 })
-                console.log('instances', instances)
                 return instances.length > 0 ? instances : undefined
             },
             startsInInterval: function(start, end){

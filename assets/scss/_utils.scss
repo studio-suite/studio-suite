@@ -195,3 +195,20 @@ img{
   }
 }
 
+
+
+
+.middot{
+  display: inline-block;
+  font-style: normal;
+  margin: 0 0.25rem;
+
+  &::before{
+    content: "\F111";
+    font-family: 'Font Awesome 5 Pro';
+    font-weight: 900;
+    transform: scale(0.5) translateY(2px);
+    display: inline-block;
+    opacity: 0.5
+  }
+}

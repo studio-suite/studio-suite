@@ -38,7 +38,6 @@
         },
         computed: {
             options: function(){
-                let vm = this
               return _.map(this.days_list, function(i){
                   return {
                       label: i.label,
@@ -57,7 +56,6 @@
             days_list: function(){
                 let vm = this
                 return _.filter(this.week, function(i){
-                    console.log('days', vm.days, i)
                     return vm.days.indexOf(i.value) >= 0
                 })
             }

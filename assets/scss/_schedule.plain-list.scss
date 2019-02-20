@@ -1,0 +1,103 @@
+.schedule{
+  &--style--plain-list{
+
+    .class{
+      display: flex;
+
+      & + .class{
+        padding-top: 2rem;
+        margin-top: 2rem;
+        border-top: 1px solid rgba($color-black, 0.1)
+      }
+
+      h2{
+        font-size: 1.3125rem;
+        font-weight: 600;
+        margin: 0 0 .5rem;
+      }
+
+      &__image{
+        flex-basis: 7.5rem;
+        margin-right: 2rem;
+
+        img{
+          border-radius: 3px;
+          box-shadow: 0 2rem 4rem rgba($color-black, 0.2);
+        }
+        span{
+          border-radius: 3px;
+          box-shadow: 0 2rem 4rem rgba($color-black, 0.2);
+          display: block;
+          height: 7.5rem;
+          background-color: currentColor;
+          opacity: 0.05;
+        }
+      }
+
+      &__date{
+        flex-basis: 7.5rem;
+        margin-right: 2rem;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        color: $color-primary;
+        font-weight: 600;
+        flex-wrap: wrap;
+        font-size: 1.125rem;
+
+        span{
+          display: block;
+          font-size: 2.25rem;
+          margin-bottom: .125rem;
+          flex-basis: 100%;
+          text-align: center;
+          font-weight: 700;
+        }
+      }
+
+      &__content{
+        flex-grow: 1;
+        display: flex;
+        align-items: center;
+
+        .fa-clock{
+          color: $color-primary;
+          margin-right: .5rem;
+        }
+
+        .details{
+          color: rgba($color-black, 0.6)
+        }
+      }
+
+      &__buttons{
+        display: flex;
+        align-items: center;
+      }
+
+
+    }
+
+
+  }
+}
+
+.btn-class-details{
+  display: inline-block;
+  font-weight: 700;
+  color: $color-black;
+  padding: .75rem 1.5rem;
+  line-height: 1;
+}
+
+.btn-class-book{
+  display: inline-block;
+  font-weight: 700;
+  padding: .75rem 2rem;
+  color: $color-bg-box;
+  background-color: $color-primary;
+  border-radius: 3px;
+  box-shadow: 0 1rem 3rem rgba($color-primary, 0.6);
+  line-height: 1;
+  margin-left: 1rem;
+}

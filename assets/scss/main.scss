@@ -44,8 +44,9 @@ img{
 
 
 
-.page--single-class{
+.single-class{
   display: flex;
+  max-width: 100%;
 
   .social-link{
     display: inline-flex;
@@ -66,7 +67,8 @@ img{
   }
 
   .left-col{
-    flex-basis: 60%;
+    flex-grow: 1;
+    flex-shrink: 1;
 
     h1{
       margin-top: 0;
@@ -78,8 +80,9 @@ img{
   }
   .right-col{
     text-align: center;
-    padding-left: 6.25rem;
-    flex-basis: 40%;
+    margin-left: 6.25rem;
+    flex-basis: 21rem;
+    flex-shrink: 0;
     position: relative;
 
     h3{
@@ -250,16 +253,10 @@ img{
       margin-right: .75rem;
     }
     .middot{
-      display: inline-block;
-      font-style: normal;
       margin: 0 0.35rem 0 0.75rem;
 
       &::before{
-        content: "\F111";
-        font-family: 'Font Awesome 5 Pro';
-        font-weight: 900;
         transform: scale(0.5) translateY(2px);
-        display: inline-block;
         opacity: 0.7
       }
     }
@@ -456,6 +453,8 @@ img{
 }
 
 
+
+
 .page--single-class{
   .location{
     .address{
@@ -464,3 +463,64 @@ img{
     }
   }
 }
+
+
+
+.classModal{
+  display: none;
+
+  &__bg{
+    position: fixed;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    background-color: $color-black;
+    opacity: 0.97;
+    z-index: 100;
+  }
+
+  &__content-wrapper{
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    min-height: 100%;
+    padding: 4rem 0;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    overflow: visible;
+  }
+
+  &__content {
+    background-color: $color-bg-box;
+    border-radius: 5px;
+    padding: 5.5rem;
+    position: relative;
+    max-width: 72rem;
+    flex-basis: 100%;
+    z-index: 110;
+    overflow: scroll;
+  }
+
+}
+body.class-modal-open {
+  //
+
+  .classModal{
+    display: block;
+  }
+
+  .page--schedule .schedule .class_list,
+  .page--schedule .filters,
+  .page--schedule .page-title,
+  .header{
+    overflow: hidden;
+    -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
+    filter: blur(5px);
+    max-height: 75vh;
+  }
+}
+
+@import '_schedule.plain-list.scss';
