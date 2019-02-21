@@ -80,7 +80,9 @@ module.exports = {
         ],
         script: [{
             src: 'https://js.stripe.com/v3/'
-        }]
+        },
+            { src: `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_GMAPS_PUBLIC_API}`, defer: true }
+            ]
     },
 
     /*
@@ -118,7 +120,17 @@ module.exports = {
     */
     modules: [
         '@nuxtjs/axios'
+       // '@nuxtjs/proxy'
     ],
+
+    proxy: {
+        '/api': {
+            target: `${process.env.VUE_APP_API_BASE}`,
+            pathRewrite: {
+                '^/api' : '/'
+            }
+        }
+    },
 
     axios: {
         proxyHeaders: false,

@@ -56,6 +56,9 @@ const store = () => {
             classes: function(state, getters){
                 return getters['classes/all']
             },
+            schedules: function(state, getters){
+                return getters['schedules/all']
+            },
             tenant: function(state){
                 return state.tenant
             },

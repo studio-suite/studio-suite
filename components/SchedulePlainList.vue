@@ -13,7 +13,7 @@
             </div>
             <div class="class__content">
                 <div>
-                    <h2>{{c.title}} <span class="margin-left--05 margin-right--05">|</span> {{getClassAge(c.age)}}</h2>
+                    <h2>{{c.title}}</h2>
                     <div class="details">
                         <i class="fal fa-clock"></i> {{ c.starting_time | moment( getClassTimeFormat() ) }} - {{ c.ending_time | moment( getClassTimeFormat() ) }}
                         <i class="middot" v-if="schedule.appearance.show_duration"></i> {{c.duration}} minutes
@@ -23,8 +23,8 @@
             </div>
             <div class="class__buttons">
                 <div>
-                    <a href="#" class="btn-class-details" v-on:click.prevent="openModal(c.id, c.starting_time)">Details</a>
-                    <a href="#" class="btn-class-book">Book</a>
+                    <a href="#" class="btn-class-details" v-on:click.prevent="openClassPage(c.slug, c.starting_time)">Details</a>
+                    <a href="#" class="btn-class-book" v-on:click.prevent="openModal(c.id, c.starting_time)">Book</a>
                 </div>
             </div>
         </article>
@@ -38,6 +38,10 @@
         name: "SchedulePlainList",
         props: ['classes', 'schedule'],
         methods: {
+            openClassPage: function(slug, sdate){
+
+                this.$router.push({ path: `/${slug}` } )
+            },
             openModal: function(id, sdate){
               this.$emit('openClassModal', {
                   classId: id,

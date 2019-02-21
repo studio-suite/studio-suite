@@ -1,14 +1,13 @@
 import axios from 'axios'
 import _ from 'lodash'
-
+import Schedule from '@/models/Schedule'
 
 const state = {
-    list: [],
-    schedule: {}
+    list: []
 }
 
 const getters = {
-    list: function(state){
+    all: function(state){
         return state.list
     }
 }
@@ -23,18 +22,25 @@ const actions = {
             console.log(e)
         }
     },
-    get: async function({commit, getters}, id){
-        return commit('SET_SCHEDULE', _.find( getters.list, {slug: id} ) )
+    get: async function({commit, getters}, slug){
+        return _.find( getters.list, { slug: slug } )
     }
 }
 
 const mutations = {
     SET: function (state, s) {
-        state.list = s
-    },
-    SET_SCHEDULE: function(state, s){
-        state.schedule = s
+        state.list = _.map( s, function(i){
+            return new Schedule(i).toObject()
+        })
     }
+    /*,
+    SET_SCHEDULE: function(state, s){
+        if( ! _.isUndefined( _.find( state.list, {slug: s.id} ) ) ){
+            state.list[_.findKey( state.list, {slug: s.id} )] = new Schedule(s).toObject()
+        } else {
+            state.list.push(new Schedule(s).toObject())
+        }
+    }*/
 }
 
 export default {

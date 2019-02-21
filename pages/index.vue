@@ -2,7 +2,7 @@
   <section class="container">
         <h1>Schedules</h1>
       <div class="schedules-list">
-          <div v-for="s in schedules" class="schedules-list__item" v-on:click.prevent="goToSchedule(s.slug)">
+          <div v-for="s in schedules" class="schedules-list__item" v-on:click.prevent="goToSchedule(s)">
               <div class="schedules-list__item__inner">
                   <h2>{{s.title}}</h2>
                   <p class="schedules-list__item__meta"><span>{{getClassTypesString(s.classTypes)}}</span> <span>{{s.age | schedule_age}}</span></p>
@@ -35,7 +35,8 @@ export default {
     },
     methods: {
         goToSchedule: function(i){
-          this.$router.push({ name: 's-slug', params: { slug: i  }})
+            //window.location = `/s/${i}`;
+          this.$router.push({ name: 's-slug', params: { slug: i.slug  }})
         },
       getClassTypesString: function(i){
           let out = 'All class types'
