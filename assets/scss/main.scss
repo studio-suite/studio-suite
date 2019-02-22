@@ -16,7 +16,15 @@ a{
 .container{
   width: 100%;
   max-width: 1076px;
-  margin: 6rem auto;
+  margin: 3rem auto;
+  padding-right: 1.5rem;
+  padding-left: 1.5rem;
+
+  @media (min-width: 992px) {
+    padding-left: 0;
+    padding-right: 0;
+    margin: 6rem auto;
+  }
 }
 
 h1{
@@ -520,6 +528,13 @@ body.class-modal-open {
     -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
     filter: blur(5px);
     max-height: 75vh;
+  }
+}
+
+
+.single-class--in-modal{
+  .meta{
+    font-size: 1.2rem;
   }
 }
 

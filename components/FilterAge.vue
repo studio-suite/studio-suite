@@ -1,6 +1,6 @@
 <template>
-    <div class="filter">
-        <no-ssr><v-select :options="options" placeholder="How old is your child?"></v-select></no-ssr>
+    <div class="filter filter--age">
+        <no-ssr><v-select :options="options" :placeholder="placeholder || 'How old?'" v-model="filter"></v-select></no-ssr>
     </div>
 </template>
 
@@ -9,7 +9,7 @@
 
     export default {
         name: "FilterClassTypes",
-        props: ['value', 'age'],
+        props: ['value', 'age', 'placeholder'],
         data: function(){
             let ages  = [{
                 value: 1,
@@ -44,17 +44,6 @@
                     return true
                     return _.range(vm.age[0], vm.age[1]).indexOf(i.value) >= 0
                 })
-            }
-        },
-        methods: {
-            getDayName: function(i){
-                if( i === 0 ) return 'Sunday'
-                if( i === 1 ) return 'Monday'
-                if( i === 2 ) return ''
-                if( i === 3 ) return ''
-                if( i === 4 ) return ''
-                if( i === 5 ) return ''
-                return 'Saturday'
             }
         }
     }

@@ -1,11 +1,10 @@
 <template>
     <section class="container page--schedule">
         <div v-if="schedule">
-            <h1 class="page-title">{{schedule.title}}</h1>
-            <Filters v-if="hasFilters" v-model="filters" :schedule="schedule"></Filters>
-            <Schedule :schedule="schedule" :filters="filters" :classes="classes" class="margin-top--2"></Schedule>
+            <h1 class="page-title" v-if="schedule.appearance.show_title">{{schedule.title}}</h1>
+            <Filters v-if="hasFilters" v-model="filters" :schedule="schedule"  class="margin-bottom--3"></Filters>
+            <Schedule :schedule="schedule" :filters="filters" :classes="classes_filtered"></Schedule>
         </div>
-
     </section>
 </template>
 
@@ -15,39 +14,16 @@
     import axios from 'axios'
     import _ from 'lodash'
 
-    function createCORSRequest(method, url) {
-        var xhr = new XMLHttpRequest();
-        if ("withCredentials" in xhr) {
-
-            // Check if the XMLHttpRequest object has a "withCredentials" property.
-            // "withCredentials" only exists on XMLHTTPRequest2 objects.
-            xhr.open(method, url, true);
-
-        } else if (typeof XDomainRequest != "undefined") {
-
-            // Otherwise, check if XDomainRequest.
-            // XDomainRequest only exists in IE, and is IE's way of making CORS requests.
-            xhr = new XDomainRequest();
-            xhr.open(method, url);
-
-        } else {
-
-            // Otherwise, CORS is not supported by the browser.
-            xhr = null;
-
-        }
-        return xhr;
-    }
-
     export default {
         data: function(){
             return {
                 filters: {
-                    classTypes: '',
-                    instructors: '',
-                    days: '',
-                    filterTimes: '',
-                    age: ''
+                    classTypes: null,
+                    instructors: null,
+                    locations: null,
+                    days: null,
+                    times: null,
+                    age: null
                 }
             }
         },
@@ -57,7 +33,6 @@
         },
         asyncData: async function({params, $axios}){
             try{
-                console.log('params', params)
                 let tenantId = process.env.VUE_APP_TENANT_ID.replace('|','%7c')
                 let r = await $axios({
                     method: 'GET',
@@ -83,17 +58,46 @@
             await store.dispatch('schedules/get', params.slug )
         },*/
         methods: {
-
           hasFilters: function(){
-              if( this.schedule.filterAge === 1 ) return true;
-              if( this.schedule.filterClassTypes.length > 0 ) return true;
-              if( this.schedule.filterDays.length > 0 ) return true;
-              if( this.schedule.filterInstructors.length > 0 ) return true;
-              if( this.schedule.filterClassTimes.length > 0 ) return true;
+              if( ! _.isEmpty( this.schedule.filterAge ) ) return true;
+              if( ! _.isEmpty( this.schedule.filterClassTypes ) && this.schedule.filterClassTypes[0] !== '0' ) return true;
+              if( ! _.isEmpty( this.schedule.filterInstructors ) && this.schedule.filterInstructors[0] !== '0' ) return true;
+              if( ! _.isEmpty( this.schedule.filterLocations ) && this.schedule.filterLocations[0] !== '0' ) return true;
+              if( ! _.isEmpty( this.schedule.filterDays ) &&  this.schedule.filterDays[0] !== -1 ) return true;
+              if( ! _.isEmpty( this.schedule.filterTimes ) &&  this.schedule.filterTimes[0] !== -1 ) return true;
               return false
           }
         },
         computed: {
+            classes_filtered: function(){
+                let vm = this
+                let out = vm.classes
+                out = _.filter( out, function(i){
+                    let test = true
+                    if( ! _.isUndefined( vm.filters.age ) && ! _.isEmpty( vm.filters.age ) ){
+                        if( _.range( i.age[0], i.age[1] ).indexOf( vm.filters.age.value ) === -1 ){
+                            test = false
+                        }
+                    }
+                    if( ! _.isUndefined( vm.filters.classTypes ) && ! _.isEmpty( vm.filters.classTypes ) ){
+                        if( _.isUndefined( i.classTypesIds ) || i.classTypesIds.indexOf(vm.filters.classTypes.value) === -1 ){
+                            test = false
+                        }
+                    }
+                    if( ! _.isUndefined( vm.filters.locations ) && ! _.isEmpty( vm.filters.locations ) ){
+                        if( i.locationId.indexOf(vm.filters.locations.value) === -1 ){
+                            test = false
+                        }
+                    }
+                    if( ! _.isUndefined( vm.filters.instructors ) && ! _.isEmpty( vm.filters.instructors ) ){
+                        if( _.isUndefined( i.instructorsIds ) || i.instructorsIds.indexOf(vm.filters.instructors.value) === -1 ){
+                            test = false
+                        }
+                    }
+                    return test
+                })
+                return out
+            },
             schedule: function(){
                 return _.find( this.$store.getters.schedules, { slug: this.slug } ) || {}
             }

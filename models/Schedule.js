@@ -1,4 +1,5 @@
 import SchemaObject from "schema-object";
+import scheduleApperance from "@/models/scheduleApperance"
 
 export default new SchemaObject({
     id: String,
@@ -113,44 +114,7 @@ export default new SchemaObject({
         }
     },
     appearance: {
-        type: {
-            show_title: Boolean,
-            show_ending: Boolean,
-            show_duration: Boolean,
-            show_excerpt: Boolean,
-            show_instructors: Boolean,
-            show_classTypes: Boolean,
-            labelNothingToShow: String,
-            colorText: String,
-            colorBg: String,
-            colorPrimary: String,
-            colorDays0: String,
-            colorDays1: String,
-            colorDays2: String,
-            colorDays3: String,
-            colorDays4: String,
-            colorDays5: String,
-            colorDays6: String
-        },
-        default: {
-            show_title: true,
-            show_ending: true,
-            show_duration: true,
-            show_excerpt: true,
-            show_instructors: true,
-            show_classTypes: true,
-            labelNothingToShow: '',
-            colorText: '',
-            colorBg: '',
-            colorPrimary: '',
-            colorDays0: '',
-            colorDays1: '',
-            colorDays2: '',
-            colorDays3: '',
-            colorDays4: '',
-            colorDays5: '',
-            colorDays6: ''
-        }
+        type: scheduleApperance
     },
     created: String,
     updated: String

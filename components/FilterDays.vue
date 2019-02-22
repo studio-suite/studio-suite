@@ -1,6 +1,6 @@
 <template>
-    <div class="filter">
-        <no-ssr><v-select :options="options" placeholder="Which day?"></v-select></no-ssr>
+    <div class="filter filter--days">
+        <no-ssr><v-select :options="options" :placeholder="placeholder || 'Which day?'"  v-model="filter"></v-select></no-ssr>
     </div>
 </template>
 
@@ -9,7 +9,7 @@
 
     export default {
         name: "FilterClassTypes",
-        props: ['value', 'days'],
+        props: ['value', 'days', 'placeholder'],
         data: function(){
             return {
                 week: [{

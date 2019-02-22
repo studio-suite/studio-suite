@@ -62,6 +62,9 @@ const store = () => {
             tenant: function(state){
                 return state.tenant
             },
+            tenantUrl: function(state){
+              return `https://${state.tenant.domain}.studiosuite.io`
+            },
             stripePublicApiKey: function(state){
                 return state.stripePublic
             }

@@ -81,7 +81,7 @@ module.exports = {
         script: [{
             src: 'https://js.stripe.com/v3/'
         },
-            { src: `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_GMAPS_PUBLIC_API}`, defer: true }
+            { src: `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_GMAPS_PUBLIC_API || 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8'}`, defer: true }
             ]
     },
 

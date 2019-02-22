@@ -1,10 +1,11 @@
 <template>
     <div class="filters">
-        <FilterAge v-if="hasFilter('filterAge')" v-model="filters.age" :age="schedule.age"></FilterAge>
-        <FilterClassTypes v-if="hasFilter('filterClassTypes')" v-model="filters.classTypes"></FilterClassTypes>
-        <FilterInstructors v-if="hasFilter('filterInstructors')" v-model="filters.instructors"></FilterInstructors>
-        <FilterDays v-if="hasFilter('filterDays')" v-model="filters.days" :days="schedule.filterDays"></FilterDays>
-        <FilterTime v-if="hasFilter('filterTimes')" v-model="filters.times" :times="schedule.filterTimes"></FilterTime>
+        <FilterAge v-if="hasFilter('filterAge')" v-model="filters.age" :age="schedule.age" :placeholder="schedule.appearance.labelFilterAge"></FilterAge>
+        <FilterClassTypes v-if="hasFilter('filterClassTypes')" v-model="filters.classTypes" :placeholder="schedule.appearance.labelFilterClassTypes"></FilterClassTypes>
+        <FilterDays v-if="hasFilter('filterDays')" v-model="filters.days" :days="schedule.filterDays" :placeholder="schedule.appearance.labelFilterDays"></FilterDays>
+        <FilterLocations v-if="hasFilter('filterLocations')" v-model="filters.locations" :placeholder="schedule.appearance.labelFilterLocations"></FilterLocations>
+        <FilterTime v-if="hasFilter('filterTimes')" v-model="filters.times" :times="schedule.filterTimes" :placeholder="schedule.appearance.labelFilterTimes"></FilterTime>
+        <FilterInstructors v-if="hasFilter('filterInstructors')" v-model="filters.instructors" :placeholder="schedule.appearance.labelFilterInstructors"></FilterInstructors>
     </div>
 </template>
 
@@ -14,11 +15,13 @@
     import FilterTime from "@/components/FilterTime"
     import FilterAge from "@/components/FilterAge"
     import FilterInstructors from "@/components/FilterInstructors"
+    import FilterLocations from "@/components/FilterLocations"
     import _ from 'lodash'
     export default {
         name: "Filters",
         components: {
             FilterClassTypes,
+            FilterLocations,
             FilterDays,
             FilterTime,
             FilterAge,
@@ -38,17 +41,14 @@
         methods: {
             hasFilter: function(f){
                 let vm = this
-                try{
-                    if(f === 'filterClassTypes' || f === 'filterInstructors'){
-                        if( parseInt(vm.schedule[f][0]) === -1 ) return true
-                        if( parseInt(vm.schedule[f][0]) !== 0 ) return true
-                    }  else if(f === 'filterDays' || f === 'filterTimes'){
-                        return vm.schedule[f].length > 0
-                    } else if(f === 'filterAge'){
-                        return vm.schedule[f] > 0
-                    }
-                } catch (e) {
-                    return false
+                switch ( f ){
+                    case 'filterClassTypes' : return ! _.isEmpty( vm.schedule.filterClassTypes ) && vm.schedule.filterClassTypes[0] !== '0'
+                    case 'filterInstructors' : return ! _.isEmpty( vm.schedule.filterInstructors ) && vm.schedule.filterInstructors[0] !== '0'
+                    case 'filterLocations' : return ! _.isEmpty( vm.schedule.filterLocations ) && vm.schedule.filterLocations[0] !== '0'
+                    case 'filterDays' : return ! _.isEmpty( vm.schedule.filterDays ) &&  vm.schedule.filterDays[0] !== -1
+                    case 'filterTimes' : return ! _.isEmpty( vm.schedule.filterTimes ) &&  vm.schedule.filterTimes[0] !== -1
+                    case 'filterAge' : return  vm.schedule.filterAge === 1
+                    default : return false
                 }
             }
         },

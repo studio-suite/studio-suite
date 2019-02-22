@@ -3,10 +3,10 @@
         <div class="classModal__bg" v-on:click.prevent="toggleModal"></div>
         <div class="classModal__content-wrapper">
             <div class="classModal__content">
-                <div class="loading" v-if="loaders">
+                <div class="loading" v-if="!classObject">
                     <div class="loader"></div>
                 </div>
-                <SingleEvent v-if="classObject" :classObject="classObject"  :isModal="true"></SingleEvent>
+                <SingleEvent v-if="classObject" :classObject="classObject" :ts="ts" :isModal="true"></SingleEvent>
             </div>
         </div>
     </div>
@@ -22,11 +22,6 @@
     export default {
         name: "ClassModal",
         props: ['classId', 'visible', 'ts', 'availability'],
-        data: function () {
-            return {
-                loaders: false,
-            }
-        },
         components: {
             SingleEvent
         },

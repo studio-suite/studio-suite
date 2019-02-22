@@ -30,7 +30,7 @@
                 let vm = this
                 for( let day = moment(vm.schedule_start); day.isBefore(vm.schedule_stop); day.add(1, 'days') ){
                     let date = day.format('YYYY-MM-DD')
-                    _.each(this.classes, function(i){
+                    _.each(vm.classes, function(i){
                         if( ! vm.isClassBlocked(i, date) && ! vm.isDayBlockedBySeason(i, date) && ! vm.isDayBlockedByLocation(i, date) ){
                             let instances = vm.buildInstances( i, date )
                             if( ! _.isUndefined( instances ) ){
@@ -39,14 +39,10 @@
                                 })
                             }
                         }
-                        /*if( i.schedule.empty.indexOf(date) === 0 && ( _.isUndefined( i.schedule.specific ) || _.isUndefined( _.find(i.schedule.specific, {d: date } ) ) ) ){
-                            _.each(i.schedule.days)
-                        }*/
                     })
 
                 }
-
-                return classes
+                return vm.schedule.limitType === 1 ? classes.splice(0, vm.schedule.limit || 9999999) : classes
             },
             schedule_classes: function(){
                 let out = ''
@@ -56,8 +52,8 @@
                 return out
             },
             schedule_start: function(){
-                if( this.schedule.start === 1 ) return moment().format('YYYY-MM-DD')
-                if( this.schedule.start === 2 ) return moment(this.schedule.startSpecific).format('YYYY-MM-DD')
+                if( this.schedule.start === 1 ) return moment(this.schedule.startSpecific).format('YYYY-MM-DD')
+                if( this.schedule.start === 2 ) return moment().add( this.schedule.startDays, 'days').format('YYYY-MM-DD')
                 return moment().format('YYYY-MM-DD')
             },
             schedule_stop: function(){
@@ -79,25 +75,23 @@
             },
             buildInstances: function(classObj, date){
                 let instances = []
-                let dayIntervals = _.find(classObj.schedule.days, {d: parseInt(moment(date).format('e'))})
+                let dayIntervals = !_.isUndefined( classObj.schedule ) && !_.isUndefined( classObj.schedule.specific ) && ! _.isEmpty( classObj.schedule.specific ) && ! _.isUndefined( _.find( classObj.schedule.specific, { d: date } ) ) ? _.find( classObj.schedule.specific, { d: date } ) : _.find(classObj.schedule.days, {d: parseInt(moment(date).format('e'))})
                 if( ! _.isUndefined( dayIntervals ) ){
                     _.each(dayIntervals.i, function(i){
                         instances.push(i)
                     })
                 }
-                /*let specificIntervals = _.find(classObj.schedule.days, {d: date})
-                if( ! _.isUndefined( specificIntervals ) ){
-                    _.each(specificIntervals, function(i){
-                        instances.push([ (i[0]/60).toString().replace('.',':'), (i[1]/60).toString().replace('.',':') ])
-                    })
-                }*/
                 instances = _.map(instances, function(i){
                     let h = parseInt( i.s / 60 )
                         h = h < 10 ? `0${h}` : h
-                    let starting_time = h + ':' + i.s % 60
+                    let min = i.s % 60
+                        min = min < 10 ? `0${min}` : min
+                    let starting_time = h + ':' + min
                         h = parseInt( i.e / 60 )
                     h = h < 10 ? `0${h}` : h
-                    let ending_time = h + ':' + i.e % 60
+                        min = i.s % 60
+                        min = min < 10 ? `0${min}` : min
+                    let ending_time = h + ':' + min
                     return {
                         ...classObj,
                         duration: i.e - i.s,
@@ -123,7 +117,7 @@
                 }
             },
             isClassBlocked: function(c, d){
-                if(  ! _.isUndefined( c.empty ) && c.empty.indexOf(d) >= 0 ){
+                if(  ! _.isUndefined( c.schedule.empty ) && c.schedule.empty.indexOf(d) >= 0 ){
                     return true
                 }
                 let validDays = _.find( c.schedule.days, {d: parseInt(moment(d).format('e')) } )

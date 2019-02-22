@@ -1,6 +1,6 @@
 <template>
-    <div class="filter">
-        <no-ssr><v-select :options="options" placeholder="Which class?"></v-select></no-ssr>
+    <div class="filter filter--class-types">
+        <no-ssr><v-select :options="options" :placeholder="placeholder || 'Which class?'" v-model="filter"></v-select></no-ssr>
     </div>
 </template>
 
@@ -9,7 +9,7 @@
 
     export default {
         name: "FilterClassTypes",
-        props: ['value'],
+        props: ['value', 'placeholder'],
         mounted: function(){
 
         },

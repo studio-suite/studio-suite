@@ -53,10 +53,8 @@
                             @openModal="openModal">
                     </BookingBox>
                     <h3>Share</h3>
-                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-twitter"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-instagram"></i></a>
-                    <a href="#" class="social-link"><i class="fab fa-facebook-f"></i></a>
+                    <a :href="fb_share_link" class="social-link" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=no,height=600,width=600');return false;"><i class="fab fa-facebook-f"></i></a>
+                    <a :href="tw_share_link" class="social-link" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=no,height=600,width=600');return false;"><i class="fab fa-twitter"></i></a>
                 </div>
             </aside>
         </div>
@@ -71,6 +69,7 @@
     import moment from "moment"
     import BookingModal from '@/components/BookingModal'
     import BookingBox from '@/components/BookingBox'
+    import queryString from 'querystring'
 
     export default {
         name: "SingleEvent",
@@ -78,7 +77,7 @@
             BookingModal,
             BookingBox
         },
-        props: [ 'classObject', 'isModal' ],
+        props: [ 'classObject', 'isModal', 'ts' ],
         data: function(){
             return {
                 classNextTs: '',
@@ -152,22 +151,21 @@
                 let vm = this
                 let schedule = vm.classObject.schedule
                 let dates = []
-                let startDate = moment().utcOffset(0)
+                let startDate = !_.isUndefined( vm.ts ) && ! _.isNull(vm.ts) ? moment.unix(vm.ts).utcOffset(0) : moment().utcOffset(0)
                 let endDate = moment(startDate).add(14, 'days')
                 if( !_.isUndefined( schedule ) && !_.isUndefined( schedule.days ) && ! _.isEmpty( schedule.days ) ){
                     _.each( schedule.days, function(i){
-                        let tempDate = moment(startDate)
+                        let tempDate = moment(startDate).utcOffset(0)
                         _.each( i.i, function(int){
-                            let counter = 0
                             while( tempDate.isSameOrBefore(endDate) ){
-                                let inc_factor = moment().utcOffset(0).day() > i.d ? i.d + 7 : i.d
+                                let inc_factor = tempDate.day() > i.d ? i.d + 7 : i.d
+                                let temp_date = moment(tempDate).utcOffset(0).set({hour:0,minute:0,second:0,millisecond:0}).day(inc_factor).add(int.s, 'minutes')
                                 dates.push({
-                                    d: moment().utcOffset(0).add( counter * 7, 'days' ).set({hour:0,minute:0,second:0,millisecond:0}).day(inc_factor).format('YYYY-MM-DD'),
+                                    d: temp_date.format('YYYY-MM-DD'),
                                     dr: parseInt( int.e ) - parseInt( int.s ),
-                                    ts: parseInt( moment().utcOffset(0).add( counter * 7, 'days' ).set({hour:0,minute:0,second:0,millisecond:0}).day(inc_factor).add(int.s, 'minutes').format('X') )
+                                    ts: parseInt( temp_date.format('X') )
                                 })
                                 tempDate = tempDate.add(7, 'days')
-                                counter++
                             }
                         })
                     })
@@ -181,20 +179,20 @@
                             dates.push({
                                 d: i.d,
                                 dr: parseInt( int.e ) - parseInt( int.s ),
-                                ts: parseInt( moment(i.d).utcOffset(0).add(int.s, 'minutes').format('X') )
+                                ts: parseInt( moment(`${i.d}T00:00:00Z`).add(int.s, 'minutes').format('X') )
                             })
                         })
                     })
                 }
-
                 if( !_.isUndefined( schedule.empty ) && ! _.isEmpty( schedule.empty ) ){
                     dates = _.filter( dates, function(d){
                         return schedule.empty.indexOf( d.d ) === -1
                     })
                 }
-
-                dates = _.orderBy( dates, function(i){ return i.d } )
-
+                dates = _.filter( dates, function(d){
+                    return parseInt(d.ts) >= parseInt(vm.ts)
+                })
+                dates = _.orderBy( dates, ['ts'] )
                 return dates
             },
             classLocationCoords: function(){
@@ -207,6 +205,12 @@
             },
         },
         computed: {
+            fb_share_link: function(){
+                return 'https://www.facebook.com/sharer.php?' + queryString.stringify({ u: this.$store.getters.tenantUrl })
+            },
+            tw_share_link: function(){
+                return 'https://twitter.com/intent/tweet?' + queryString.stringify({ url: this.$store.getters.tenantUrl, text: `${this.classObject.title}` })
+            },
             classLocation: function(){
                 return _.find( this.$store.getters.locations, { id: this.classObject.locationId })
             },

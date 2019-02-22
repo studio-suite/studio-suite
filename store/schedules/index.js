@@ -30,6 +30,7 @@ const actions = {
 const mutations = {
     SET: function (state, s) {
         state.list = _.map( s, function(i){
+            if( i.slug === 'trial-classes' ) console.log('sche', i, new Schedule(i).toObject())
             return new Schedule(i).toObject()
         })
     }

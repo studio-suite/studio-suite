@@ -1,6 +1,6 @@
 <template>
-    <div class="filter filter--instructors">
-        <no-ssr><v-select :options="options" :placeholder="placeholder || 'Which instructor?'" v-model="filter"></v-select></no-ssr>
+    <div class="filter filter--location">
+        <no-ssr><v-select :options="options" :placeholder="placeholder || 'Which location?'" v-model="filter"></v-select></no-ssr>
     </div>
 </template>
 
@@ -8,16 +8,16 @@
     import _ from 'lodash'
 
     export default {
-        name: "FilterInstructors",
+        name: "FilterLocations",
         props: ['value', 'placeholder'],
         mounted: function(){
 
         },
         computed: {
             options: function(){
-              return _.map(this.class_types, function(i){
+              return _.map(this.locations, function(i){
                   return {
-                      label: `${i.firstName} ${i.lastName}`,
+                      label: i.name,
                       value: i.id
                   }
               })
@@ -30,8 +30,8 @@
                     this.$emit('input', i)
                 }
             },
-            class_types: function(){
-                return _.orderBy(this.$store.state.instructors.list, ['name'])
+            locations: function(){
+                return _.orderBy(this.$store.state.locations.list, ['name'])
             }
         },
         methods: {
