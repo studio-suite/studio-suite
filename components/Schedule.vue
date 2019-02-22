@@ -1,6 +1,7 @@
 <template>
     <div class="schedule" :class="schedule_classes">
         <SchedulePlainList v-if="schedule.style === 0" :classes="classes_list" :schedule="schedule" @openClassModal="openClassModal"></SchedulePlainList>
+        <ScheduleCompactList v-if="schedule.style === 1" :classes="classes_list" :schedule="schedule" @openClassModal="openClassModal"></ScheduleCompactList>
         <ClassModal :visible="showModal" :ts="ts" :classId="classId" @closeModal="showModal = false"></ClassModal>
     </div>
 </template>
@@ -9,12 +10,14 @@
     import _ from 'lodash'
     import moment from 'moment'
     import SchedulePlainList from '@/components/SchedulePlainList'
+    import ScheduleCompactList from '@/components/ScheduleCompactList'
     import ClassModal from '@/components/ClassModal'
     export default {
         name: "Schedule",
         props: ['schedule', 'filters', 'classes'],
         components: {
             SchedulePlainList,
+            ScheduleCompactList,
             ClassModal
         },
         data: function(){
