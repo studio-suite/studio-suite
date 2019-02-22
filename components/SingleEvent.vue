@@ -206,10 +206,10 @@
         },
         computed: {
             fb_share_link: function(){
-                return 'https://www.facebook.com/sharer.php?' + queryString.stringify({ u: this.$store.getters.tenantUrl })
+                return 'https://www.facebook.com/sharer.php?' + queryString.stringify({ u: `${this.$store.getters.tenantUrl}/${this.classObject.slug}` })
             },
             tw_share_link: function(){
-                return 'https://twitter.com/intent/tweet?' + queryString.stringify({ url: this.$store.getters.tenantUrl, text: `${this.classObject.title}` })
+                return 'https://twitter.com/intent/tweet?' + queryString.stringify({ url: `${this.$store.getters.tenantUrl}/${this.classObject.slug}`, text: `${this.classObject.title}` })
             },
             classLocation: function(){
                 return _.find( this.$store.getters.locations, { id: this.classObject.locationId })
