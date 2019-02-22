@@ -52,9 +52,12 @@
                             :availabilityRequest="availabilityRequest"
                             @openModal="openModal">
                     </BookingBox>
-                    <h3>Share</h3>
-                    <a :href="fb_share_link" class="social-link" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=no,height=600,width=600');return false;"><i class="fab fa-facebook-f"></i></a>
-                    <a :href="tw_share_link" class="social-link" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=no,height=600,width=600');return false;"><i class="fab fa-twitter"></i></a>
+                    <template v-if="!isModal">
+                        <h3>Share</h3>
+                        <a :href="fb_share_link" class="social-link" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=no,height=600,width=600');return false;"><i class="fab fa-facebook-f"></i></a>
+                        <a :href="tw_share_link" class="social-link" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=no,height=600,width=600');return false;"><i class="fab fa-twitter"></i></a>
+                    </template>
+
                 </div>
             </aside>
         </div>
