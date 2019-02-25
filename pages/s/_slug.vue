@@ -31,10 +31,22 @@
             Filters,
             Schedule
         },
-        asyncData: async function({params, $axios}){
+        head () {
+            let schedule = _.find( this.$store.getters.schedules, { slug: this.slug } )
+            return {
+                title: `${schedule.title} | ${this.$store.getters.tenant.name}`,
+                meta: [
+                    { hid: 'og:title', name: 'og:title', content: this.schedule.title },
+                    { hid: 'og:site_name', name: 'og:site_name', content: this.$store.getters.tenant.name },
+                    { hid: 'og:type', name: 'og:type', content: 'website' },
+                    { hid: 'og:url', name: 'og:url', content: `https://${this.$store.getters.tenant.domain}.studiosuite.io/s/${this.schedule.slug}` },
+                ]
+            }
+        },
+        asyncData: async function({params}){
             try{
                 let tenantId = process.env.VUE_APP_TENANT_ID.replace('|','%7c')
-                let r = await $axios({
+                let r = await axios({
                     method: 'GET',
                     url: `${process.env.VUE_APP_API_BASE}/classes?tenantId=${tenantId}&scheduleSlug=${params.slug}`,
                     headers: {

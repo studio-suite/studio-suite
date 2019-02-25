@@ -49,7 +49,6 @@ async function getSchedulesRoutes(){
         })
         classesAll = _.concat( classesAll, classes )
     }
-    console.log('schedules', classesAll)
     return classesAll
 }
 
@@ -72,11 +71,11 @@ module.exports = {
         meta: [
             {charset: 'utf-8'},
             {name: 'viewport', content: 'width=device-width, initial-scale=1'},
-            {hid: 'description', name: 'description', content: pkg.description}
+            {hid: 'description', name: 'description', content: pkg.description},
+            {hid: 'robots', name: 'robots', content: 'index, follow'}
         ],
         link: [
-            {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'},
-            {rel: 'stylesheet', href: 'https://fonts.googleapis.com/css?family=Muli:300,400,600,700,800,900'}
+            {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'}
         ],
         script: [{
             src: 'https://js.stripe.com/v3/'
@@ -119,22 +118,14 @@ module.exports = {
     ** Nuxt.js modules
     */
     modules: [
-        '@nuxtjs/axios'
+        'nuxt-webfontloader'
        // '@nuxtjs/proxy'
     ],
 
-    proxy: {
-        '/api': {
-            target: `${process.env.VUE_APP_API_BASE}`,
-            pathRewrite: {
-                '^/api' : '/'
-            }
+    webfontloader: {
+        google: {
+            families: ['Muli:300,400,600,700,800,900'] //Loads Lato font with weights 400 and 700
         }
-    },
-
-    axios: {
-        proxyHeaders: false,
-        credentials: false
     },
 
     generate: {

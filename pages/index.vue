@@ -21,6 +21,11 @@ export default {
   components: {
     Logo
   },
+    head () {
+        return {
+            title: `${this.$store.getters.tenant.name}`,
+        }
+    },
     filters: {
       schedule_age: function(i){
           if( ! _.isUndefined(i) ){
