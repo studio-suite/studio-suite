@@ -156,6 +156,7 @@
                 let dates = []
                 let startDate = !_.isUndefined( vm.ts ) && ! _.isNull(vm.ts) ? moment.unix(vm.ts).utcOffset(0) : moment().utcOffset(0)
                 let endDate = moment(startDate).add(14, 'days')
+
                 if( !_.isUndefined( schedule ) && !_.isUndefined( schedule.days ) && ! _.isEmpty( schedule.days ) ){
                     _.each( schedule.days, function(i){
                         let tempDate = moment(startDate).utcOffset(0)
@@ -192,9 +193,12 @@
                         return schedule.empty.indexOf( d.d ) === -1
                     })
                 }
-                dates = _.filter( dates, function(d){
-                    return parseInt(d.ts) >= parseInt(vm.ts)
-                })
+                if( !_.isUndefined( vm.ts ) && ! _.isEmpty( vm.ts ) ){
+                    dates = _.filter( dates, function(d){
+                        return parseInt(d.ts) >= parseInt(vm.ts)
+                    })
+                }
+
                 dates = _.orderBy( dates, ['ts'] )
                 return dates
             },
