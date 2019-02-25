@@ -1,5 +1,7 @@
 <template>
-    <SingleEvent :classObject="classObject" :ts="ts" class="container" :isModal="false"></SingleEvent>
+    <section class="main-wrapper">
+        <SingleEvent :classObject="classObject" :ts="ts" class="container" :isModal="false"></SingleEvent>
+    </section>
 </template>
 
 <script>

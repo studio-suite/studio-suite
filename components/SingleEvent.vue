@@ -3,15 +3,15 @@
         <div class="single-class" v-if="classObject" :class="{ 'single-class--in-modal': isModal }">
             <div class="left-col">
                 <h1 class="title">{{classObject.title}}</h1>
-                <div class="meta">
-                    <i class="fal fa-users-class"></i> {{classAgeInterval}} <i class="middot" v-if="classTypes"></i> {{classTypes}}
+                <div class="meta margin-bottom--4">
+                    <span class="margin-right--025"><i class="fal fa-users-class"></i> {{classAgeInterval}}</span> <span v-if="classTypes" class="no-wrap"><i class="middot"></i> {{classTypes}}</span>
                 </div>
-                <div v-if="classObject.image" class="image">
+                <div v-if="classObject.image" class="image margin-bottom--4">
                     <img :src="getImgSrc({w: 1300}, classObject.image)">
                 </div>
-                <div class="short-description">{{classObject.excerpt}}</div>
-                <div class="content" v-if="!isModal">{{classObject.content}}</div>
-                <div class="instructors" v-if="classObject.instructorsIds && !isModal">
+                <div class="short-description margin-bottom--4" v-if="classObject.excerpt">{{classObject.excerpt}}</div>
+                <div class="content margin-bottom--6" v-if="!isModal">{{classObject.content}}</div>
+                <div class="instructors margin-bottom--6" v-if="classObject.instructorsIds && !isModal">
                     <h3>Instructors</h3>
                     <div v-for="instructor in classObject.instructorsIds" :key="instructor" class="instructor" v-if="getInstructor(instructor)">
                         <div class="left">
@@ -34,7 +34,7 @@
                 </div>
                 <div class="location" v-if="classLocation" v-show="!isModal">
                     <h3>Location</h3>
-                    <div id="map" ref="map" class="map"></div>
+                    <div id="map" ref="map" class="map margin-bottom--4"></div>
                     <h4>{{classLocation.name}}</h4>
                     <div class="address">
                         {{classLocation.address.address1}}<template v-if="classLocation.address.address2">, {{classLocation.address.address2}}</template><template v-if="classLocation.address.city">, {{classLocation.address.city}}</template><template>, {{classLocation.address.zip}} {{classLocation.address.state}}</template>
