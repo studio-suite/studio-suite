@@ -5,59 +5,59 @@ import _ from 'lodash'
 let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || 'auth0|5bdae2a63fd53b44339f6ab4'
 let VUE_APP_API_URL_SCHEDULES = process.env.VUE_APP_API_BASE || 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod'
 
-async function getClassesRoutes(){
+async function getClassesRoutes() {
     let classesAll = []
     let lastId = false
     let baseUrl = `${VUE_APP_API_URL_SCHEDULES}/get-routes?id=${VUE_APP_TENANT_ID}`
-    while( ! _.isNull( lastId ) || lastId === false ){
-        let url = ! _.isNull(lastId) && lastId !== false ? baseUrl + '&ExclusiveStartKey=' + lastId : baseUrl
-        let classes = await axios.get(url).then(function(r){
-            if( ! _.isUndefined( r.data.LastEvaluatedKey ) ){
+    while (!_.isNull(lastId) || lastId === false) {
+        let url = !_.isNull(lastId) && lastId !== false ? baseUrl + '&ExclusiveStartKey=' + lastId : baseUrl
+        let classes = await axios.get(url).then(function (r) {
+            if (!_.isUndefined(r.data.LastEvaluatedKey)) {
                 lastId = r.data.LastEvaluatedKey.id
             } else {
                 lastId = null
             }
-            return _.map(r.data.Items, function(i){
+            return _.map(r.data.Items, function (i) {
                 return {
                     route: `/${i.slug}`,
                     payload: i
                 }
             })
         })
-        classesAll = _.concat( classesAll, classes )
+        classesAll = _.concat(classesAll, classes)
     }
     return classesAll
 }
-async function getSchedulesRoutes(){
+
+async function getSchedulesRoutes() {
     let classesAll = []
     let lastId = false
     let baseUrl = `${VUE_APP_API_URL_SCHEDULES}/get-routes?type=schedule&id=${VUE_APP_TENANT_ID}`
-    while( ! _.isNull( lastId ) || lastId === false ){
-        let url = ! _.isNull(lastId) && lastId !== false ? baseUrl + '&ExclusiveStartKey=' + lastId : baseUrl
-        let classes = await axios.get(url).then(function(r){
-            if( ! _.isUndefined( r.data.LastEvaluatedKey ) ){
+    while (!_.isNull(lastId) || lastId === false) {
+        let url = !_.isNull(lastId) && lastId !== false ? baseUrl + '&ExclusiveStartKey=' + lastId : baseUrl
+        let classes = await axios.get(url).then(function (r) {
+            if (!_.isUndefined(r.data.LastEvaluatedKey)) {
                 lastId = r.data.LastEvaluatedKey.id
             } else {
                 lastId = null
             }
-            return _.map(r.data.Items, function(i){
+            return _.map(r.data.Items, function (i) {
                 return {
                     route: `/s/${i.slug}`,
                     payload: i
                 }
             })
         })
-        classesAll = _.concat( classesAll, classes )
+        classesAll = _.concat(classesAll, classes)
     }
     return classesAll
 }
 
-async function getRoutes(){
+async function getRoutes() {
     let classes = await getClassesRoutes()
     let schedules = await getSchedulesRoutes()
-    return _.concat( schedules, classes )
+    return _.concat(schedules, classes)
 }
-
 
 
 module.exports = {
@@ -79,9 +79,13 @@ module.exports = {
         ],
         script: [{
             src: 'https://js.stripe.com/v3/'
-        },
-            { src: `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_GMAPS_PUBLIC_API || 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8'}`, defer: true }
-            ]
+            },
+            {
+                src: `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_GMAPS_PUBLIC_API || 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8'}`,
+                defer: true,
+                async: true
+            }
+        ]
     },
 
     /*
@@ -111,7 +115,7 @@ module.exports = {
     plugins: [
         {src: '~/plugins/main.js', ssr: true},
         {src: '~/plugins/vue-select.js', ssr: false},
-        {src: '~/plugins/currency', ssr: true }
+        {src: '~/plugins/currency', ssr: true}
     ],
 
     /*
@@ -119,7 +123,7 @@ module.exports = {
     */
     modules: [
         'nuxt-webfontloader'
-       // '@nuxtjs/proxy'
+        // '@nuxtjs/proxy'
     ],
 
     webfontloader: {
@@ -140,6 +144,7 @@ module.exports = {
         /*
         ** You can extend webpack config here
         */
-        vendor: ['vue-select']
+        vendor: ['vue-select'],
+        extractCSS: true
     }
 }
