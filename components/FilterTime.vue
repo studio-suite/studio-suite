@@ -1,6 +1,6 @@
 <template>
     <div class="filter filters--times">
-        <no-ssr><v-select :options="options" :placeholder="placeholder || 'What time?'" v-model="filter"></v-select></no-ssr>
+        <no-ssr><v-select :options="day" :placeholder="placeholder || 'What time?'" v-model="filter"></v-select></no-ssr>
     </div>
 </template>
 
@@ -17,22 +17,15 @@
                     label: 'Morning'
                 },{
                     value: 1,
-                    label: 'Evening'
-                },{
-                    value: 2,
                     label: 'Afternoon'
+                },
+                    {
+                    value: 2,
+                    label: 'Evening'
                 }]
             }
         },
         computed: {
-            options: function(){
-              return _.map(this.times_list, function(i){
-                  return {
-                      label: i.label,
-                      value: i.value
-                  }
-              })
-            },
             filter: {
                 get: function(){
                    return this.value
@@ -40,23 +33,6 @@
                 set: function(i){
                     this.$emit('input', i)
                 }
-            },
-            times_list: function(){
-                let vm = this
-                return _.filter(this.day, function(i){
-                    return vm.times.indexOf(i.value) >= 0
-                })
-            }
-        },
-        methods: {
-            getDayName: function(i){
-                if( i === 0 ) return 'Sunday'
-                if( i === 1 ) return 'Monday'
-                if( i === 2 ) return ''
-                if( i === 3 ) return ''
-                if( i === 4 ) return ''
-                if( i === 5 ) return ''
-                return 'Saturday'
             }
         }
     }

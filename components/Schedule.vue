@@ -2,6 +2,13 @@
     <div class="schedule" :class="schedule_classes">
         <SchedulePlainList v-if="schedule.style === 0" :classes="classes_list" :schedule="schedule" @openClassModal="openClassModal"></SchedulePlainList>
         <ScheduleCompactList v-if="schedule.style === 1" :classes="classes_list" :schedule="schedule" @openClassModal="openClassModal"></ScheduleCompactList>
+        <ScheduleWeekly
+                v-if="schedule.style === 2"
+                :classes="classes_list"
+                :schedule="schedule"
+                :start="schedule_start"
+                :stop="schedule_stop"
+                @openClassModal="openClassModal"></ScheduleWeekly>
         <ClassModal :visible="showModal" :ts="ts" :classId="classId" @closeModal="showModal = false"></ClassModal>
     </div>
 </template>
@@ -11,6 +18,7 @@
     import moment from 'moment'
     import SchedulePlainList from '@/components/SchedulePlainList'
     import ScheduleCompactList from '@/components/ScheduleCompactList'
+    import ScheduleWeekly from '@/components/ScheduleWeekly'
     import ClassModal from '@/components/ClassModal'
     export default {
         name: "Schedule",
@@ -18,6 +26,7 @@
         components: {
             SchedulePlainList,
             ScheduleCompactList,
+            ScheduleWeekly,
             ClassModal
         },
         data: function(){
@@ -45,7 +54,27 @@
                     })
 
                 }
-                return vm.schedule.limitType === 1 ? classes.splice(0, vm.schedule.limit || 9999999) : classes
+                // Filter by day of the week
+                if( ! _.isUndefined( vm.filters ) && ! _.isUndefined( vm.filters.days ) && ! _.isNull( vm.filters.days ) && ! _.isUndefined( vm.filters.days.value ) && ! _.isNull( vm.filters.days.value ) ){
+                    classes = _.filter( classes, function(c){
+                        return parseInt( moment(c.starting_time).utcOffset(0).format('d') ) === parseInt(vm.filters.days.value )
+                    })
+                }
+                // Filter by time of the day
+                if( ! _.isUndefined( vm.filters ) && ! _.isUndefined( vm.filters.times ) && ! _.isNull( vm.filters.times ) && ! _.isUndefined( vm.filters.times.value ) && ! _.isNull( vm.filters.times.value ) ){
+                    classes = _.filter( classes, function(c){
+                        let h = parseInt( moment(c.starting_time).utcOffset(0).format('H') )
+                        switch ( vm.filters.times.value ) {
+                            case 0 : return  h <= 11
+                            case 1 : return h > 11 && h <= 16
+                            case 2 : return h > 16 && h <= 23
+                            default: return false
+                        }
+                    })
+                }
+                // Limit classes by number
+                vm.schedule.limitType === 1 ? classes.splice(0, vm.schedule.limit || 9999999) : classes
+                return classes
             },
             schedule_classes: function(){
                 let out = ''
@@ -60,6 +89,7 @@
                 return moment().format('YYYY-MM-DD')
             },
             schedule_stop: function(){
+                if( this.schedule.style === 2 ) return moment(this.schedule_start).add(7, 'days').format('YYYY-MM-DD')
                 if( this.schedule.stop === 1 ) return moment(this.schedule.stopSpecific).format('YYYY-MM-DD')
                 return moment().add(this.schedule.stopDays, 'days').format('YYYY-MM-DD')
             }

@@ -25,6 +25,14 @@ export default new SchemaObject({
         type: Boolean,
         default: true
     },
+    show_empty: {
+        type: Boolean,
+        default: true
+    },
+    show_weekdays: {
+        type: Boolean,
+        default: false
+    },
     labelNothingToShow: {
         type: String,
         default: ''

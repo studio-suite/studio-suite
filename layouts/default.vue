@@ -1,41 +1,45 @@
 <template>
-  <div>
-      <div class="header" :class="header_classes">
-          <nuxt-link to="/" :title="tenant_name">
-              <template v-if="logo">
-                  <img :src="getImgSrc({w: 200}, logo.url)" :alt="tenant_name">
-              </template>
-              <template v-else>{{tenant_name}}</template>
-          </nuxt-link>
-      </div>
-    <nuxt/>
-  </div>
+    <div>
+        <div class="header" :class="header_classes">
+            <nuxt-link to="/" :title="tenant_name">
+                <template v-if="logo">
+                    <img :src="getImgSrc({w: 200}, logo.url)" :alt="tenant_name">
+                </template>
+                <template v-else>{{tenant_name}}</template>
+            </nuxt-link>
+        </div>
+        <nuxt/>
+    </div>
 </template>
 
 <style>
 </style>
 
 <script>
+    import moment from 'moment'
 
     export default {
         computed: {
-            tenant_name: function(){
-              try{
-                  return this.$store.state.tenant.name
-              } catch (e) {
-                  return ''
-              }
+            year: function () {
+                return moment().format('YYYY')
             },
-            logo: function(){
-              try{
-                  return this.$store.getters.logo
-              } catch (e) {
-                  return ''
-              }
+            tenant_name: function () {
+                try {
+                    return this.$store.state.tenant.name
+                } catch (e) {
+                    return ''
+                }
             },
-            header_classes: function(){
+            logo: function () {
+                try {
+                    return this.$store.getters.logo
+                } catch (e) {
+                    return ''
+                }
+            },
+            header_classes: function () {
                 let classes = {}
-                if( this.logo ){
+                if (this.logo) {
                     classes['header--with-logo'] = true
                     classes['logo--aspect-landscape'] = this.logo.aspect === 'landscape'
                     classes['logo--aspect-portrait'] = this.logo.aspect === 'portrait'
