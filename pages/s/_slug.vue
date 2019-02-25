@@ -1,9 +1,11 @@
 <template>
-    <section class="container page--schedule">
-        <div v-if="schedule">
-            <h1 class="page-title" v-if="schedule.appearance.show_title">{{schedule.title}}</h1>
-            <Filters v-if="hasFilters" v-model="filters" :schedule="schedule"  class="margin-bottom--3"></Filters>
-            <Schedule :schedule="schedule" :filters="filters" :classes="classes_filtered"></Schedule>
+    <section class="main-wrapper">
+        <div class="container page--schedule">
+            <div v-if="schedule">
+                <h1 class="page-title" v-if="schedule.appearance.show_title">{{schedule.title}}</h1>
+                <Filters v-if="hasFilters" v-model="filters" :schedule="schedule"  class="margin-bottom--3"></Filters>
+                <Schedule :schedule="schedule" :filters="filters" :classes="classes_filtered"></Schedule>
+            </div>
         </div>
     </section>
 </template>

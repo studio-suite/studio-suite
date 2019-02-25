@@ -35,7 +35,7 @@ export default new SchemaObject({
     },
     labelNothingToShow: {
         type: String,
-        default: ''
+        default: 'No classes available'
     },
     labelFilterInstructors: {
         type: String,

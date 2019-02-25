@@ -12,17 +12,14 @@ a{
   text-decoration: none;
 }
 
+@import '_utils';
 
 .container{
   width: 100%;
-  max-width: 1076px;
+  max-width: 1020px;
   margin: 3rem auto;
-  padding-right: 1.5rem;
-  padding-left: 1.5rem;
 
-  @media (min-width: 992px) {
-    padding-left: 0;
-    padding-right: 0;
+  @include breakpoint(laptop) {
     margin: 6rem auto;
   }
 }
@@ -41,7 +38,7 @@ img{
   box-sizing: border-box;
 }
 
-@import '_utils';
+
 @import '_page.schedules.scss';
 @import '_booking-modal.scss';
 
@@ -539,81 +536,7 @@ body.class-modal-open {
 }
 
 @import '_schedule.plain-list.scss';
-
-.classes_by_day{
-  &__day{
-    display: flex;
-    width: 100%;
-
-    & + .classes_by_day__day{
-      margin-top: 2rem;
-    }
-  }
-  &__date{
-    flex-basis: 10rem;
-    margin-right: 3.25rem;
-    background-color: $color-bg-box;
-    border-radius: 5px;
-    height: 10rem;
-    display: flex;
-    justify-content: center;
-    align-items: center;
-    font-size: 1.75rem;
-    text-transform: uppercase;
-    color: $color-primary;
-    text-align: center;
-    font-weight: 600;
-
-    span{
-      display: block;
-      color: $color-black;
-      font-size: 3.25rem;
-      font-weight: 800;
-      letter-spacing: -2px;
-    }
-  }
-  h2{
-    margin-top: 0;
-    margin-bottom: .5rem;
-    font-size: 1.3125rem;
-  }
-  small{
-    display: block;
-    margin-bottom: .75rem;
-    font-size: .875rem;
-    opacity: 0.6;
-  }
-  .details{
-    color: rgba($color-black, 0.6)
-  }
-  .fa-clock{
-    color: $color-primary
-  }
-  .class_list{
-    flex-grow: 1;
-
-    .class{
-      display: flex;
-      width: 100%;
-      align-items: center;
-
-      & + .class{
-        margin-top: 2rem;
-        padding-top: 2rem;
-        border-top: 1px solid rgba($color-black, 0.1)
-      }
-
-      &:last-child{
-        padding-bottom: 2rem;
-        border-bottom: 1px solid rgba($color-black, 0.1)
-      }
-
-      &__content{
-        flex-grow: 1;
-      }
-    }
-  }
-}
+@import '_schedule.compact-list.scss';
 
 
 
@@ -632,7 +555,9 @@ body.class-modal-open {
 }
 
 
-
+.main-wrapper{
+  padding: 0 2rem;
+}
 
 
 

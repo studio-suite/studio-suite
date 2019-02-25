@@ -1,12 +1,14 @@
 <template>
-  <section class="container">
-        <h1>Schedules</h1>
-      <div class="schedules-list">
-          <div v-for="s in schedules" class="schedules-list__item" v-on:click.prevent="goToSchedule(s)">
-              <div class="schedules-list__item__inner">
-                  <h2>{{s.title}}</h2>
-                  <p class="schedules-list__item__meta"><span>{{getClassTypesString(s.classTypes)}}</span> <span>{{s.age | schedule_age}}</span></p>
-                  <i class="far fa-arrow-right fa-2x schedules-list__item__link"></i>
+  <section class="main-wrapper">
+      <div class="container">
+          <h1>Schedules</h1>
+          <div class="schedules-list">
+              <div v-for="s in schedules" class="schedules-list__item" v-on:click.prevent="goToSchedule(s)">
+                  <div class="schedules-list__item__inner">
+                      <h2>{{s.title}}</h2>
+                      <p class="schedules-list__item__meta"><span>{{getClassTypesString(s.classTypes)}}</span> <span>{{s.age | schedule_age}}</span></p>
+                      <i class="far fa-arrow-right fa-2x schedules-list__item__link"></i>
+                  </div>
               </div>
           </div>
       </div>

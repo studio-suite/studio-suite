@@ -1,11 +1,17 @@
 <template>
-    <div class="filters">
-        <FilterAge v-if="hasFilter('filterAge')" v-model="filters.age" :age="schedule.age" :placeholder="schedule.appearance.labelFilterAge"></FilterAge>
-        <FilterClassTypes v-if="hasFilter('filterClassTypes')" v-model="filters.classTypes" :placeholder="schedule.appearance.labelFilterClassTypes"></FilterClassTypes>
-        <FilterDays v-if="hasFilter('filterDays')" v-model="filters.days" :days="schedule.filterDays" :placeholder="schedule.appearance.labelFilterDays"></FilterDays>
-        <FilterLocations v-if="hasFilter('filterLocations')" v-model="filters.locations" :placeholder="schedule.appearance.labelFilterLocations"></FilterLocations>
-        <FilterTime v-if="hasFilter('filterTimes')" v-model="filters.times" :times="schedule.filterTimes" :placeholder="schedule.appearance.labelFilterTimes"></FilterTime>
-        <FilterInstructors v-if="hasFilter('filterInstructors')" v-model="filters.instructors" :placeholder="schedule.appearance.labelFilterInstructors"></FilterInstructors>
+    <div class="filters-wrapper">
+        <label for="filters"><i class="far fa-filter margin-right--1"></i> <template v-if="!show_filters">Show</template><template v-else>Hide</template> Filters</label>
+        <input v-model="show_filters" type="checkbox" id="filters"/>
+        <div class="filters-container" :class="{ 'filters-container--visible' : show_filters }">
+            <div class="filters" :class="`filters--count-${filtersCount()}`">
+                <FilterAge v-if="hasFilter('filterAge')" v-model="filters.age" :age="schedule.age" :placeholder="schedule.appearance.labelFilterAge"></FilterAge>
+                <FilterClassTypes v-if="hasFilter('filterClassTypes')" v-model="filters.classTypes" :placeholder="schedule.appearance.labelFilterClassTypes"></FilterClassTypes>
+                <FilterDays v-if="hasFilter('filterDays')" v-model="filters.days" :days="schedule.filterDays" :placeholder="schedule.appearance.labelFilterDays"></FilterDays>
+                <FilterLocations v-if="hasFilter('filterLocations')" v-model="filters.locations" :placeholder="schedule.appearance.labelFilterLocations"></FilterLocations>
+                <FilterTime v-if="hasFilter('filterTimes')" v-model="filters.times" :times="schedule.filterTimes" :placeholder="schedule.appearance.labelFilterTimes"></FilterTime>
+                <FilterInstructors v-if="hasFilter('filterInstructors')" v-model="filters.instructors" :placeholder="schedule.appearance.labelFilterInstructors"></FilterInstructors>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -27,6 +33,19 @@
             FilterAge,
             FilterInstructors
         },
+        data: function(){
+          return {
+              show_filters: false
+          }
+        },
+        watch: {
+          value: {
+              handler: function(n){
+                  this.show_filters = false
+              },
+              deep: true
+          }
+        },
         props: ['value', 'schedule'],
         computed: {
             filters: {
@@ -39,6 +58,17 @@
             }
         },
         methods: {
+            filtersCount: function(){
+                let vm = this
+                let count = 0
+                count += vm.hasFilter('filterClassTypes') ? 1 : 0
+                count += vm.hasFilter('filterLocations') ? 1 : 0
+                count += vm.hasFilter('filterInstructors') ? 1 : 0
+                count += vm.hasFilter('filterDays') ? 1 : 0
+                count += vm.hasFilter('filterTimes') ? 1 : 0
+                count += vm.hasFilter('filterAge') ? 1 : 0
+                return count
+            },
             hasFilter: function(f){
                 let vm = this
                 switch ( f ){

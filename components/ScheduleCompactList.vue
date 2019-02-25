@@ -14,9 +14,9 @@
                             <small>{{c.starting_time | moment('dddd, MMMM D, YYYY')}}</small>
                             <h2>{{c.title}}</h2>
                             <div class="details">
-                                <i class="fal fa-clock fa-fw"></i> {{ c.starting_time | moment( getClassTimeFormat() ) }} <template v-if="schedule.appearance.show_ending">- {{ c.ending_time | moment( getClassTimeFormat() ) }}</template>
-                                <template v-if="schedule.appearance.show_duration"><i class="middot" v-if="schedule.appearance.show_duration"></i> {{c.duration}} minutes</template>
-                                <template v-if="schedule.appearance.show_classTypes"><i class="middot" v-if="getClassClassTypes(c.classTypesIds)"></i> {{getClassClassTypes(c.classTypesIds)}}</template>
+                                <span class="margin-right--05"><i class="far fa-clock margin-right--025"></i> {{ c.starting_time | moment( getClassTimeFormat() ) }} <template v-if="schedule.appearance.show_ending">- {{ c.ending_time | moment( getClassTimeFormat() ) }}</template></span>
+                                <span class="margin-right--05" v-if="schedule.appearance.show_duration"><i class="middot" v-if="schedule.appearance.show_duration"></i> {{c.duration}} minutes</span>
+                                <span class="no-wrap" v-if="schedule.appearance.show_classTypes"><i class="middot" v-if="getClassClassTypes(c.classTypesIds)"></i> {{getClassClassTypes(c.classTypesIds)}}</span>
                             </div>
                         </div>
                     </div>
@@ -29,7 +29,9 @@
                 </article>
             </div>
         </div>
-
+        <div v-if="classes.length === 0" class="empty">
+            {{schedule.appearance.labelNothingToShow}}
+        </div>
     </div>
 </template>
 

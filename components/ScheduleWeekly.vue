@@ -1,19 +1,25 @@
 <template>
-    <div class="weekly_schedule" :class="{ 'weekly_schedule--weekdays-only' : schedule.appearance.show_weekdays }">
-        <div v-for="day in 7" class="weekly_schedule__day" v-if="(schedule.appearance.show_weekdays && day <= 5) || !schedule.appearance.show_weekdays">
-            <div class="weekly_schedule__day-title">
-                {{day | getDayName(day)}}
+    <div>
+        <div v-if="classes.length > 0" class="weekly_schedule" :class="{ 'weekly_schedule--weekdays-only' : schedule.appearance.show_weekdays }">
+            <div v-for="day in 7" class="weekly_schedule__day" v-if="(schedule.appearance.show_weekdays && day <= 5) || !schedule.appearance.show_weekdays">
+                <div class="weekly_schedule__day-title">
+                    {{day | getDayName(day)}}
+                </div>
+                <div class="weekly_schedule__day-classes">
+                    <article v-for="event in getDayEvents(day)" class="class" v-on:click.prevent="openModal(event, event.starting_time)">
+                        <h2>{{event.title}} <i class="fas fa-play"></i></h2>
+                        <div class="meta">
+                            <div>{{ event.starting_time | moment( getClassTimeFormat() ) }} <template v-if="schedule.appearance.show_ending">- {{ event.ending_time | moment( getClassTimeFormat() ) }}</template></div>
+                            <div v-if="schedule.appearance.show_duration">{{event.duration}} minutes</div>
+                            <div v-if="getClassClassTypes(event.classTypesIds)">{{getClassClassTypes(event.classTypesIds)}}</div>
+                        </div>
+                    </article>
+                </div>
             </div>
-            <div class="weekly_schedule__day-classes">
-                <article v-for="event in getDayEvents(day)" class="class" v-on:click.prevent="openModal(event, event.starting_time)">
-                    <h2>{{event.title}} <i class="fas fa-play"></i></h2>
-                    <div class="meta">
-                        <div>{{ event.starting_time | moment( getClassTimeFormat() ) }} <template v-if="schedule.appearance.show_ending">- {{ event.ending_time | moment( getClassTimeFormat() ) }}</template></div>
-                        <div v-if="schedule.appearance.show_duration">{{event.duration}} minutes</div>
-                        <div v-if="getClassClassTypes(event.classTypesIds)">{{getClassClassTypes(event.classTypesIds)}}</div>
-                    </div>
-                </article>
-            </div>
+
+        </div>
+        <div v-if="classes.length === 0" class="empty">
+            {{schedule.appearance.labelNothingToShow}}
         </div>
     </div>
 </template>

@@ -1,9 +1,9 @@
 <template>
     <div class="class_list">
         <article v-for="c in classes" class="class">
-            <div class="class__image">
+            <div class="class__image" :class="{ 'class__image--empty': !c.image }">
                 <img v-if="c.image" :src="getImgSrc({w: 250, h: 250, fit: 'crop', crop: 'edges'}, c.image)" class="thumb">
-                <img v-if="c.image" :src="getImgSrc({w: 900 }, c.image)" class="thumb-mobile">
+                <img v-if="c.image" :src="getImgSrc({w: 600 }, c.image)" class="thumb-mobile">
                 <span v-if="!c.image"></span>
             </div>
             <div class="class__date">
@@ -15,10 +15,11 @@
             <div class="class__content">
                 <div>
                     <h2>{{c.title}}</h2>
+                    <div class="class__date-mobile">{{ c.starting_time | moment('D') }} {{ c.starting_time | moment('MMMM') }}</div>
                     <div class="details">
-                        <i class="fal fa-clock"></i> {{ c.starting_time | moment( getClassTimeFormat() ) }} <template v-if="schedule.appearance.show_ending">- {{ c.ending_time | moment( getClassTimeFormat() ) }}</template>
-                        <template v-if="schedule.appearance.show_duration"><i class="middot" v-if="schedule.appearance.show_duration"></i> {{c.duration}} minutes</template>
-                        <template v-if="schedule.appearance.show_classTypes"><i class="middot" v-if="getClassClassTypes(c.classTypesIds)"></i> {{getClassClassTypes(c.classTypesIds)}}</template>
+                        <span class="margin-right--05"><i class="far fa-clock margin-right--025"></i> {{ c.starting_time | moment( getClassTimeFormat() ) }} <template v-if="schedule.appearance.show_ending">- {{ c.ending_time | moment( getClassTimeFormat() ) }}</template></span>
+                        <span class="margin-right--05" v-if="schedule.appearance.show_duration"><i class="middot" v-if="schedule.appearance.show_duration"></i> {{c.duration}} minutes</span>
+                        <span class="no-wrap" v-if="schedule.appearance.show_classTypes"><i class="middot" v-if="getClassClassTypes(c.classTypesIds)"></i> {{getClassClassTypes(c.classTypesIds)}}</span>
                     </div>
                 </div>
             </div>
@@ -29,6 +30,9 @@
                 </div>
             </div>
         </article>
+        <div v-if="classes.length === 0" class="empty">
+            {{schedule.appearance.labelNothingToShow}}
+        </div>
     </div>
 </template>
 

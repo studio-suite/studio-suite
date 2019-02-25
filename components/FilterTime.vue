@@ -1,5 +1,5 @@
 <template>
-    <div class="filter filters--times">
+    <div class="filter filter--times">
         <no-ssr><v-select :options="day" :placeholder="placeholder || 'What time?'" v-model="filter"></v-select></no-ssr>
     </div>
 </template>
