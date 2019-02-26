@@ -119,6 +119,7 @@
                 this.availability[v.ts] = _.isUndefined( this.availability[v.ts] ) ? parseInt( v.qty ) : ( this.availability[v.ts] + parseInt( v.qty ) )
             },
             openModal: function(p){
+                //
                 this.classNextTs = p
                 this.showModal = true
             },

@@ -1,119 +1,116 @@
 <template>
-    <div class="bookingModal">
-        <div class="bookingModal__bg" v-on:click.prevent="toggleModal"></div>
-        <div class="bookingModal__content-wrapper">
-            <div class="bookingModal__content">
+    <modal name="booking-modal" height="auto" :scrollable="true" :reset="true" :width="580" :adaptive="true" classes="booking-modal" @before-close="allowCloseModal">
+        <div class="text-align--right"><i class="fal fa-times" v-on:click.prevent="closeModal"></i></div>
 
-                <div class="loading" v-if="loaders">
-                    <div class="loader"></div>
-                </div>
-
-
-                <!-- C H I L D R E N -->
-                <div v-if="step === 0">
-                    <h2>Trial Class Registration</h2>
-                    <h3>Hurry up! Only <template v-if="capacity > 1">{{capacity}} spots</template><template v-else>one spot</template> left!</h3>
-                    <div class="attendees">
-                        <div class="attendee" v-for="(att, ind) in attendees">
-                            <label>Child first name & birthdate <span class="remove-attendee" v-if="ind > 0" v-on:click.prevent="attendees.splice(ind, 1)"><i class="far fa-user-minus margin-right--05"></i> Remove</span></label>
-                            <input type="text" v-model="att.name" placeholder="Your child’s first name here" class="name" :class="checkForErrors(`attendees.${ind}.name`)"/>
-                            <div class="year" :class="checkForErrors(`attendees.${ind}.dob.y`)">
-                                <select v-model="att.dob.y" :class="checkForErrors(`attendees.${ind}.dob.y`)"  title="Choose childyear of birth">
-                                    <option value="" disabled>Year</option>
-                                    <option v-for="y in availableYears" :value="y">{{y}}</option>
-                                </select>
-                            </div>
-                            <div class="month" :class="checkForErrors(`attendees.${ind}.dob.m`)">
-                                <select v-model="att.dob.m" :class="checkForErrors(`attendees.${ind}.dob.m`)" title="Choose child month of birth">
-                                    <option value="" disabled>Month</option>
-                                    <option :value="1">January</option>
-                                    <option :value="2">February</option>
-                                    <option :value="3">March</option>
-                                    <option :value="4">April</option>
-                                    <option :value="5">May</option>
-                                    <option :value="6">June</option>
-                                    <option :value="7">July</option>
-                                    <option :value="8">August</option>
-                                    <option :value="9">September</option>
-                                    <option :value="10">October</option>
-                                    <option :value="11">November</option>
-                                    <option :value="12">December</option>
-                                </select>
-                            </div>
-                            <div class="day" :class="checkForErrors(`attendees.${ind}.dob.d`)">
-                                <select v-model="att.dob.d" :class="checkForErrors(`attendees.${ind}.dob.d`)"  title="Choose child day of birth">
-                                    <option value="" disabled>Day</option>
-                                    <option v-for="day in availableDays(att.dob)" :value="day">{{day}}</option>
-                                </select>
-                            </div>
-                        </div>
-                        <a href="#" v-on:click.prevent="addChild" class="add-child" v-if="attendees.length < 3 && capacity >= attendees.length + 1"><i class="far fa-user-plus margin-right--05"></i> Add Another Child</a>
-                        <div class="next margin-top--6">
-                            <a href="#" class="next-button" v-on:click.prevent="saveChildren">Next</a>
-                        </div>
-                    </div>
-                </div>
-
-                <!-- P A R E N T -->
-                <div v-if="step === 1">
-                    <h2>Trial Class Registration</h2>
-                    <h3>Please fill out the form below</h3>
-                    <label>First name</label>
-                    <input type="text" v-model="form.firstName" placeholder="Your first name here" :class="checkForErrors(`form.firstName`)"/>
-                    <label class="margin-top--2">Last name</label>
-                    <input type="text" v-model="form.lastName" placeholder="Your last name here" :class="checkForErrors(`form.lastName`)"/>
-                    <label class="margin-top--2">Phone number</label>
-                    <input type="text" v-model="form.phone" placeholder="Your phone number here" :class="checkForErrors(`form.phone`)"/>
-                    <label class="margin-top--2">Email</label>
-                    <input type="text" v-model="form.email" placeholder="Your email here" :class="checkForErrors(`form.email`)"/>
-                    <div class="next margin-top--6">
-                        <a href="#" class="next-button" v-on:click.prevent="saveParent">Next</a>
-                    </div>
-                </div>
-
-                <!-- P A Y M E N T -->
-                <div v-if="step === 2">
-                    <h2>Trial Class Registration</h2>
-                    <h3><template v-if="classObject.price > 0">Please provide payment details below</template><template v-else>Please review your registration</template></h3>
-                    <form method="post" id="payment-form" ref="paymentForm" class="margin-top--3" v-if="classObject.price > 0">
-                        <div class="form-row">
-                            <label for="card-element">Credit or debit card</label>
-                            <div id="card-element" ref="cardElement"></div>
-                            <div id="card-errors" role="alert"></div>
-                        </div>
-                    </form>
-                    <div class="summary">
-                        <label class="label-summary">Registration summary</label>
-                        <strong>{{classObject.title}}</strong>
-                        <span>{{ts | moment_ts( summaryDateFormat ) }}</span>
-                        <div class="item" v-for="att in formSubmit.attendees">
-                            <h5>{{att.name}} <span>{{formSubmit.price | currency }}</span></h5>
-                        </div>
-                        <div class="total">Total <span>{{ formSubmit.attendees.length * formSubmit.price | currency }}</span></div>
-                    </div>
-                    <div class="next margin-top--6">
-                        <a href="#" class="next-button" v-on:click.prevent="completeBooking">Complete Booking</a>
-                    </div>
-                </div>
-
-                <!-- C O N F I R M A T I O N -->
-                <div v-if="step === 3" class="confirmation">
-                    <h2>Registration Confirmation</h2>
-                    <img src="~/assets/ok.svg">
-                    <p class="text-align--center margin-top--4"><template v-if="classObject.price > 0">Your payment of <strong>{{ formSubmit.attendees.length * formSubmit.price | currency(tenantCurrency) }}</strong> processed successfully.</template> We sent you an email confirmation.</p>
-                </div>
-
-
-                <!-- N O   M O R E   S P O T S -->
-                <div v-if="step === 4">
-                    <h2>Registration Failed</h2>
-                    <p class="margin-top--4 text-align--center"><strong>Unfortunately there are no more spots avaialble</strong>. Please close this window and choose a different date.</p>
-                    <a href="#" class="close-button" v-on:click.prevent="closeModal">Choose different date</a>
-                </div>
-
+        <div class="booking-modal__content">
+            <div class="loading" v-if="loaders">
+                <div class="loader"></div>
             </div>
+
+            <!-- C H I L D R E N -->
+            <div v-if="step === 0">
+                <h2>Trial Class Registration</h2>
+                <h3 class="margin-bottom--6">Hurry up! Only <template v-if="capacity > 1">{{capacity}} spots</template><template v-else>one spot</template> left!</h3>
+                <div class="attendees">
+                    <div class="attendee" v-for="(att, ind) in attendees">
+                        <label>Child first name & birthdate <span class="remove-attendee" v-if="ind > 0" v-on:click.prevent="attendees.splice(ind, 1)"><i class="far fa-user-minus margin-right--05"></i> Remove</span></label>
+                        <input type="text" v-model="att.name" placeholder="Your child’s first name here" class="name" :class="checkForErrors(`attendees.${ind}.name`)"/>
+                        <div class="year" :class="checkForErrors(`attendees.${ind}.dob.y`)">
+                            <select v-model="att.dob.y" :class="checkForErrors(`attendees.${ind}.dob.y`)"  title="Choose childyear of birth">
+                                <option value="" disabled>Year</option>
+                                <option v-for="y in availableYears" :value="y">{{y}}</option>
+                            </select>
+                        </div>
+                        <div class="month" :class="checkForErrors(`attendees.${ind}.dob.m`)">
+                            <select v-model="att.dob.m" :class="checkForErrors(`attendees.${ind}.dob.m`)" title="Choose child month of birth">
+                                <option value="" disabled>Month</option>
+                                <option :value="1">January</option>
+                                <option :value="2">February</option>
+                                <option :value="3">March</option>
+                                <option :value="4">April</option>
+                                <option :value="5">May</option>
+                                <option :value="6">June</option>
+                                <option :value="7">July</option>
+                                <option :value="8">August</option>
+                                <option :value="9">September</option>
+                                <option :value="10">October</option>
+                                <option :value="11">November</option>
+                                <option :value="12">December</option>
+                            </select>
+                        </div>
+                        <div class="day" :class="checkForErrors(`attendees.${ind}.dob.d`)">
+                            <select v-model="att.dob.d" :class="checkForErrors(`attendees.${ind}.dob.d`)"  title="Choose child day of birth">
+                                <option value="" disabled>Day</option>
+                                <option v-for="day in availableDays(att.dob)" :value="day">{{day}}</option>
+                            </select>
+                        </div>
+                    </div>
+                    <a href="#" v-on:click.prevent="addChild" class="add-child" v-if="attendees.length < 3 && capacity >= attendees.length + 1"><i class="far fa-user-plus margin-right--05"></i> Add Another Child</a>
+                    <div class="next margin-top--6">
+                        <a href="#" class="next-button" v-on:click.prevent="saveChildren">Next</a>
+                    </div>
+                </div>
+            </div>
+
+            <!-- P A R E N T -->
+            <div v-if="step === 1">
+                <h2>Trial Class Registration</h2>
+                <h3 class="margin-bottom--6">Please fill out the form below</h3>
+                <label>First name</label>
+                <input type="text" v-model="form.firstName" placeholder="Your first name here" :class="checkForErrors(`form.firstName`)"/>
+                <label class="margin-top--2">Last name</label>
+                <input type="text" v-model="form.lastName" placeholder="Your last name here" :class="checkForErrors(`form.lastName`)"/>
+                <label class="margin-top--2">Phone number</label>
+                <input type="text" v-model="form.phone" placeholder="Your phone number here" :class="checkForErrors(`form.phone`)"/>
+                <label class="margin-top--2">Email</label>
+                <input type="text" v-model="form.email" placeholder="Your email here" :class="checkForErrors(`form.email`)"/>
+                <div class="next margin-top--6">
+                    <a href="#" class="next-button" v-on:click.prevent="saveParent">Next</a>
+                </div>
+            </div>
+
+            <!-- P A Y M E N T -->
+            <div v-if="step === 2">
+                <h2>Trial Class Registration</h2>
+                <h3 class="margin-bottom--6"><template v-if="classObject.price > 0">Please provide payment details below</template><template v-else>Please review your registration</template></h3>
+                <form method="post" id="payment-form" ref="paymentForm" class="margin-top--3" v-if="classObject.price > 0">
+                    <div class="form-row">
+                        <label for="card-element">Credit or debit card</label>
+                        <div id="card-element" ref="cardElement"></div>
+                        <div id="card-errors" role="alert"></div>
+                    </div>
+                </form>
+                <div class="summary">
+                    <label class="label-summary">Registration summary</label>
+                    <strong>{{classObject.title}}</strong>
+                    <span>{{ts | moment_ts( summaryDateFormat ) }}</span>
+                    <div class="item" v-for="att in formSubmit.attendees">
+                        <h5>{{att.name}} <span>{{formSubmit.price | currency }}</span></h5>
+                    </div>
+                    <div class="total">Total <span>{{ formSubmit.attendees.length * formSubmit.price | currency }}</span></div>
+                </div>
+                <div class="next margin-top--6">
+                    <a href="#" class="next-button" v-on:click.prevent="completeBooking">Complete Booking</a>
+                </div>
+            </div>
+
+            <!-- C O N F I R M A T I O N -->
+            <div v-if="step === 3" class="confirmation">
+                <h2>Registration Confirmation</h2>
+                <img src="~/assets/ok.svg">
+                <p class="text-align--center margin-top--4"><template v-if="classObject.price > 0">Your payment of <strong>{{ formSubmit.attendees.length * formSubmit.price | currency(tenantCurrency) }}</strong> processed successfully.</template> We sent you an email confirmation.</p>
+            </div>
+
+
+            <!-- N O   M O R E   S P O T S -->
+            <div v-if="step === 4">
+                <h2>Registration Failed</h2>
+                <p class="margin-top--4 text-align--center"><strong>Unfortunately there are no more spots avaialble</strong>. Please close this window and choose a different date.</p>
+                <a href="#" class="close-button" v-on:click.prevent="closeModal">Choose different date</a>
+            </div>
+
         </div>
-    </div>
+    </modal>
 </template>
 
 <script>
@@ -218,6 +215,12 @@
             }
         },
         methods: {
+            allowCloseModal: function(e){
+                if( this.visible ){
+                    e.stop()
+                }
+                this.$emit('closeModal')
+            },
             closeModal: function(){
                 this.$emit('closeModal')
             },
@@ -356,10 +359,10 @@
                 }
             },
             showModal: function () {
-                this.toggleBodyClass('addClass', 'modal-open');
+                this.$modal.show('booking-modal');
             },
             hideModal: function () {
-                this.toggleBodyClass('removeClass', 'modal-open');
+                this.$modal.hide('booking-modal');
             },
             toggleModal: function () {
                 this.$emit('closeModal')

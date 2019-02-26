@@ -8,6 +8,8 @@
     z-index: 10;
   }
 
+
+
   .social-link{
     display: inline-flex;
     margin: 0 .5rem;
@@ -545,6 +547,77 @@
   }
 }
 
+
+.class-modal{
+  .fa-times{
+    color: $color-bg-box;
+    font-size: 1.5rem;
+    display: inline-block;
+    padding: 1rem 0;
+    cursor: pointer;
+    transition: all 120ms ease;
+
+    &:hover{
+      opacity: 0.5;
+    }
+  }
+  > section{
+    background-color: $color-bg-box;
+    border-radius: 5px;
+    //padding: 2rem 2.5rem;
+    position: relative;
+    box-shadow: .5rem 3rem 6.25rem rgba($color-black, 0.2);
+  }
+}
+.v--modal-overlay{
+  background-color: rgba($color-black, 0.95);
+}
+
+
+.single-class--in-modal{
+  .meta{
+    font-size: 1.2rem;
+  }
+}
+
+.single-class.single-class{
+   &--in-modal{
+     padding: 2.5rem;
+
+     .booking-box{
+       border-top: 1px solid rgba($color-black, 0.1);
+       box-shadow: none;
+       padding: 2rem 0;
+       display: block;
+     }
+     .booking-box-wrapper{
+       position: inherit;
+     }
+     .booking-box__bg,
+     .booking-box__button{
+       display: none;
+     }
+     @include breakpoint(laptop){
+       padding: 5.5rem;
+
+       .booking-box{
+         box-shadow: .5rem 3rem 6.25rem darken($color-bg, 20);
+         padding: 2rem;
+         border-top: none;
+
+         &__date,
+         &__pre-title{
+           display: block;
+         }
+         &__time{
+           display: inline-flex;
+         }
+       }
+     }
+
+
+   }
+ }
 
 
 

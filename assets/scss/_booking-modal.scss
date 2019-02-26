@@ -1,162 +1,152 @@
-.bookingModal{
-  display: none;
-
-  &__bg{
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    background-color: $color-black;
-    opacity: 0.97;
-    z-index: 100;
-  }
-
-  &__content-wrapper{
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    min-height: 100%;
-    padding: 4rem 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: visible;
-  }
+.booking-modal{
 
   &__content{
     background-color: $color-bg-box;
     border-radius: 5px;
-    padding: 5.5rem;
-    position: relative;
-    max-width: 36.25rem;
-    flex-basis: 100%;
-    z-index: 110;
-    overflow: scroll;
+    padding: 2.5rem;
 
-    label{
-      display: block;
-      margin-bottom: .5rem;
-      font-size: 1.125rem;
-      font-weight: 600;
-      flex-basis: 100%;
-    }
-
-    input[type=text]{
-      display: block;
-
-      height: 3.125rem;
-      line-height: 3.125rem;
-      padding: 0 1rem;
-      width: 100%;
-    }
-
-    input[type=text],
-    select{
-      outline: none;
-      font-family: 'Muli', sans-serif;
-      background-color: transparent;
-      border: 1px solid rgba($color-black, 0.1);
-
-      &:active,
-      &:focus{
-        border: 1px solid rgba($color-black, 0.33);
-      }
-
-      &.field-error{
-        border: 1px solid rgba($color-red, 0.1);
-        background-color: rgba($color-red, 0.1);
-
-        &::placeholder {
-          color: $color-red;
-        }
-      }
-    }
-
-    select{
-      display: block;
-      border-radius: 0;
-      height: 3.125rem;
-      line-height: 3.125rem;
-      padding: 0 1rem;
-      width: 100%;
-      -webkit-appearance: none;
-      -moz-appearance: none;
-      appearance: none;
-      position: relative;
-      z-index: 1;
-
-      &.field-error{
-        color: $color-red
-      }
-    }
-
-    .name{
-      margin-bottom: .75rem;
-      flex-basis: 100%;
-    }
-
-    .year,
-    .month,
-    .day{
-      position: relative;
-
-      &.field-error{
-        color: $color-red;
-      }
-
-      &::after{
-        content: "\F107";
-        font-family: 'Font Awesome 5 Pro';
-        font-weight: 300;
-        position: absolute;
-        top: 0;
-        right: 0;
-        height: 3.125rem;
-        line-height: 3.125rem;
-        font-size: 1.2em;
-        width: 2.5rem;
-        text-align: center;
-        z-index: 0;
-      }
-    }
-
-    .year{
-      flex-grow: 1;
-    }
-    .month{
-      flex-grow: 2;
-      margin: 0 .75rem;
-    }
-    .day{
-      flex-grow: 1;
-    }
-
-    .add-child{
-      display: inline-block;
-      margin-top: 2.5rem;
-      font-size: .875rem;
-      color: $color-primary;
-      font-weight: 400;
-    }
-
-    h2{
-      font-size: 2.1rem;
-      font-weight: 800;
-      letter-spacing: -1px;
-      margin: 0;
-    }
-    h3{
-      margin-top: .75rem;
-      font-weight: 500;
-      color: $color-primary;
-      margin-bottom: 6rem;
-    }
-    h2, h3{
-      text-align: center;
+    @include breakpoint(laptop){
+      padding: 5.5rem;
     }
   }
+
+  .fa-times{
+    color: $color-bg-box;
+    font-size: 1.5rem;
+    display: inline-block;
+    padding: 1rem 0;
+    cursor: pointer;
+    transition: all 120ms ease;
+
+    &:hover{
+      opacity: 0.5;
+    }
+  }
+
+  h2{
+    font-size: 1.75rem;
+    font-weight: 800;
+    letter-spacing: -1px;
+    margin: 0;
+
+    @include breakpoint(laptop){
+      font-size: 2.1rem;
+    }
+  }
+  h3{
+    margin-top: .75rem;
+    font-weight: 500;
+    color: $color-primary;
+  }
+  h2, h3{
+    text-align: center;
+  }
+
+  label{
+    display: block;
+    margin-bottom: .5rem;
+    font-size: 1.125rem;
+    font-weight: 600;
+    flex-basis: 100%;
+  }
+
+  input[type=text]{
+    display: block;
+    height: 3.125rem;
+    line-height: 3.125rem;
+    padding: 0 1rem;
+    width: 100%;
+  }
+
+  select {
+    display: block;
+    border-radius: 0;
+    height: 3.125rem;
+    line-height: 3.125rem;
+    padding: 0 1rem;
+    width: 100%;
+    -webkit-appearance: none;
+    -moz-appearance: none;
+    appearance: none;
+    position: relative;
+    z-index: 1;
+
+    &.field-error{
+      color: $color-red
+    }
+  }
+
+  input[type=text],
+  select {
+    outline: none;
+    font-family: 'Muli', sans-serif;
+    background-color: transparent;
+    border: 1px solid rgba($color-black, 0.1);
+
+    &:active,
+    &:focus {
+      border: 1px solid rgba($color-black, 0.33);
+    }
+
+    &.field-error {
+      border: 1px solid rgba($color-red, 0.1);
+      background-color: rgba($color-red, 0.1);
+
+      &::placeholder {
+        color: $color-red;
+      }
+    }
+  }
+
+  .name{
+    margin-bottom: .75rem;
+    flex-basis: 100%;
+  }
+
+  .year,
+  .month,
+  .day{
+    position: relative;
+
+    &.field-error{
+      color: $color-red;
+    }
+
+    &::after{
+      content: "\F107";
+      font-family: 'Font Awesome 5 Pro';
+      font-weight: 300;
+      position: absolute;
+      top: 0;
+      right: 0;
+      height: 3.125rem;
+      line-height: 3.125rem;
+      font-size: 1.2em;
+      width: 2.5rem;
+      text-align: center;
+      z-index: 0;
+    }
+  }
+
+  .year{
+    flex-grow: 1;
+  }
+  .month{
+    flex-grow: 2;
+    margin: 0 .75rem;
+  }
+  .day{
+    flex-grow: 1;
+  }
+
+  .add-child{
+    display: inline-block;
+    margin-top: 2.5rem;
+    font-size: .875rem;
+    color: $color-primary;
+    font-weight: 400;
+  }
+
 
   .attendees{
     text-align: center;
@@ -352,27 +342,6 @@
   }
 
 }
-
-
-
-
-body.modal-open {
-  //
-
-  .bookingModal{
-    display: block;
-  }
-
-  .page--single-class,
-  .header{
-    overflow: hidden;
-    -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
-    filter: blur(5px);
-    max-height: 75vh;
-  }
-}
-
-
 
 .loader,
 .loader:after {

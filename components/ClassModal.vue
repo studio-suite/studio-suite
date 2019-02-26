@@ -1,15 +1,8 @@
 <template>
-    <div class="classModal">
-        <div class="classModal__bg" v-on:click.prevent="toggleModal"></div>
-        <div class="classModal__content-wrapper">
-            <div class="classModal__content">
-                <div class="loading" v-if="!classObject">
-                    <div class="loader"></div>
-                </div>
-                <SingleEvent v-if="classObject" :classObject="classObject" :ts="ts" :isModal="true"></SingleEvent>
-            </div>
-        </div>
-    </div>
+    <modal name="class-modal" height="auto" :scrollable="true" :reset="true" :width="1150" :adaptive="true" classes="class-modal" @before-close="allowCloseModal">
+        <div class="text-align--right"><i class="fal fa-times" v-on:click.prevent="closeModal"></i></div>
+        <SingleEvent v-if="classObject" :classObject="classObject" :ts="ts" :isModal="true"></SingleEvent>
+    </modal>
 </template>
 
 <script>
@@ -38,6 +31,12 @@
           }
         },
         methods: {
+            allowCloseModal: function(e){
+                if( this.visible ){
+                    e.stop()
+                }
+                this.$emit('closeModal')
+            },
             getClass: function(){
                 if( ! _.isNull( this.classId ) ) {
                     this.$store.dispatch( 'classes/get', this.classId )
@@ -56,10 +55,12 @@
                 }
             },
             showModal: function () {
-                this.toggleBodyClass('addClass', 'class-modal-open');
+                this.$modal.show('class-modal');
+                //this.toggleBodyClass('addClass', 'class-modal-open');
             },
             hideModal: function () {
-                this.toggleBodyClass('removeClass', 'class-modal-open');
+                this.$modal.hide('class-modal');
+                //this.toggleBodyClass('removeClass', 'class-modal-open');
             },
             toggleModal: function () {
                 this.$emit('closeModal')

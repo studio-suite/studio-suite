@@ -42,80 +42,9 @@ img{
 @import '_page.schedules.scss';
 @import '_booking-modal.scss';
 
-
-
 @import '_filters';
 
-
 @import '_single.class.scss';
-
-
-
-
-
-.classModal{
-  display: none;
-
-  &__bg{
-    position: fixed;
-    top: 0;
-    right: 0;
-    left: 0;
-    bottom: 0;
-    background-color: $color-black;
-    opacity: 0.97;
-    z-index: 100;
-  }
-
-  &__content-wrapper{
-    position: absolute;
-    top: 0;
-    left: 0;
-    right: 0;
-    min-height: 100%;
-    padding: 4rem 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    overflow: visible;
-  }
-
-  &__content {
-    background-color: $color-bg-box;
-    border-radius: 5px;
-    padding: 4rem 5.5rem;
-    position: relative;
-    max-width: 72rem;
-    flex-basis: 100%;
-    z-index: 110;
-    overflow: scroll;
-  }
-
-}
-body.class-modal-open {
-  //
-
-  .classModal{
-    display: block;
-  }
-
-  .page--schedule .schedule .class_list,
-  .page--schedule .filters,
-  .page--schedule .page-title,
-  .header{
-    overflow: hidden;
-    -webkit-filter: blur(5px); /* Safari 6.0 - 9.0 */
-    filter: blur(5px);
-    max-height: 75vh;
-  }
-}
-
-
-.single-class--in-modal{
-  .meta{
-    font-size: 1.2rem;
-  }
-}
 
 @import '_schedule.plain-list.scss';
 @import '_schedule.compact-list.scss';

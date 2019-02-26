@@ -115,7 +115,8 @@ module.exports = {
     plugins: [
         {src: '~/plugins/main.js', ssr: true},
         {src: '~/plugins/vue-select.js', ssr: false},
-        {src: '~/plugins/currency', ssr: true}
+        {src: '~/plugins/currency', ssr: true},
+        {src: '~plugins/vue-js-modal', ssr: true}
     ],
 
     /*
