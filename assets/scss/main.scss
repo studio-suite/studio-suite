@@ -69,3 +69,37 @@ img{
 .main-wrapper{
   padding: 0 2rem;
 }
+
+.confirmation-wrapper{
+  text-align: center;
+
+  a{
+    color: $color-black;
+    opacity: 0.4;
+    text-decoration: underline;
+  }
+}
+.confirmation{
+  box-shadow: .5rem 3rem 6.25rem darken($color-bg, 15);
+  background-color: $color-bg-box;
+  border-radius: 5px;
+  padding: 2.5rem;
+  max-width: 36.5rem;
+  margin: 6rem auto;
+
+  @include breakpoint(laptop){
+    padding: 5.5rem;
+  }
+
+  p{
+    color: rgba($color-black, 0.75);
+  }
+  strong{
+    color: $color-black
+  }
+
+  img{
+    max-width: 8.75rem;
+    margin: 4rem auto;
+  }
+}

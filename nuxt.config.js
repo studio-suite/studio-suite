@@ -98,7 +98,8 @@ module.exports = {
     */
     css: [
         '@/assets/scss/main.scss',
-        '@/assets/fontawesome-pro/css/all.css'
+        '@/assets/fontawesome-pro/css/all.css',
+        'vue-js-modal/dist/styles.css'
     ],
 
     env: {
