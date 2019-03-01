@@ -4,7 +4,10 @@
 
 <script>
     export default {
-        name: "index"
+        name: "index",
+        mounted: function(){
+            this.$router.push({ path: '/' })
+        }
     }
 </script>
 

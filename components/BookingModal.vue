@@ -422,9 +422,10 @@
         watch: {
             bookingConfirmation: function(n){
                 if( n === 1 ){
+                    let vm = this
                     this.$emit('blockDate', { ts: this.ts, qty: this.attendees.length })
                     this.loaders = false
-                    this.$router.push({ name: 'confirmation' })
+                    this.$router.push({ name: 'confirmation', params: vm.formSubmit })
                 }
             },
             booking: function(n){

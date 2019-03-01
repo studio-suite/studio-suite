@@ -70,22 +70,12 @@ img{
   padding: 0 2rem;
 }
 
-.confirmation-wrapper{
-  text-align: center;
-
-  a{
-    color: $color-black;
-    opacity: 0.4;
-    text-decoration: underline;
-  }
-}
 .confirmation{
-  box-shadow: .5rem 3rem 6.25rem darken($color-bg, 15);
+  box-shadow: .5rem 3rem 6.25rem darken($color-black, 15);
   background-color: $color-bg-box;
   border-radius: 5px;
   padding: 2.5rem;
-  max-width: 36.5rem;
-  margin: 6rem auto;
+  text-align: center;
 
   @include breakpoint(laptop){
     padding: 5.5rem;
@@ -101,5 +91,37 @@ img{
   img{
     max-width: 8.75rem;
     margin: 4rem auto;
+  }
+}
+
+.confirmation-modal{
+  .fa-times{
+    color: $color-bg-box;
+    font-size: 1.5rem;
+    display: inline-block;
+    padding: 1rem 0;
+    cursor: pointer;
+    transition: all 120ms ease;
+
+    &:hover{
+      opacity: 0.5;
+    }
+  }
+}
+
+.confirmation-wrapper{
+  text-align: center;
+
+  a{
+    color: $color-black;
+    opacity: 0.4;
+    text-decoration: underline;
+  }
+
+  .confirmation {
+    box-shadow: .5rem 3rem 6.25rem darken($color-bg, 15);
+    max-width: 36.5rem;
+    margin: 6rem auto;
+
   }
 }

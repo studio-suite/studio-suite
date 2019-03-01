@@ -50,7 +50,9 @@
     flex-basis: 100%;
   }
 
-  input[type=text]{
+  input[type=text],
+  input[type=tel],
+  input[type=email]{
     display: block;
     height: 3.125rem;
     line-height: 3.125rem;
@@ -77,6 +79,8 @@
   }
 
   input[type=text],
+  input[type=tel],
+  input[type=email],
   select {
     outline: none;
     font-family: 'Muli', sans-serif;

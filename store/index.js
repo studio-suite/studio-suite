@@ -27,11 +27,18 @@ const store = () => {
                 state.logo = l
             },
             SET_INTEGRATIONS: function(state, i){
+
                 let stripe = _.find( i, function(s){
                     return s.type === 'stripe'
                 })
                 if( ! _.isUndefined( stripe )){
                     state.stripePublic = stripe.clientId
+                }
+                let ga = _.find( i, function(s){
+                    return s.type === 'analytics'
+                })
+                if( ! _.isUndefined( ga )){
+                    state.ga = ga.apiKey
                 }
             }
         },
@@ -61,6 +68,9 @@ const store = () => {
             },
             tenant: function(state){
                 return state.tenant
+            },
+            ga: function(state){
+                return state.ga
             },
             tenantUrl: function(state){
               return `https://${state.tenant.domain}.studiosuite.io`

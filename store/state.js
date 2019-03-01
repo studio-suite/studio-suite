@@ -1,5 +1,6 @@
 export default {
     tenant: null,
     logo: {},
-    stripePublic: null
+    stripePublic: null,
+    ga: null
 }

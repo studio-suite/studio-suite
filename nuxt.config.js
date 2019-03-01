@@ -117,7 +117,8 @@ module.exports = {
         {src: '~/plugins/main.js', ssr: true},
         {src: '~/plugins/vue-select.js', ssr: false},
         {src: '~/plugins/currency', ssr: true},
-        {src: '~plugins/vue-js-modal', ssr: true}
+        {src: '~plugins/vue-js-modal', ssr: true},
+        { src: '~plugins/ga.js', ssr: false }
     ],
 
     /*
@@ -125,8 +126,8 @@ module.exports = {
     */
     modules: [
         'nuxt-webfontloader'
-        // '@nuxtjs/proxy'
     ],
+
 
     webfontloader: {
         google: {
