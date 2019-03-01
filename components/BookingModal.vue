@@ -61,9 +61,9 @@
                 <label class="margin-top--2">Last name</label>
                 <input type="text" v-model="form.lastName" placeholder="Your last name here" :class="checkForErrors(`form.lastName`)"/>
                 <label class="margin-top--2">Phone number</label>
-                <input type="text" v-model="form.phone" placeholder="Your phone number here" :class="checkForErrors(`form.phone`)"/>
+                <input type="tel" v-model="form.phone" placeholder="Your phone number here" :class="checkForErrors(`form.phone`)"/>
                 <label class="margin-top--2">Email</label>
-                <input type="text" v-model="form.email" placeholder="Your email here" :class="checkForErrors(`form.email`)"/>
+                <input type="email" v-model="form.email" placeholder="Your email here" :class="checkForErrors(`form.email`)"/>
                 <div class="next margin-top--6">
                     <a href="#" class="next-button" v-on:click.prevent="saveParent">Next</a>
                 </div>
