@@ -40,6 +40,12 @@ const store = () => {
                 if( ! _.isUndefined( ga )){
                     state.ga = ga.apiKey
                 }
+                let fb = _.find( i, function(s){
+                    return s.type === 'facebook'
+                })
+                if( ! _.isUndefined( fb )){
+                    state.fb = fb.apiKey
+                }
             }
         },
         getters: {

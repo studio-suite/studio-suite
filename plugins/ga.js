@@ -2,7 +2,7 @@ export default ({ app, store }) => {
     /*
     ** Only run on client-side and only in production mode
     */
-    if (typeof store.getters.ga === 'undefined' || store.getters.ga === null ) return
+    if (typeof store.getters.ga === 'undefined' || store.getters.ga === null || store.getters.ga.length < 4 ) return
     /*
     ** Include Google Analytics Script
     */

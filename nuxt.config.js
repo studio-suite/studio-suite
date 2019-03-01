@@ -118,7 +118,8 @@ module.exports = {
         {src: '~/plugins/vue-select.js', ssr: false},
         {src: '~/plugins/currency', ssr: true},
         {src: '~plugins/vue-js-modal', ssr: true},
-        { src: '~plugins/ga.js', ssr: false }
+        { src: '~plugins/ga.js', ssr: false },
+        { src: '~plugins/fb.js', ssr: false }
     ],
 
     /*
