@@ -2,7 +2,8 @@
     <section class="main-wrapper">
         <div class="container page--schedule">
             <div v-if="schedule">
-                <h1 class="page-title" v-if="schedule.appearance.show_title">{{schedule.title}}</h1>
+                <h1 class="page-title" v-if="schedule.appearance.show_title">{{schedule.headline || schedule.title}}</h1>
+                <div class="page-description margin-bottom--3" v-if="schedule.description" v-html="marked(schedule.description)"></div>
                 <Filters v-if="hasFilters" v-model="filters" :schedule="schedule"  class="margin-bottom--3"></Filters>
                 <Schedule :schedule="schedule" :filters="filters" :classes="classes_filtered"></Schedule>
             </div>
@@ -15,6 +16,7 @@
     import Schedule from '@/components/Schedule'
     import axios from 'axios'
     import _ from 'lodash'
+    import marked from "marked"
 
     export default {
         data: function(){
@@ -72,6 +74,9 @@
             await store.dispatch('schedules/get', params.slug )
         },*/
         methods: {
+            marked: function(v){
+                return marked(v)
+            },
           hasFilters: function(){
               if( ! _.isEmpty( this.schedule.filterAge ) ) return true;
               if( ! _.isEmpty( this.schedule.filterClassTypes ) && this.schedule.filterClassTypes[0] !== '0' ) return true;

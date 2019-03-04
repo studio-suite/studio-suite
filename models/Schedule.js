@@ -7,6 +7,14 @@ export default new SchemaObject({
         type: String,
         default: ''
     },
+    headline: {
+        type: String,
+        default: ''
+    },
+    description: {
+        type: String,
+        default: ''
+    },
     slug: {
         type: String,
         default: ''

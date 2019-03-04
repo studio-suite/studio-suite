@@ -10,7 +10,7 @@
                     <img :src="getImgSrc({w: 1300}, classObject.image)">
                 </div>
                 <div class="short-description margin-bottom--4" v-if="classObject.excerpt">{{classObject.excerpt}}</div>
-                <div class="content margin-bottom--6" v-if="!isModal">{{classObject.content}}</div>
+                <div class="content margin-bottom--6" v-if="!isModal" v-html="marked(classObject.content)"></div>
                 <div class="instructors margin-bottom--6" v-if="classObject.instructorsIds && !isModal">
                     <h3>Instructors</h3>
                     <div v-for="instructor in classObject.instructorsIds" :key="instructor" class="instructor" v-if="getInstructor(instructor)">
@@ -115,6 +115,9 @@
             })
         },
         methods: {
+            marked: function(v){
+              return marked(v)
+            },
             updateAvailability: function(v){
                 this.availability[v.ts] = _.isUndefined( this.availability[v.ts] ) ? parseInt( v.qty ) : ( this.availability[v.ts] + parseInt( v.qty ) )
             },
