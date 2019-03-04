@@ -156,6 +156,7 @@
                 let schedule = vm.classObject.schedule
                 let dates = []
                 let startDate = !_.isUndefined( vm.ts ) && ! _.isNull(vm.ts) ? moment.unix(vm.ts).utcOffset(0) : moment().utcOffset(0)
+                console.log('start date', startDate.format())
                 let endDate = moment(startDate).add(14, 'days')
 
                 if( !_.isUndefined( schedule ) && !_.isUndefined( schedule.days ) && ! _.isEmpty( schedule.days ) ){
@@ -177,16 +178,18 @@
                 }
                 if( !_.isUndefined( schedule ) && !_.isUndefined( schedule.specific ) && ! _.isEmpty( schedule.specific ) ){
                     _.each( schedule.specific, function(i){
-                        dates = _.filter( dates, function(d){
-                            return d.d !== i.d
-                        })
-                        _.each( i.i, function(int){
-                            dates.push({
-                                d: i.d,
-                                dr: parseInt( int.e ) - parseInt( int.s ),
-                                ts: parseInt( moment(`${i.d}T00:00:00Z`).add(int.s, 'minutes').format('X') )
+                        if( startDate.isSameOrBefore(moment(`${i.d}T00:00:00Z`)) ){
+                            dates = _.filter( dates, function(d){
+                                return d.d !== i.d
                             })
-                        })
+                            _.each( i.i, function(int){
+                                dates.push({
+                                    d: i.d,
+                                    dr: parseInt( int.e ) - parseInt( int.s ),
+                                    ts: parseInt( moment(`${i.d}T00:00:00Z`).add(int.s, 'minutes').format('X') )
+                                })
+                            })
+                        }
                     })
                 }
                 if( !_.isUndefined( schedule.empty ) && ! _.isEmpty( schedule.empty ) ){

@@ -8,7 +8,7 @@
 
     &-title{
       text-align: center;
-      color: $color-primary;
+      color: var(--color-accent);
       font-weight: 700;
       border-bottom: 0.375rem solid currentColor;
       text-transform: uppercase;
@@ -25,15 +25,15 @@
       padding: 1.5rem;
       font-size: .8125rem;
       min-height: 10rem;
-      border-bottom: 1px solid rgba($color-black, 0.1);
+      border-bottom: 1px solid var(--color-text-alpha-10);
       transition: all 120ms ease;
-      background-color: $color-bg-box;
+      background-color: var(--color-bgContent);
       cursor: pointer;
 
       &:hover{
         transform: scale(1.1);
         border-bottom-color: transparent;
-        box-shadow: 0 2rem 5rem rgba($color-black, 0.2);
+        box-shadow: 0 2rem 5rem var(--color-text-alpha-20);
       }
 
       h2{
@@ -51,7 +51,7 @@
         height: 1rem;
         border-radius: 100px;
         line-height: 1rem;
-        background-color: $color-primary;
+        background-color: var(--color-accent);
         color: white;
         text-align: center;
         text-indent: 1px;
@@ -71,7 +71,7 @@
 
     & + .weekly_schedule__day{
       .weekly_schedule__day-classes{
-        border-left: 1px solid rgba($color-black, 0.1)
+        border-left: 1px solid var(--color-text-alpha-10)
       }
     }
   }
@@ -84,7 +84,7 @@
     display: flex;
     margin-left: -10rem;
     margin-right: -10rem;
-    background-color: $color-bg-box;
+    background-color: var(--color-bgContent);
     border-radius: 5px;
     align-items: stretch;
 

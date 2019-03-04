@@ -25,7 +25,7 @@ export default {
   },
     head () {
         return {
-            title: `${this.$store.getters.tenant.name}`,
+            title: `${this.$store.getters.tenant.name}`
         }
     },
     filters: {

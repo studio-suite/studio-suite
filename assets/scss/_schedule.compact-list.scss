@@ -7,14 +7,14 @@
     display: none;
     flex-basis: 10rem;
     margin-right: 3.25rem;
-    background-color: $color-bg-box;
+    background-color: var(--color-bgContent);
     border-radius: 5px;
     height: 10rem;
     justify-content: center;
     align-items: center;
     font-size: 1.75rem;
     text-transform: uppercase;
-    color: $color-primary;
+    color: var(--color-accent);
     text-align: center;
     font-weight: 600;
 
@@ -42,10 +42,10 @@
     opacity: 0.6;
   }
   .details{
-    color: rgba($color-black, 0.6)
+    color: var(--color-text-alpha-60)
   }
   .fa-clock{
-    color: $color-primary
+    color: var(--color-accent)
   }
   .class_list{
     flex-grow: 1;
@@ -96,12 +96,12 @@
       }
 
       & + .class{
-        border-top: 1px solid rgba($color-black, 0.1)
+        border-top: 1px solid var(--color-text-alpha-10)
       }
 
       &:last-child{
         padding-bottom: 2rem;
-        border-bottom: 1px solid rgba($color-black, 0.1)
+        border-bottom: 1px solid var(--color-text-alpha-10)
       }
 
       &__content{

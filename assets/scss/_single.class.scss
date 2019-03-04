@@ -19,12 +19,12 @@
     line-height: 1;
     align-items: center;
     justify-content: center;
-    background-color: rgba($color-black, 0.25);
-    color: $color-bg;
+    background-color: var(--color-text-alpha-20);
+    color: var(--color-bg);
     transition: all 120ms ease;
 
     &:hover{
-      background-color: rgba($color-black, 0.45);
+      background-color: var(--color-text-alpha-40);
     }
   }
 
@@ -47,9 +47,9 @@
     }
   }
   .booking-box{
-    background-color: $color-bg-box;
+    background-color: var(--color-bgContent);
     border-radius: 5px;
-    box-shadow: .5rem 3rem 6.25rem darken($color-bg, 20);
+    box-shadow: .5rem 3rem 6.25rem var(--color-text-alpha-20);
     padding: 2rem;
     display: none;
 
@@ -69,19 +69,19 @@
       right: 0;
       left: 0;
       z-index: -1;
-      background-color: $color-bg-box;
+      background-color: var(--color-bgContent);
       opacity: 0;
     }
 
     &__button{
       display: flex;
       border-radius: 5px;
-      background-color: $color-bg-box;
+      background-color: var(--color-bgContent);
       padding: .75rem 1.5rem;
       font-size: 1rem;
       transition: all 120ms ease;
       margin: 0 0 1rem;
-      box-shadow: 0 -1rem 4.5rem rgba($color-black, 0.5);
+      box-shadow: 0 -1rem 4.5rem var(--color-text-alpha-10);
       flex-wrap: wrap;
       align-items: center;
 
@@ -118,11 +118,11 @@
         padding: 1rem .5rem;
 
         &:hover{
-          background-color: $color-bg;
+          background-color: var(--color-bg);
         }
 
         & + .booking-box__dates-list-item{
-          border-top: 1px solid rgba($color-black, 0.1)
+          border-top: 1px solid var(--color-text-alpha-10)
         }
       }
     }
@@ -228,7 +228,7 @@
         content: '';
         display: inline-block;
         width: 40%;
-        border-bottom: 1px solid rgba($color-black, 0.1);
+        border-bottom: 1px solid var(--color-text-alpha-10);
         position: absolute;
         top: 50%;
       }

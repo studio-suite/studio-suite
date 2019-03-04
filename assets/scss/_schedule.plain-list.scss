@@ -27,7 +27,7 @@
 
       & + .class{
         margin-top: 2rem;
-        border-top: 1px solid rgba($color-black, 0.1)
+        border-top: 1px solid var(--color-text-alpha-10)
       }
 
       h2{
@@ -48,11 +48,11 @@
 
         img{
           border-radius: 3px;
-          box-shadow: 0 2rem 4rem rgba($color-black, 0.2);
+          box-shadow: 0 2rem 4rem var(--color-text-alpha-20);
         }
         span{
           border-radius: 3px;
-          box-shadow: 0 2rem 4rem rgba($color-black, 0.2);
+          box-shadow: 0 2rem 4rem var(--color-text-alpha-20);
           display: block;
           height: 7.5rem;
           background-color: currentColor;
@@ -64,7 +64,7 @@
         display: none;
         justify-content: center;
         align-items: center;
-        color: $color-primary;
+        color: var(--color-accent);
         font-weight: 600;
         flex-basis: 100%;
         font-size: 1.125rem;
@@ -74,7 +74,7 @@
 
       &__date-mobile{
         display: block;
-        color: $color-primary;
+        color: var(--color-accent);
         font-weight: 600;
         flex-basis: 100%;
         font-size: 1rem;
@@ -92,13 +92,13 @@
         line-height: 1.8;
 
         .fa-clock{
-          color: $color-primary;
+          color: var(--color-accent);
           margin-right: .25rem;
           font-size: .95em;
         }
 
         .details{
-          color: rgba($color-black, 0.6);
+          color: var(--color-text-alpha-60);
           line-height: 1.5;
         }
       }
@@ -180,7 +180,7 @@
 .btn-class-details{
   display: inline-block;
   font-weight: 700;
-  color: $color-black;
+  color: var(--color-text);
   padding: .75rem 1.5rem;
   line-height: 1;
   transition: all 120ms ease;
@@ -194,23 +194,15 @@
   display: inline-block;
   font-weight: 700;
   padding: .75rem 2rem;
-  color: $color-bg-box;
-  background-color: $color-primary;
+  color: var(--color-bgContent);
+  background-color: var(--color-accent);
   border-radius: 3px;
-  box-shadow: 0 1rem 3rem rgba($color-primary, 0.6);
+  box-shadow: 0 1rem 3rem var(--color-accent-alpha-60);
   line-height: 1;
   margin-left: 1rem;
   transition: all 120ms ease;
 
   &:hover{
-    background-color: darken($color-primary, 10);
-  }
-}
-
-.schedule{
-  &--style--plain-list{
-    .class{
-
-    }
+    background-color: var(--color-accent-darken-10);
   }
 }

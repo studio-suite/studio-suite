@@ -85,7 +85,10 @@ module.exports = {
                 defer: true,
                 async: true
             }
-        ]
+        ],
+        bodyAttrs: {
+            class: 'body'
+        },
     },
 
     /*
@@ -119,7 +122,8 @@ module.exports = {
         {src: '~/plugins/currency', ssr: true},
         {src: '~plugins/vue-js-modal', ssr: true},
         { src: '~plugins/ga.js', ssr: false },
-        { src: '~plugins/fb.js', ssr: false }
+        { src: '~plugins/fb.js', ssr: false },
+        { src: '~plugins/css.js', ssr: true }
     ],
 
     /*

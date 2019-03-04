@@ -25,7 +25,7 @@
 
     &__inner{
       padding: 2rem;
-      background-color: $color-bg-box;
+      background-color: var(--color-bgContent);
       min-height: 12.5rem;
       border-radius: 3px;
       position: relative;
@@ -44,7 +44,7 @@
     }
 
     &__link{
-      color: $color-primary;
+      color: var(--color-accent);
       display: inline-block;
       position: absolute;
       right: 2rem;
