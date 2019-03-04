@@ -31,6 +31,24 @@
                 }
             }
         },
+        head () {
+            let head = {
+                title: `${this.schedule.title} | ${this.$store.getters.tenant.name}`,
+                meta: [
+                    { hid: 'og:title', name: 'og:title', content: this.schedule.title },
+                    { hid: 'og:site_name', name: 'og:site_name', content: this.$store.getters.tenant.name },
+                    { hid: 'og:type', name: 'og:type', content: 'website' },
+                    { hid: 'og:url', name: 'og:url', content: `https://${this.$store.getters.tenant.domain}.studiosuite.io/s/${this.schedule.slug}` },
+                ]
+            }
+
+            if( ! _.isUndefined( this.schedule.description ) && ! _.isEmpty( this.schedule.description ) ){
+                head.meta.push({ hid: 'og:description', name: 'og:description', content: this.schedule.description })
+                head.meta.push({ hid: 'description', name: 'description', content: this.schedule.description })
+            }
+
+            return head
+        },
         components: {
             Filters,
             Schedule

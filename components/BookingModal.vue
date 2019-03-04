@@ -381,6 +381,7 @@
                 let vm = this
                 if( ! _.isNull( vm.booking ) && _.isNull( vm.bookingConfirmation ) ){
                     axios.get( `${process.env.VUE_APP_BOOKINGS_API_BASE}/booking?id=${vm.booking}` ).then(function(r){
+                        console.log('raspuns', r)
                         if( ! _.isUndefined( r.data ) && parseInt(r.data) === 1 ){
                             vm.bookingConfirmation = 1
                         } else if( ! _.isUndefined( r.data ) && parseInt(r.data) === -1 ){
@@ -425,7 +426,12 @@
                     let vm = this
                     this.$emit('blockDate', { ts: this.ts, qty: this.attendees.length })
                     this.loaders = false
-                    this.$router.push({ name: 'confirmation', params: vm.formSubmit })
+                    if( ! _.isUndefined( vm.classObject.redirect ) && ! _.isEmpty( vm.classObject.redirect ) ){
+                        window.location = vm.classObject.redirect
+                    } else {
+                        this.$router.push({ name: 'confirmation', params: vm.formSubmit })
+                    }
+
                 }
             },
             booking: function(n){
