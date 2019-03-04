@@ -166,7 +166,7 @@
       right: 0;
       left: 0;
       bottom: 0;
-      background-color: rgba($color-bg-box, 0.95);
+      background-color: var(--color-bgContent-alpha-95);
       border-radius: 5px;
       display: flex;
       align-items: center;
@@ -180,7 +180,7 @@
       right: 0;
       left: 0;
       bottom: 0;
-      background-color: rgba($color-bg-box, 0.95);
+      background-color: var(--color-bgContent-alpha-95);
       border-radius: 5px;
       display: flex;
       align-items: center;
@@ -209,7 +209,7 @@
       background-color: $color-green;
       box-shadow: .25rem 1.25rem 3rem $color-green;
       padding: .75rem 0;
-      color: $color-bg-box;
+      color: white;
       font-weight: 800;
       font-size: 1rem;
       transition: all 120ms ease;
@@ -274,7 +274,7 @@
   .content{
     font-size: 1rem;
     line-height: 1.5;
-    color: lighten($color-black, 0.42);
+    color: var(--color-text-lighten-40);
     font-weight: 400;
   }
   .image{
@@ -288,8 +288,8 @@
       right: 0;
       bottom: 0;
       left: 0;
-      box-shadow: .5rem 2rem 4.25rem darken($color-bg, 20);
-      opacity: 1;
+      box-shadow: .5rem 2rem 4.25rem currentColor;
+      opacity: 0.2;
     }
   }
   h3{
@@ -312,7 +312,7 @@
   .map{
     min-height: 20rem;
     border-radius: 5px;
-    box-shadow: .5rem 2rem 4.25rem darken($color-bg, 15);
+    box-shadow: .5rem 2rem 4.25rem var(--color-text-alpha-20);
   }
   .instructors{
     p{
@@ -384,11 +384,11 @@
         letter-spacing: -4px;
         line-height: 1em;
         font-weight: 600;
-        background-color: $color-primary;
+        background-color: var(--color-accent);
         border-radius: 10000px;
         color: $color-bg;
         text-transform: uppercase;
-        text-shadow: 0 0 1rem rgba($color-black, 0.6);
+        text-shadow: 0 0 1rem var(--color-text-alpha-60);
         position: relative;
 
         &::before{
@@ -399,7 +399,7 @@
           right: 0;
           bottom: 0;
           left: 0;
-          box-shadow: .5rem 1.5rem 2.5rem darken($color-bg, 20);
+          box-shadow: .5rem 1.5rem 2.5rem var(--color-text-alpha-20);
           border-radius: 10000px;
         }
       }
@@ -416,7 +416,7 @@
           right: 0;
           bottom: 0;
           left: 0;
-          box-shadow: .5rem 1.5rem 2.5rem darken($color-bg, 20);
+          box-shadow: .5rem 1.5rem 2.5rem var(--color-text-alpha-20);
           border-radius: 10000px
         }
       }
@@ -436,7 +436,7 @@
           opacity: 0.4;
           cursor: pointer;
           transition: all 120ms ease;
-          color: rgba($color-black, 0.7);
+          color: var(--color-text-alpha-60);
 
           &:hover{
             opacity: 1;
@@ -473,9 +473,9 @@
       flex-shrink: 0;
     }
     .booking-box {
-      background-color: $color-bg-box;
+      background-color: var(--color-bgContent);
       border-radius: 5px;
-      box-shadow: .5rem 3rem 6.25rem darken($color-bg, 20);
+      box-shadow: .5rem 3rem 6.25rem var(--color-text-alpha-20);
       padding: 3rem 2rem;
       margin-bottom: 4rem;
       position: relative;
@@ -527,7 +527,7 @@
     }
     .image{
       &::before{
-        box-shadow: .5rem 3rem 6.25rem darken($color-bg, 20);
+        box-shadow: .5rem 3rem 6.25rem var(--color-text-alpha-20);
       }
     }
     .instructors{
@@ -542,7 +542,7 @@
       }
     }
     .map{
-      box-shadow: .5rem 3rem 6.25rem darken($color-bg, 15);
+      box-shadow: .5rem 3rem 6.25rem var(--color-text-alpha-20);
     }
   }
 }
@@ -550,7 +550,7 @@
 
 .class-modal{
   .fa-times{
-    color: $color-bg-box;
+    color: var(--color-bgContent);
     font-size: 1.5rem;
     display: inline-block;
     padding: 1rem 0;
@@ -562,15 +562,15 @@
     }
   }
   > section{
-    background-color: $color-bg-box;
+    background-color: var(--color-bgContent);
     border-radius: 5px;
     //padding: 2rem 2.5rem;
     position: relative;
-    box-shadow: .5rem 3rem 6.25rem rgba($color-black, 0.2);
+    box-shadow: .5rem 3rem 6.25rem var(--color-text-alpha-20);
   }
 }
 .v--modal-overlay.v--modal-overlay.v--modal-overlay.v--modal-overlay{
-  background-color: rgba($color-black, 0.95);
+  background-color: var(--color-text-alpha-95);
 }
 
 
@@ -585,7 +585,7 @@
      padding: 2.5rem;
 
      .booking-box{
-       border-top: 1px solid rgba($color-black, 0.1);
+       border-top: 1px solid var(--color-text-alpha-10);
        box-shadow: none;
        padding: 2rem 0;
        display: block;
@@ -601,7 +601,7 @@
        padding: 5.5rem;
 
        .booking-box{
-         box-shadow: .5rem 3rem 6.25rem darken($color-bg, 20);
+         box-shadow: .5rem 3rem 6.25rem var(--color-text-alpha-20);
          padding: 2rem;
          border-top: none;
 
