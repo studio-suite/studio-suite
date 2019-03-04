@@ -161,7 +161,8 @@
                 let vm = this
                 let locationSchedule = _.find(this.$store.state.locations.list, {id: c.locationId })
                 try{
-                    if( ! _.isUndefined( locationSchedule.empty ) && locationSchedule.empty.indexOf(d) >= 0 ){
+
+                    if( ! _.isUndefined( locationSchedule.schedule ) && ! _.isUndefined( locationSchedule.schedule.empty ) && locationSchedule.schedule.empty.indexOf(d) >= 0 ){
                         return true
                     }
                     let validSpecific = ! _.isUndefined( locationSchedule.specific ) ? _.find( locationSchedule.specific,  {d: parseInt(moment(d).format('e')) }) : undefined
@@ -174,13 +175,18 @@
                 }
             },
             isDayBlockedBySeason: function(c, d){
-                if( ! _.isUndefined( c.seasonId ) ){
-                    let validSeason = _.find( this.$store.state.seasons.list, { id: c.seasonId } )
-                    if( ! _.isUndefined( validSeason ) ){
-                        return moment(validSeason.range[0]).isBefore(d) && moment(validSeason.range[1]).isAfter(d)
-                    }
+                let blocked  = false
+                let vm = this
+                if( ! _.isUndefined( c.seasonsIds ) && ! _.isEmpty( c.seasonsIds ) ){
+                    _.each( c.seasonsIds, function(season){
+                        let validSeason = _.find( vm.$store.state.seasons.list, { id: season } )
+                        if( ! blocked && ! _.isUndefined( validSeason ) && ( moment(validSeason.range[0]).isAfter(d) || moment(validSeason.range[1]).isBefore(d) ) ){
+                            blocked = true
+                        }
+                    })
+                    //|| moment(season.range[1]).isBefore(d)
                 }
-                return false
+                return blocked
             }
         }
     }

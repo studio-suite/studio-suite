@@ -115,6 +115,36 @@
             })
         },
         methods: {
+            isDayBlockedByLocation: function(c, d){
+                let vm = this
+                let locationSchedule = _.find(this.$store.state.locations.list, {id: c.locationId })
+                try{
+                    if( ! _.isUndefined( locationSchedule.schedule ) && ! _.isUndefined( locationSchedule.schedule.empty ) && locationSchedule.schedule.empty.indexOf(d) >= 0 ){
+                        return true
+                    }
+                    let validSpecific = ! _.isUndefined( locationSchedule.specific ) ? _.find( locationSchedule.specific,  {d: parseInt(moment(d).format('e')) }) : undefined
+                    validSpecific = !_.isUndefined( validSpecific ) ? vm.fitsIntervals( d, validSpecific.i, c.schedule.specific ) : validSpecific
+                    let validDays = _.find( locationSchedule.schedule.days, {d: parseInt(moment(d).format('e')) } )
+                    validDays = !_.isUndefined( validDays ) ? vm.fitsIntervals( d, validSpecific.i, c.schedule.days ) : validDays
+                    return !_.isUndefined(validDays) || _.isUndefined( validDays ) && !_.isUndefined( validSpecific )
+                } catch (e) {
+                    return false
+                }
+            },
+            isDayBlockedBySeason: function(c, d){
+                let blocked  = false
+                let vm = this
+                if( ! _.isUndefined( c.seasonsIds ) && ! _.isEmpty( c.seasonsIds ) ){
+                    _.each( c.seasonsIds, function(season){
+                        let validSeason = _.find( vm.$store.state.seasons.list, { id: season } )
+                        if( ! blocked && ! _.isUndefined( validSeason ) && ( moment(validSeason.range[0]).isAfter(d) || moment(validSeason.range[1]).isBefore(d) ) ){
+                            blocked = true
+                        }
+                    })
+                    //|| moment(season.range[1]).isBefore(d)
+                }
+                return blocked
+            },
             marked: function(v){
               return marked(v)
             },
@@ -159,7 +189,6 @@
                 let schedule = vm.classObject.schedule
                 let dates = []
                 let startDate = !_.isUndefined( vm.ts ) && ! _.isNull(vm.ts) ? moment.unix(vm.ts).utcOffset(0) : moment().utcOffset(0)
-                console.log('start date', startDate.format())
                 let endDate = moment(startDate).add(14, 'days')
 
                 if( !_.isUndefined( schedule ) && !_.isUndefined( schedule.days ) && ! _.isEmpty( schedule.days ) ){
@@ -205,6 +234,10 @@
                         return parseInt(d.ts) >= parseInt(vm.ts)
                     })
                 }
+
+                dates = _.filter( dates, function(dCheck){
+                    return ! vm.isDayBlockedByLocation( vm.classObject, dCheck.d ) && ! vm.isDayBlockedBySeason( vm.classObject, dCheck.d )
+                })
 
                 dates = _.orderBy( dates, ['ts'] )
                 return dates
