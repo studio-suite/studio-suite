@@ -123,7 +123,8 @@ module.exports = {
         {src: '~plugins/vue-js-modal', ssr: true},
         { src: '~plugins/ga.js', ssr: false },
         { src: '~plugins/fb.js', ssr: false },
-        { src: '~plugins/css.js', ssr: true }
+        { src: '~plugins/css.js', ssr: true },
+        { src: '~plugins/confirmation.js', ssr: true }
     ],
 
     /*

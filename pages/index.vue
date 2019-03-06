@@ -24,8 +24,25 @@ export default {
     Logo
   },
     head () {
+      let description = `Book you dance trial class at ${this.$store.getters.tenant.name} by selecting `
+        if( this.$store.getters.schedules.length > 1 ){
+          description += 'a schedule '
+        } else {
+          description += 'the schedule '
+        }
+        description += 'and find a class that fits. We offer various types of dance classes such as: '
+        let classTypes = _.map(this.$store.getters.class_types, function(c){ return c.name })
+        description += _.take(classTypes, 5).join(', ')
+        description += '.'
         return {
-            title: `${this.$store.getters.tenant.name}`
+            title: `${this.$store.getters.tenant.name}`,
+            meta: [
+                { hid: 'og:title', name: 'og:title', content: this.$store.getters.tenant.name },
+                { hid: 'og:site_name', name: 'og:site_name', content: this.$store.getters.tenant.name },
+                { hid: 'og:type', name: 'og:type', content: 'website' },
+                { hid: 'og:url', name: 'og:url', content: `https://${this.$store.getters.tenant.domain}.studiosuite.io/` },
+                { hid: 'description', name: 'description', content: description }
+            ]
         }
     },
     filters: {

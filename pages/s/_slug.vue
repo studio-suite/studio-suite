@@ -3,7 +3,7 @@
         <div class="container page--schedule">
             <div v-if="schedule">
                 <h1 class="page-title" v-if="schedule.appearance.show_title">{{schedule.headline || schedule.title}}</h1>
-                <div class="page-description margin-bottom--3" v-if="schedule.description" v-html="marked(schedule.description)"></div>
+                <div class="page-description margin-bottom--3" v-if="schedule.description" v-html="schedule.description ? marked(schedule.description) : ''"></div>
                 <Filters v-if="hasFilters" v-model="filters" :schedule="schedule"  class="margin-bottom--3"></Filters>
                 <Schedule :schedule="schedule" :filters="filters" :classes="classes_filtered"></Schedule>
             </div>
@@ -52,18 +52,6 @@
         components: {
             Filters,
             Schedule
-        },
-        head () {
-            let schedule = _.find( this.$store.getters.schedules, { slug: this.slug } )
-            return {
-                title: `${schedule.title} | ${this.$store.getters.tenant.name}`,
-                meta: [
-                    { hid: 'og:title', name: 'og:title', content: this.schedule.title },
-                    { hid: 'og:site_name', name: 'og:site_name', content: this.$store.getters.tenant.name },
-                    { hid: 'og:type', name: 'og:type', content: 'website' },
-                    { hid: 'og:url', name: 'og:url', content: `https://${this.$store.getters.tenant.domain}.studiosuite.io/s/${this.schedule.slug}` },
-                ]
-            }
         },
         asyncData: async function({params}){
             try{

@@ -24,9 +24,6 @@
         name: "confirmation",
         mounted: function(){
             this.showModal()
-            if( _.isUndefined( this.booking ) || _.isNull( this.booking ) || _.isEmpty( this.booking ) ){
-                this.$router.push({ path: '/' })
-            }
         },
         computed: {
           booking: function(){
