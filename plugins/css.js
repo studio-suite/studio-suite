@@ -18,7 +18,6 @@ function populateCss(css, colors){
             --color-text-alpha-60: ${text.alpha(0.6).rgb().string()};
             --color-text-alpha-75: ${text.alpha(0.75).rgb().string()};
             --color-text-alpha-95: ${text.alpha(0.95).rgb().string()};
-            --color-text-lighten-40: ${accent.lighten(0.40).rgb().string()};
             --color-accent: ${accent.hex()};
             --color-accent-alpha-60: ${accent.alpha(0.60).rgb().string()};
             --color-accent-shadow-60: ${accent.alpha(0.6).rgb().string()};
@@ -28,7 +27,6 @@ function populateCss(css, colors){
             --color-accent-reverse: ${accent.isDark() ? '#FFFFFF' : '#000000'};
           }
     `
-    console.log('colors')
     return css
 }
 

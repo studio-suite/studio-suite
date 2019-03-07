@@ -274,7 +274,7 @@
   .content{
     font-size: 1rem;
     line-height: 1.5;
-    color: var(--color-text-lighten-40);
+    color: var(--color-text-alpha-75);
     font-weight: 400;
   }
   .image{
@@ -307,6 +307,10 @@
   }
   .location{
     text-align: center;
+
+    h4{
+      margin-bottom: 0.5rem;
+    }
 
   }
   .map{
@@ -538,6 +542,7 @@
         .right{
           padding-left: 2rem;
           margin-top: auto;
+          text-align: left;
         }
       }
     }
