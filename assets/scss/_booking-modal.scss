@@ -4,6 +4,7 @@
     background-color: $color-bg-box;
     border-radius: 5px;
     padding: 2.5rem;
+    position: relative;
 
     @include breakpoint(laptop){
       padding: 5.5rem;

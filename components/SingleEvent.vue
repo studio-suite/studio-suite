@@ -1,6 +1,9 @@
 <template>
     <section>
         <div class="single-class" v-if="classObject" :class="{ 'single-class--in-modal': isModal }">
+            <div class="loading" v-if="loaders && isModal">
+                <div class="loader"></div>
+            </div>
             <div class="left-col">
                 <h1 class="title">{{classObject.title}}</h1>
                 <div class="meta margin-bottom--4">
@@ -88,7 +91,8 @@
                 availability: [],
                 chooseDate: false,
                 availabilityRequest: false,
-                map: null
+                map: null,
+                loaders: false
             }
         },
         mounted: function(){
@@ -105,13 +109,16 @@
             let min = _.min( tss )
             let max = _.max( tss )
             let id = this.classObject.id
+            vm.loaders = true
             axios.get(`https://3h737nakvh.execute-api.us-east-2.amazonaws.com/prod/availability?id=${id}&min=${min}&max=${max}`).then(function(r){
                 vm.availabilityRequest = true
                 if( ! _.isNull( r.data ) ){
                     vm.availability = r.data
                 }
+                vm.loaders = false
             }).catch(function(r){
                 vm.availabilityRequest = true
+                vm.loaders = false
             })
         },
         methods: {
@@ -179,7 +186,6 @@
             },
             classNextAvailableDates: function(){
                 let vm = this
-                console.log('next dates', this.classNextDates())
                 let filtered = _.filter( this.classNextDates(), function(i){
                     return vm.classObject.capacity - ( ! _.isUndefined( vm.availability[i.ts] ) ? vm.availability[i.ts] : 0 ) > 0
                 })

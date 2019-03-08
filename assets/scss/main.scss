@@ -71,7 +71,7 @@ img{
 }
 
 .confirmation{
-  box-shadow: .5rem 3rem 6.25rem var(--color-accent-darken-15);
+  box-shadow: .5rem 3rem 6.25rem $color-black;
   background-color: $color-bg-box;
   border-radius: 5px;
   padding: 2.5rem;
@@ -82,7 +82,7 @@ img{
   }
 
   p{
-    color: var(--color-text-75);
+    color: rgba($color-black, 0.75);
   }
   strong{
     color: $color-black
@@ -119,7 +119,7 @@ img{
   }
 
   .confirmation {
-    box-shadow: .5rem 3rem 6.25rem var(--color-accent-darken-15);
+    box-shadow: .5rem 3rem 6.25rem $color-black;
     max-width: 36.5rem;
     margin: 6rem auto;
 

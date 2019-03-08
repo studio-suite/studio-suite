@@ -8,7 +8,18 @@
     z-index: 10;
   }
 
-
+  .loading{
+    position: absolute;
+    top: 0;
+    right: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 110;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    background-color: rgba($color-bg-box, 0.95);
+  }
 
   .social-link{
     display: inline-flex;
@@ -580,6 +591,8 @@
 
 
 .single-class--in-modal{
+  position: relative;
+
   .meta{
     font-size: 1.2rem;
   }
