@@ -389,7 +389,7 @@
                             vm.stok = null
                             vm.errorsPayment.push('Could not process payment. Please try again')
                         } else {
-                            setTimeout(vm.checkForPayment, 5000)
+                            setTimeout(vm.checkForPayment, 500)
                         }
                     }).catch(function(e){
                         vm.booking = null
