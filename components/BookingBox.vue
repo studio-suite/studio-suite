@@ -23,7 +23,7 @@
                 </span>
                 <span class="booking-box__price"><template v-if="price  === 0">Free</template><template v-else>{{price | currency(tenantCurrency)}}</template></span>
                 <span class="booking-box__availability"><template v-if="next_class_capacity > 1">{{next_class_capacity}} spots available</template><template v-else-if="next_class_capacity > 0">{{next_class_capacity}} spot available</template><template v-else>No Spots available</template></span>
-                <a class="booking-box__booking-button" href="#" v-on:click.prevent="openModal(next_class.ts)" :disabled="isSaveDisabled">Book Trial Class</a>
+                <a class="booking-box__booking-button" href="#" v-on:click.prevent="openModal(next_class.ts)" :disabled="isSaveDisabled">Book Now</a>
                 <template v-if="dates.length > 1 && !sold_out">
                     <span class="booking-box__or">or</span>
                     <span class="booking-box__choose" v-on:click.prevent="chooseDate = !chooseDate">Choose a different date</span>
