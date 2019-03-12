@@ -56,6 +56,13 @@ async function getSchedulesRoutes() {
 async function getRoutes() {
     let classes = await getClassesRoutes()
     let schedules = await getSchedulesRoutes()
+    let locations = await axios.get(`${VUE_APP_API_URL_SCHEDULES}/locations?tenantId=${VUE_APP_TENANT_ID}`)
+        locations = _.map(locations.data, function(l){
+            return l.id
+        })
+    classes = _.filter(classes, function(c){
+        return locations.indexOf( c.locationId ) >= 0
+    })
     return _.concat(schedules, classes)
 }
 

@@ -153,6 +153,7 @@
             }
         },
         mounted: function () {
+
             if (this.isClassForAdults) {
                 this.step = 1
             } else {
@@ -351,7 +352,6 @@
             },
             toggleBodyClass(addRemoveClass, className) {
                 const el = document.body;
-
                 if (addRemoveClass === 'addClass') {
                     el.classList.add(className);
                 } else {
@@ -464,7 +464,7 @@
             },
             visible: function (n) {
                 if (n) {
-                    this.step = 0
+                    this.step = this.isClassForAdults ? 1 : 0
                     this.form = JSON.parse( JSON.stringify( this.default_form ) ),
                     this.attendees = JSON.parse( JSON.stringify( this.default_attendees ) ),
                     this.stok = null,
@@ -539,6 +539,15 @@
                         vm.$emit('blockDate', { ts: vm.ts, qty: 999999 })
                     }
 
+                } else if( n=== 2 && vm.isClassForAdults ){
+                    vm.attendees = [{
+                        name: vm.formSubmit.firstName,
+                        dob: {
+                            y: 1900,
+                            m:1,
+                            d:1
+                        }
+                    }]
                 }
             }
         }
