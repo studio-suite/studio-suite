@@ -1,12 +1,6 @@
 export default ({ app, store }) => {
-    /*
-    ** Only run on client-side and only in production mode
-    */
     console.log('store', store.getters.fb)
     if (typeof store.getters.fb === 'undefined' || store.getters.fb === null || store.getters.fb.length < 3 ) return
-    /*
-    ** Include Google Analytics Script
-    */
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
         n.callMethod.apply(n,arguments):n.queue.push(arguments)};
@@ -15,14 +9,8 @@ export default ({ app, store }) => {
         t.src=v;s=b.getElementsByTagName(e)[0];
         s.parentNode.insertBefore(t,s)}(window, document,'script',
         'https://connect.facebook.net/en_US/fbevents.js');
-    /*
-    ** Set the current page
-    */
     fbq('init', store.getters.fb);
     console.log("test", store.getters.fb)
-    /*
-    ** Every time the route changes (fired on initialization too)
-    */
     app.router.afterEach((to, from) => {
         console.log('track')
         fbq('track', 'PageView');

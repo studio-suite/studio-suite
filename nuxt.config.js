@@ -66,7 +66,6 @@ async function getRoutes() {
     return _.concat(schedules, classes)
 }
 
-
 module.exports = {
     mode: 'universal',
 
@@ -129,7 +128,7 @@ module.exports = {
         {src: '~/plugins/currency', ssr: true},
         {src: '~plugins/vue-js-modal', ssr: true},
         { src: '~plugins/ga.js', ssr: false },
-        { src: '~plugins/fb.js', ssr: false },
+        //{ src: '~plugins/fb.js', ssr: false },
         { src: '~plugins/css.js', ssr: true },
         { src: '~plugins/confirmation.js', ssr: true }
     ],
@@ -138,9 +137,15 @@ module.exports = {
     ** Nuxt.js modules
     */
     modules: [
-        'nuxt-webfontloader'
+        'nuxt-webfontloader',
+        'nuxt-facebook-pixel-module'
     ],
 
+    facebook: {
+        track: 'PageView',
+        pixelId: '1028096897222871',
+        disabled: false
+    },
 
     webfontloader: {
         google: {
