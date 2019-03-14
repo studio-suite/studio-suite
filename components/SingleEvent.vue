@@ -42,6 +42,9 @@
                     <div class="address">
                         {{classLocation.address.address1}}<template v-if="classLocation.address.address2">, {{classLocation.address.address2}}</template><template v-if="classLocation.address.city">, {{classLocation.address.city}}</template><template>, {{classLocation.address.zip}} {{classLocation.address.state}}</template>
                     </div>
+                    <div v-if="classObject.description">
+                        {{classObject.description}}
+                    </div>
                 </div>
             </div>
             <aside class="right-col">

@@ -2,6 +2,7 @@ export default ({ app, store }) => {
     /*
     ** Only run on client-side and only in production mode
     */
+    console.log('store', store.getters.fb)
     if (typeof store.getters.fb === 'undefined' || store.getters.fb === null || store.getters.fb.length < 3 ) return
     /*
     ** Include Google Analytics Script
@@ -18,6 +19,7 @@ export default ({ app, store }) => {
     ** Set the current page
     */
     fbq('init', store.getters.fb);
+    console.log("test", store.getters.fb)
     /*
     ** Every time the route changes (fired on initialization too)
     */

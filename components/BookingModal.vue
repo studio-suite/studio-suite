@@ -10,7 +10,7 @@
             <!-- C H I L D R E N -->
             <div v-if="step === 0">
                 <h2>Trial Class Registration</h2>
-                <h3 class="margin-bottom--6">Hurry up! Only <template v-if="capacity > 1">{{capacity}} spots</template><template v-else>one spot</template> left!</h3>
+                <h3 class="margin-bottom--5">Hurry up! Only <template v-if="capacity > 1">{{capacity}} spots</template><template v-else>one spot</template> left!</h3>
                 <div class="attendees">
                     <div class="attendee" v-for="(att, ind) in attendees">
                         <label>Child first name & birthdate <span class="remove-attendee" v-if="ind > 0" v-on:click.prevent="attendees.splice(ind, 1)"><i class="far fa-user-minus margin-right--05"></i> Remove</span></label>
@@ -46,7 +46,7 @@
                         </div>
                     </div>
                     <a href="#" v-on:click.prevent="addChild" class="add-child" v-if="attendees.length < 3 && capacity >= attendees.length + 1"><i class="far fa-user-plus margin-right--05"></i> Add Another Child</a>
-                    <div class="next margin-top--6">
+                    <div class="next margin-top--5">
                         <a href="#" class="next-button" v-on:click.prevent="saveChildren">Next</a>
                     </div>
                 </div>
@@ -55,7 +55,7 @@
             <!-- P A R E N T -->
             <div v-if="step === 1">
                 <h2>Trial Class Registration</h2>
-                <h3 class="margin-bottom--6">Please fill out the form below</h3>
+                <h3 class="margin-bottom--5">Please fill out the form below</h3>
                 <label>First name</label>
                 <input type="text" v-model="form.firstName" placeholder="Your first name here" :class="checkForErrors(`form.firstName`)"/>
                 <label class="margin-top--2">Last name</label>
@@ -64,7 +64,7 @@
                 <input type="tel" v-model="form.phone" placeholder="Your phone number here" :class="checkForErrors(`form.phone`)"/>
                 <label class="margin-top--2">Email</label>
                 <input type="email" v-model="form.email" placeholder="Your email here" :class="checkForErrors(`form.email`)"/>
-                <div class="next margin-top--6">
+                <div class="next margin-top--5">
                     <a href="#" class="next-button" v-on:click.prevent="saveParent">Next</a>
                 </div>
             </div>
@@ -72,7 +72,7 @@
             <!-- P A Y M E N T -->
             <div v-if="step === 2">
                 <h2>Trial Class Registration</h2>
-                <h3 class="margin-bottom--6"><template v-if="classObject.price > 0">Please provide payment details below</template><template v-else>Please review your registration</template></h3>
+                <h3 class="margin-bottom--5"><template v-if="classObject.price > 0">Please provide payment details below</template><template v-else>Please review your registration</template></h3>
                 <form method="post" id="payment-form" ref="paymentForm" class="margin-top--3" v-if="classObject.price > 0">
                     <div class="form-row">
                         <label for="card-element">Credit or debit card</label>
@@ -89,7 +89,7 @@
                     </div>
                     <div class="total">Total <span>{{ formSubmit.attendees.length * formSubmit.price | currency }}</span></div>
                 </div>
-                <div class="next margin-top--6">
+                <div class="next margin-top--5">
                     <a href="#" class="next-button" v-on:click.prevent="completeBooking">Complete Booking</a>
                 </div>
             </div>
