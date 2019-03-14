@@ -138,14 +138,13 @@ module.exports = {
     */
     modules: [
         'nuxt-webfontloader',
-        'nuxt-facebook-pixel-module'
+        ['nuxt-facebook-pixel-module', {
+            /* module options */
+            track: 'PageView',
+            pixelId: '1028096897222871',
+            disabled: false
+        }],
     ],
-
-    facebook: {
-        track: 'PageView',
-        pixelId: '1028096897222871',
-        disabled: false
-    },
 
     webfontloader: {
         google: {

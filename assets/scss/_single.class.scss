@@ -647,3 +647,15 @@
     }
   }
 }
+
+
+.page--schedule{
+  text-align: center;
+
+  @include breakpoint(laptop){
+    text-align: left;
+  }
+  .page-title{
+    margin-bottom: 1rem;
+  }
+}
