@@ -24,6 +24,7 @@
         name: "confirmation",
         mounted: function(){
             this.showModal()
+            this.$fb.track('Lead')
         },
         computed: {
           booking: function(){
