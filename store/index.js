@@ -78,6 +78,9 @@ const store = () => {
             ga: function(state){
                 return state.ga
             },
+            fb: function(state){
+                return state.fb
+            },
             tenantUrl: function(state){
               return `https://${state.tenant.domain}.studiosuite.io`
             },
