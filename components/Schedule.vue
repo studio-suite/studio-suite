@@ -184,7 +184,6 @@
                             blocked = true
                         }
                     })
-                    //|| moment(season.range[1]).isBefore(d)
                 }
                 return blocked
             }
