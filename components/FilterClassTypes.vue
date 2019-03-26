@@ -1,9 +1,11 @@
 <template>
     <div class="filter filter--class-types" :class="{'is-null': filter === null}">
-        <select v-model="filter">
-            <option :value="null" v-text="placeholder || 'Which class?'"></option>
-            <option v-for="(option, optionIndex) in options" :key="`filter-class-types-key-${optionIndex}`" :value="option.value" v-text="option.label"></option>
-        </select>
+        <div>
+            <select v-model="filter">
+                <option :value="null" v-text="placeholder || 'Which class?'"></option>
+                <option v-for="(option, optionIndex) in options" :key="`filter-class-types-key-${optionIndex}`" :value="option.value" v-text="option.label"></option>
+            </select>
+        </div>
     </div>
 </template>
 
