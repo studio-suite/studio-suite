@@ -67,7 +67,11 @@ img{
 
 
 .main-wrapper{
-  padding: 0 2rem;
+  padding: 0 2rem 4rem 2rem;
+
+  @include breakpoint(laptop){
+    padding: 0 2rem;
+  }
 }
 
 .confirmation{
