@@ -1,6 +1,9 @@
 <template>
-    <div class="filter filter--age">
-        <no-ssr><v-select :options="options" :placeholder="placeholder || 'How old?'" v-model="filter"></v-select></no-ssr>
+    <div class="filter filter--age" :class="{'is-null': filter === null}">
+        <select v-model="filter">
+            <option :value="null">{{placeholder || 'How old?'}}</option>
+            <option v-for="(option, optionIndex) in options" :key="`filter-age-key-${optionIndex}`" :value="option.value">{{option.label}}</option>
+        </select>
     </div>
 </template>
 

@@ -1,6 +1,9 @@
 <template>
-    <div class="filter filter--days">
-        <no-ssr><v-select :options="options" :placeholder="placeholder || 'Which day?'"  v-model="filter"></v-select></no-ssr>
+    <div class="filter filter--days" :class="{'is-null': filter === null}">
+        <select v-model="filter">
+            <option :value="null" v-text="placeholder || 'Which day?'"></option>
+            <option v-for="(option, optionIndex) in options" :key="`filter-class-types-key-${optionIndex}`" :value="option.value" v-text="option.label"></option>
+        </select>
     </div>
 </template>
 

@@ -1,47 +1,36 @@
 .filter{
-  .v-select{
-    .dropdown-toggle{
-      background-color: var(--color-bgContent);
-      border: 1px solid var(--color-text-alpha-20);
-      font-size: 1rem;
-      line-height: 2rem;
-      padding: .5rem .75rem;
-      width: 100%;
-      border-radius: 2px;
-      color: var(--color-text);
+  position: relative;
 
-      .clear{
-        color: var(--color-text-alpha-60);
-      }
+  select{
+    display: block;
+    -moz-appearance: none;
+    -webkit-appearance: none;
+    background-color: var(--color-bgContent);
+    border: 1px solid var(--color-text-alpha-20);
+    font-size: 1rem;
+    line-height: 1.8rem;
+    padding: .5rem 2rem .5rem 1rem;
+    width: 100%;
+    border-radius: 3px;
+    color: var(--color-text);
+    outline: none;
+  }
 
-      .open-indicator::before{
-        border-color: var(--color-text-alpha-60);
-      }
-    }
+  &::after{
+    display: block;
+    position: absolute;
+    top: 1.45rem;
+    right: 1.65rem;
+    content: "\f107";
+    font-family: "Font Awesome 5 Pro";
+    font-size: 150%;
+    opacity: 0.45;
+    line-height: 0;
+  }
 
-    &.open .dropdown-toggle{
-      border-top: 1px solid var(--color-text-alpha-20);
-      border-right: 1px solid var(--color-text-alpha-20);
-      border-left: 1px solid var(--color-text-alpha-20);
-      border-bottom: 1px solid transparent;
-    }
-    .dropdown-menu{
-      border-bottom-left-radius: 2px;
-      border-bottom-right-radius: 2px;
-      border-bottom: 1px solid var(--color-text-alpha-20);
-      border-right: 1px solid var(--color-text-alpha-20);
-      border-left: 1px solid var(--color-text-alpha-20);
-      box-shadow: .5rem 2rem 5rem var(--color-text-alpha-20);
-      background-color: var(--color-bgContent);
-
-      > li.highlight > a,
-      > li.highlight.active > a{
-        background-color: var(--color-accent);
-        color: var(--color-accent-reverse)
-      }
-      > li.active > a{
-        background-color: var(--color-bg);
-      }
+  &.is-null{
+    select{
+      color: var(--color-text-alpha-60);
     }
   }
 }

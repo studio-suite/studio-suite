@@ -55,16 +55,16 @@
 
                 }
                 // Filter by day of the week
-                if( ! _.isUndefined( vm.filters ) && ! _.isUndefined( vm.filters.days ) && ! _.isNull( vm.filters.days ) && ! _.isUndefined( vm.filters.days.value ) && ! _.isNull( vm.filters.days.value ) ){
+                if( ! _.isUndefined( vm.filters ) && ! _.isUndefined( vm.filters.days ) && ! _.isNull( vm.filters.days ) && ! _.isUndefined( vm.filters.days ) && ! _.isNull( vm.filters.days ) ){
                     classes = _.filter( classes, function(c){
-                        return parseInt( moment(c.starting_time).utcOffset(0).format('d') ) === parseInt(vm.filters.days.value )
+                        return parseInt( moment(c.starting_time).utcOffset(0).format('d') ) === parseInt(vm.filters.days )
                     })
                 }
                 // Filter by time of the day
-                if( ! _.isUndefined( vm.filters ) && ! _.isUndefined( vm.filters.times ) && ! _.isNull( vm.filters.times ) && ! _.isUndefined( vm.filters.times.value ) && ! _.isNull( vm.filters.times.value ) ){
+                if( ! _.isUndefined( vm.filters ) && ! _.isUndefined( vm.filters.times ) && ! _.isNull( vm.filters.times ) && ! _.isUndefined( vm.filters.times ) && ! _.isNull( vm.filters.times ) ){
                     classes = _.filter( classes, function(c){
                         let h = parseInt( moment(c.starting_time).utcOffset(0).format('H') )
-                        switch ( vm.filters.times.value ) {
+                        switch ( vm.filters.times ) {
                             case 0 : return  h <= 11
                             case 1 : return h > 11 && h <= 16
                             case 2 : return h > 16 && h <= 23

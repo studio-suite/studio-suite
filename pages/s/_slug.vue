@@ -99,23 +99,29 @@
                 let out = vm.classes
                 out = _.filter( out, function(i){
                     let test = true
-                    if( ! _.isUndefined( vm.filters.age ) && ! _.isEmpty( vm.filters.age ) ){
-                        if( _.range( i.age[0], i.age[1] ).indexOf( vm.filters.age.value ) === -1 ){
+                    if( ! _.isUndefined( vm.filters.age ) && ! _.isNull( vm.filters.age ) ){
+                        if( parseInt( vm.filters.age ) === 19 ){
+                            if( i.age[0] !== 18 && i.age[1] !== 18 ){
+                                test = false
+                            }
+                        } else {
+                            if( _.range( i.age[0], i.age[1] + 1 ).indexOf( vm.filters.age ) === -1 ){
+                                test = false
+                            }
+                        }
+                    }
+                    if( ! _.isUndefined( vm.filters.classTypes ) && ! _.isNull( vm.filters.classTypes ) ){
+                        if( _.isUndefined( i.classTypesIds ) || i.classTypesIds.indexOf(vm.filters.classTypes) === -1 ){
                             test = false
                         }
                     }
-                    if( ! _.isUndefined( vm.filters.classTypes ) && ! _.isEmpty( vm.filters.classTypes ) ){
-                        if( _.isUndefined( i.classTypesIds ) || i.classTypesIds.indexOf(vm.filters.classTypes.value) === -1 ){
-                            test = false
-                        }
-                    }
-                    if( ! _.isUndefined( vm.filters.locations ) && ! _.isEmpty( vm.filters.locations ) ){
-                        if( i.locationId.indexOf(vm.filters.locations.value) === -1 ){
+                    if( ! _.isUndefined( vm.filters.locations ) && ! _.isNull( vm.filters.locations ) ){
+                        if( i.locationId.indexOf(vm.filters.locations) === -1 ){
                             test = false
                         }
                     }
                     if( ! _.isUndefined( vm.filters.instructors ) && ! _.isEmpty( vm.filters.instructors ) ){
-                        if( _.isUndefined( i.instructorsIds ) || i.instructorsIds.indexOf(vm.filters.instructors.value) === -1 ){
+                        if( _.isUndefined( i.instructorsIds ) || i.instructorsIds.indexOf(vm.filters.instructors) === -1 ){
                             test = false
                         }
                     }
