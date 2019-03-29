@@ -121,8 +121,8 @@
                         min = min < 10 ? `0${min}` : min
                     let starting_time = h + ':' + min
                         h = parseInt( i.e / 60 )
-                    h = h < 10 ? `0${h}` : h
-                        min = i.s % 60
+                        h = h < 10 ? `0${h}` : h
+                        min = i.e % 60
                         min = min < 10 ? `0${min}` : min
                     let ending_time = h + ':' + min
                     return {

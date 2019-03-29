@@ -8,7 +8,7 @@
             </div>
             <div class="class__date">
                 <div>
-                    <span>{{ c.starting_time | moment('D') }}</span>
+                    <span>{{ c.starting_time | moment('D' ) }}</span>
                     {{ c.starting_time | moment('MMMM') }}
                 </div>
             </div>
@@ -38,10 +38,15 @@
 
 <script>
     import _ from 'lodash'
-    import moment from 'moment'
+    import moment from 'moment-timezone'
     export default {
         name: "SchedulePlainList",
         props: ['classes', 'schedule'],
+        filters: {
+            moment_location: function(v, f, tz){
+                return moment(v).tz( tz ).format(f)
+            }
+        },
         methods: {
             openClassPage: function(slug, sdate){
                 this.$router.push({
@@ -60,6 +65,10 @@
                         ts: parseInt( moment(sdate).utcOffset(0).format('X') )
                     })
                 }
+            },
+            getTimezone: function(id){
+                let l = _.find( this.$store.getters.locations, { id: id } )
+                return l.timezone || 'Europe/London'
             }
         }
     }
