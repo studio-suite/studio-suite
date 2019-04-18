@@ -63,7 +63,6 @@
                         'Content-Type': 'application/json'
                     }
                 })
-                //console.log('response', r)
                 return {
                     classes: r.data || [],
                     slug: params.slug
@@ -75,10 +74,6 @@
                 }
             }
         },
-        /*async fetch (context) {
-            const { store, params } = context
-            await store.dispatch('schedules/get', params.slug )
-        },*/
         methods: {
             marked: function(v){
                 return marked(v)

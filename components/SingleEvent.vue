@@ -53,8 +53,8 @@
                             :price="classObject.price"
                             :capacity="classObject.capacity"
                             :availability="availability"
-                            :dates_available="classNextAvailableDates()"
-                            :dates_next="classNextDates()"
+                            :dates_available="classNextAvailableDates"
+                            :dates_next="classNextDates"
                             :availabilityRequest="availabilityRequest"
                             @openModal="openModal">
                     </BookingBox>
@@ -79,6 +79,7 @@
     import BookingModal from '@/components/BookingModal'
     import BookingBox from '@/components/BookingBox'
     import queryString from 'querystring'
+    import algoliasearch from 'algoliasearch'
 
     export default {
         name: "SingleEvent",
@@ -95,7 +96,21 @@
                 chooseDate: false,
                 availabilityRequest: false,
                 map: null,
-                loaders: false
+                loaders: false,
+                bookings: []
+            }
+        },
+        watch: {
+            bookings: function(nv){
+                let vm = this
+                let bookings = _.groupBy(nv, 'ts')
+                    bookings = _.map( bookings, function(objs, bb){
+                    return {
+                        ts: parseInt(bb),
+                        count: _.sumBy(objs, 'count')
+                    }
+                })
+                vm.availability = bookings
             }
         },
         mounted: function(){
@@ -106,25 +121,33 @@
                 let map = new google.maps.Map( vm.$refs.map, { zoom: 16, center: uluru });
                 new google.maps.Marker({position: uluru, map: map});
             }
-            let tss = _.map( this.classNextDates(), function(i){
+            let tss = _.map( vm.classNextDates, function(i){
                 return i.ts
             })
-            let min = _.min( tss )
-            let max = _.max( tss )
-            let id = this.classObject.id
-            vm.loaders = true
-            axios.get(`https://3h737nakvh.execute-api.us-east-2.amazonaws.com/prod/availability?id=${id}&min=${min}&max=${max}`).then(function(r){
-                vm.availabilityRequest = true
-                if( ! _.isNull( r.data ) ){
-                    vm.availability = r.data
-                }
-                vm.loaders = false
-            }).catch(function(r){
-                vm.availabilityRequest = true
-                vm.loaders = false
-            })
+
+            vm.getBookings( this.classObject.id, _.min( tss ), _.max( tss ) )
         },
         methods: {
+            getBookings: function(classId, min, max){
+                let vm = this
+                vm.loaders = true
+                let client = algoliasearch( '04QHF1E2Q9', this.$store.getters.tenant.algoliaPublicApiKey );
+                let index = client.initIndex('ss_prod_bookings');
+                let filters = ''
+                filters += `ts:${min} TO ${max}`
+                index.search({
+                        hitsPerPage: 1000,
+                        page: 0,
+                        filters: `${filters} AND status >= 1 AND classId:${classId}`
+                    },
+                    function searchDone(err, content) {
+                        vm.loaders = false;
+                        vm.availabilityRequest = true
+                        if (err) throw err;
+                        vm.bookings = content.hits
+                    }
+                );
+            },
             isDayBlockedByLocation: function(c, d){
                 let vm = this
                 let locationSchedule = _.find(this.$store.state.locations.list, {id: c.locationId })
@@ -185,13 +208,18 @@
                 let vm = this
                 return _.join( _.map( vm.getInstructorName(id).split(' '), function(i){ return i[0] }), ' ')
             },
-            classNextAvailableDates: function(){
+
+
+            classLocationCoords: function(){
                 let vm = this
-                let filtered = _.filter( this.classNextDates(), function(i){
-                    return vm.classObject.capacity - ( ! _.isUndefined( vm.availability[i.ts] ) ? vm.availability[i.ts] : 0 ) > 0
-                })
-                return filtered
+                if( !_.isUndefined( this.classLocation ) && ! _.isUndefined( this.classLocation.coords ) && this.classLocation.coords.indexOf('|') >= 0 ){
+                    let coords = _.map(_.split(vm.classLocation.coords, '|'), Number)
+                    return [coords[0], coords[1]]
+                }
+                return false
             },
+        },
+        computed: {
             classNextDates: function(){
                 let vm = this
                 let schedule = vm.classObject.schedule
@@ -250,16 +278,14 @@
                 dates = _.orderBy( dates, ['ts'] )
                 return dates
             },
-            classLocationCoords: function(){
+            classNextAvailableDates: function(){
                 let vm = this
-                if( !_.isUndefined( this.classLocation ) && ! _.isUndefined( this.classLocation.coords ) && this.classLocation.coords.indexOf('|') >= 0 ){
-                    let coords = _.map(_.split(vm.classLocation.coords, '|'), Number)
-                    return [coords[0], coords[1]]
-                }
-                return false
+                let availability = vm.availability
+                let filtered = _.filter( vm.classNextDates, function(i){
+                    return vm.classObject.capacity - ( ! _.isUndefined( _.find(availability, { ts: i.ts }) ) ? _.find(availability, { ts: i.ts }) : 0 ) > 0
+                })
+                return filtered
             },
-        },
-        computed: {
             fb_share_link: function(){
                 return 'https://www.facebook.com/sharer.php?' + queryString.stringify({ u: `${this.$store.getters.tenantUrl}/${this.classObject.slug}` })
             },

@@ -20,6 +20,9 @@
     import ScheduleCompactList from '@/components/ScheduleCompactList'
     import ScheduleWeekly from '@/components/ScheduleWeekly'
     import ClassModal from '@/components/ClassModal'
+
+    import algoliasearch from 'algoliasearch'
+
     export default {
         name: "Schedule",
         props: ['schedule', 'filters', 'classes'],
@@ -33,16 +36,43 @@
           return {
               showModal: false,
               classId: null,
-              ts: null
+              ts: null,
+              bookings: [],
+              bookings_page: 0,
+              bookings_pages: 0,
+              bookings_count: 0
           }
         },
         computed: {
+            available_classes: function(){
+                let vm = this
+                let classes = _.map( vm.classes, function(i){
+                    let bookings = _.filter( vm.bookings, { classId: i.id })
+                    bookings = _.groupBy(bookings, 'ts')
+                    bookings = _.map( bookings, function(objs, bb){
+                        return {
+                            ts: bb,
+                            count: _.sumBy(objs, 'count')
+                        }
+                    })
+                    bookings = _.filter( bookings, function(bb){
+                        return bb.count >= i.capacity
+                    })
+                    return {
+                        ...i,
+                        fully_booked: _.map(bookings, function(b){
+                            return b.ts
+                        })
+                    }
+                })
+                return classes
+            },
             classes_list: function(){
                 let classes = []
                 let vm = this
                 for( let day = moment(vm.schedule_start); day.isBefore(vm.schedule_stop); day.add(1, 'days') ){
                     let date = day.format('YYYY-MM-DD')
-                    _.each(vm.classes, function(i){
+                    _.each(vm.available_classes, function(i){
                         if( ! vm.isClassBlocked(i, date) && ! vm.isDayBlockedBySeason(i, date) && ! vm.isDayBlockedByLocation(i, date) ){
                             let instances = vm.buildInstances( i, date )
                             if( ! _.isUndefined( instances ) ){
@@ -72,6 +102,9 @@
                         }
                     })
                 }
+
+
+
                 // Limit classes by number
                 vm.schedule.limitType === 1 ? classes.splice(0, vm.schedule.limit || 9999999) : classes
                 return classes
@@ -94,7 +127,41 @@
                 return moment().add(this.schedule.stopDays, 'days').format('YYYY-MM-DD')
             }
         },
+        mounted: function(){
+            let vm = this
+            vm.getBookings()
+        },
+        watch: {
+            bookings: function(nv){
+                let vm = this
+                if( nv.length < vm.bookings_count ){
+                    vm.getBookings(vm.bookings_page)
+                }
+            }
+        },
         methods: {
+            getBookings: function(page){
+                let vm = this
+                let client = algoliasearch( '04QHF1E2Q9', this.$store.getters.tenant.algoliaPublicApiKey );
+                let index = client.initIndex('ss_prod_bookings');
+                let filters = ''
+                let min = parseInt( moment(`${vm.schedule_start}T00:00:00Z`).format('X') )
+                let max = parseInt( moment( `${vm.schedule_stop}T23:59:59Z` ).format('X') )
+                filters += `ts:${min} TO ${max}`
+                index.search({
+                        hitsPerPage: 1000,
+                        page: page || 0,
+                        filters: `${filters} AND status>=1`
+                    },
+                    function searchDone(err, content) {
+                        if (err) throw err;
+                        vm.bookings = _.concat(vm.bookings, content.hits)
+                        vm.bookings_count = content.nbHits
+                        vm.bookings_pages = content.nbPages
+                        vm.bookings_page++
+                    }
+                );
+            },
             openClassModal: function(v){
                 if( ! _.isNull( v ) ){
                     this.classId = v.classId
@@ -131,6 +198,16 @@
                         starting_time: `${date}T${starting_time}Z`,
                         ending_time: `${date}T${ending_time}Z`,
                     }
+                })
+                instances = _.filter(instances, function(i){
+                    if( ! _.isUndefined( classObj.fully_booked ) ){
+                        let ts = moment(i.starting_time).utcOffset(0).format('X').toString()
+                        let fully_booked = _.find( classObj.fully_booked, function(v){
+                            return v === ts
+                        })
+                        return _.isUndefined( fully_booked )
+                    }
+                    return true
                 })
                 return instances.length > 0 ? instances : undefined
             },
