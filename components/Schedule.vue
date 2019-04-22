@@ -84,6 +84,9 @@
                     })
 
                 }
+
+                classes = _.orderBy( classes, ['starting_time'] )
+
                 // Filter by day of the week
                 if( ! _.isUndefined( vm.filters ) && ! _.isUndefined( vm.filters.days ) && ! _.isNull( vm.filters.days ) && ! _.isUndefined( vm.filters.days ) && ! _.isNull( vm.filters.days ) ){
                     classes = _.filter( classes, function(c){
@@ -175,12 +178,22 @@
             },
             buildInstances: function(classObj, date){
                 let instances = []
-                let dayIntervals = !_.isUndefined( classObj.schedule ) && !_.isUndefined( classObj.schedule.specific ) && ! _.isEmpty( classObj.schedule.specific ) && ! _.isUndefined( _.find( classObj.schedule.specific, { d: date } ) ) ? _.find( classObj.schedule.specific, { d: date } ) : _.find(classObj.schedule.days, {d: parseInt(moment(date).format('e'))})
-                if( ! _.isUndefined( dayIntervals ) ){
-                    _.each(dayIntervals.i, function(i){
-                        instances.push(i)
+                let dayIntervals =  _.find(classObj.schedule.days, {d: parseInt(moment(date).format('e'))})
+                    dayIntervals = ! _.isUndefined( dayIntervals ) ? [ dayIntervals ] : []
+                if( ! _.isUndefined( classObj.schedule ) && ! _.isUndefined( classObj.schedule.specific ) && ! _.isEmpty( classObj.schedule.specific ) ){
+                    let matched = _.find( classObj.schedule.specific, { d: date } )
+                    if( ! _.isUndefined( matched ) ){
+                        dayIntervals = _.concat( dayIntervals, matched )
+                    }
+                }
+                if( dayIntervals.length > 0 ){
+                    _.each( dayIntervals, function(di){
+                        _.each(di.i, function(i){
+                            instances.push(i)
+                        })
                     })
                 }
+                instances = _.orderBy( instances, ['s'] )
                 instances = _.map(instances, function(i){
                     let h = parseInt( i.s / 60 )
                         h = h < 10 ? `0${h}` : h
@@ -231,8 +244,10 @@
                     return true
                 }
                 let validDays = _.find( c.schedule.days, {d: parseInt(moment(d).format('e')) } )
-                let specificDays = _.isUndefined( c.specific ) ? undefined : _.find( c.schedule.specific, {d: parseInt(moment(d).format('e')) } )
-                return _.isUndefined(validDays) && _.isUndefined( specificDays ) || _.isUndefined( validDays ) && !_.isUndefined( specificDays )
+                let specificDays = _.isUndefined( c.schedule.specific ) ? undefined : _.find( c.schedule.specific, { d: d } )
+                let out = _.isUndefined( validDays ) && _.isUndefined( specificDays )
+                //console.log('date', d, c.title, specificDays, out)
+                return out
             },
             isDayBlockedByLocation: function(c, d){
                 let vm = this
