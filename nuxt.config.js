@@ -26,7 +26,6 @@ async function getClassesRoutes() {
         })
         classesAll = _.concat(classesAll, classes)
     }
-    console.log('routes are', classesAll)
     return classesAll
 }
 
