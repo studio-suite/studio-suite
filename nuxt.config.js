@@ -2,7 +2,7 @@ const pkg = require('./package')
 import axios from 'axios'
 import _ from 'lodash'
 
-let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || 'auth0|5bdae2a63fd53b44339f6ab4'
+let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || 'auth0|5cc321c2e80cf00f2a28336b'
 let VUE_APP_API_URL_SCHEDULES = process.env.VUE_APP_API_BASE || 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod'
 
 async function getClassesRoutes() {
@@ -26,6 +26,7 @@ async function getClassesRoutes() {
         })
         classesAll = _.concat(classesAll, classes)
     }
+    console.log('routes are', classesAll)
     return classesAll
 }
 
@@ -112,7 +113,7 @@ module.exports = {
     ],
 
     env: {
-        VUE_APP_TENANT_ID: process.env.VUE_APP_TENANT_ID || 'auth0|5bdae2a63fd53b44339f6ab4',
+        VUE_APP_TENANT_ID: process.env.VUE_APP_TENANT_ID || VUE_APP_TENANT_ID,
         VUE_APP_API_BASE: process.env.VUE_APP_API_BASE || 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod',
         VUE_APP_IMGIX_URL: process.env.VUE_APP_IMGIX_URL || 'my-getstudiosuite.imgix.net',
         VUE_APP_BOOKINGS_API_BASE: process.env.VUE_APP_BOOKINGS_API_BASE || 'https://3h737nakvh.execute-api.us-east-2.amazonaws.com/prod',

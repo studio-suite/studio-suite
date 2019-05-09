@@ -260,7 +260,7 @@
                         }
                     })
                 }
-                if( !_.isUndefined( schedule.empty ) && ! _.isEmpty( schedule.empty ) ){
+                if( !_.isUndefined( schedule ) && !_.isUndefined( schedule.empty ) && ! _.isEmpty( schedule.empty ) ){
                     dates = _.filter( dates, function(d){
                         return schedule.empty.indexOf( d.d ) === -1
                     })
