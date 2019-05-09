@@ -2,8 +2,10 @@ import axios from 'axios'
 import _ from 'lodash'
 import Schedule from '@/models/Schedule'
 
-const state = {
-    list: []
+const state = () => {
+    return {
+        list: []
+    }
 }
 
 const getters = {

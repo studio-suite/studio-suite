@@ -161,10 +161,6 @@ module.exports = {
     ** Build configuration
     */
     build: {
-        /*
-        ** You can extend webpack config here
-        */
-        vendor: ['vue-select'],
         extractCSS: true
     }
 }

@@ -1,8 +1,10 @@
 import axios from 'axios'
 
 
-const state = {
-    list: []
+const state = () => {
+    return {
+        list: []
+    }
 }
 
 const getters = {
