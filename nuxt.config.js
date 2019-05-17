@@ -2,7 +2,7 @@ const pkg = require('./package')
 import axios from 'axios'
 import _ from 'lodash'
 
-let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || 'auth0|5cc321c2e80cf00f2a28336b'
+let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || 'auth0|5cbf6ddbca5e2e0f3837683d'
 let VUE_APP_API_URL_SCHEDULES = process.env.VUE_APP_API_BASE || 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod'
 
 async function getClassesRoutes() {

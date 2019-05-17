@@ -240,11 +240,11 @@
                 }
             },
             isClassBlocked: function(c, d){
-                if(  ! _.isUndefined( c.schedule.empty ) && c.schedule.empty.indexOf(d) >= 0 ){
+                if(  ! _.isUndefined(c.schedule) && ! _.isUndefined( c.schedule.empty ) && c.schedule.empty.indexOf(d) >= 0 ){
                     return true
                 }
-                let validDays = _.find( c.schedule.days, {d: parseInt(moment(d).format('e')) } )
-                let specificDays = _.isUndefined( c.schedule.specific ) ? undefined : _.find( c.schedule.specific, { d: d } )
+                let validDays = ! _.isUndefined( c.schedule ) ? _.find( c.schedule.days, {d: parseInt(moment(d).format('e')) } ) : undefined
+                let specificDays =  _.isUndefined( c.schedule ) || _.isUndefined( c.schedule.specific ) ? undefined : _.find( c.schedule.specific, { d: d } )
                 let out = _.isUndefined( validDays ) && _.isUndefined( specificDays )
                 //console.log('date', d, c.title, specificDays, out)
                 return out
@@ -254,7 +254,7 @@
                 let locationSchedule = _.find(this.$store.state.locations.list, {id: c.locationId })
                 try{
 
-                    if( ! _.isUndefined( locationSchedule.schedule ) && ! _.isUndefined( locationSchedule.schedule.empty ) && locationSchedule.schedule.empty.indexOf(d) >= 0 ){
+                    if( ! _.isUndefined( locationSchedule ) && ! _.isUndefined( locationSchedule.schedule ) && ! _.isUndefined( locationSchedule.schedule.empty ) && locationSchedule.schedule.empty.indexOf(d) >= 0 ){
                         return true
                     }
                     let validSpecific = ! _.isUndefined( locationSchedule.specific ) ? _.find( locationSchedule.specific,  {d: parseInt(moment(d).format('e')) }) : undefined
