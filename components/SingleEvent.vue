@@ -97,7 +97,9 @@
                 availabilityRequest: false,
                 map: null,
                 loaders: false,
-                bookings: []
+                bookings: [],
+                startDate: moment().format(),
+                startSteps: 0
             }
         },
         watch: {
@@ -111,6 +113,20 @@
                     }
                 })
                 vm.availability = bookings
+            },
+            classNextDates: function(n){
+                let vm = this
+                if( _.isEmpty(n) && vm.startSteps < 20 ){
+                    vm.startDate = moment(vm.startDate).add(14, 'days').format()
+                    vm.startSteps++
+                } else if( ! _.isEmpty( n ) ){
+                    let tss = _.map( n, function(i){
+                        return i.ts
+                    })
+                    if( ! _.isEmpty( tss ) ){
+                        vm.getBookings( this.classObject.id, _.min( tss ), _.max( tss ) )
+                    }
+                }
             }
         },
         mounted: function(){
@@ -121,11 +137,17 @@
                 let map = new google.maps.Map( vm.$refs.map, { zoom: 16, center: uluru });
                 new google.maps.Marker({position: uluru, map: map});
             }
-            let tss = _.map( vm.classNextDates, function(i){
-                return i.ts
-            })
+            vm.startDate = !_.isUndefined( vm.ts ) && ! _.isNull(vm.ts) ? moment.unix(vm.ts).utcOffset(0) : vm.startDate
 
-            vm.getBookings( this.classObject.id, _.min( tss ), _.max( tss ) )
+            if( ! _.isEmpty( vm.classNextDates ) ){
+                let tss = _.map( vm.classNextDates, function(i){
+                    return i.ts
+                })
+                vm.getBookings( this.classObject.id, _.min( tss ), _.max( tss ) )
+            } else {
+                vm.startDate = moment(vm.startDate).add(14, 'days').format()
+            }
+
         },
         methods: {
             getBookings: function(classId, min, max){
@@ -218,13 +240,15 @@
                 }
                 return false
             },
+            
         },
         computed: {
             classNextDates: function(){
+                console.log('new')
                 let vm = this
                 let schedule = vm.classObject.schedule
                 let dates = []
-                let startDate = !_.isUndefined( vm.ts ) && ! _.isNull(vm.ts) ? moment.unix(vm.ts).utcOffset(0) : moment().utcOffset(0)
+                let startDate = moment(this.startDate).utcOffset(0)
                 let endDate = moment(startDate).add(14, 'days')
 
                 if( !_.isUndefined( schedule ) && !_.isUndefined( schedule.days ) && ! _.isEmpty( schedule.days ) ){
