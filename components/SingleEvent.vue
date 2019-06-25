@@ -40,7 +40,7 @@
                     <div id="map" ref="map" class="map margin-bottom--4"></div>
                     <h4>{{classLocation.name}}</h4>
                     <div class="address">
-                        {{classLocation.address.address1}}<template v-if="classLocation.address.address2">, {{classLocation.address.address2}}</template><template v-if="classLocation.address.city">, {{classLocation.address.city}}</template><template>, {{classLocation.address.zip}} {{classLocation.address.state}}</template>
+                        {{classLocation.address.address1}}<template v-if="classLocation.address.address2">, {{classLocation.address.address2}}</template><template v-if="classLocation.address.city">, {{classLocation.address.city}}</template>, {{classLocation.address.state}} {{classLocation.address.zip}}
                     </div>
                     <div v-if="classObject.description">
                         {{classObject.description}}

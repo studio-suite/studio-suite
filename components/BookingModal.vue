@@ -80,6 +80,7 @@
                         <div id="card-errors" role="alert"></div>
                     </div>
                 </form>
+                <div class="payment-error" v-if="errorsPayment.length > 0">{{errorsPayment[errorsPayment.length - 1]}}</div>
                 <div class="summary">
                     <label class="label-summary">Registration summary</label>
                     <strong>{{classObject.title}}</strong>
@@ -381,12 +382,14 @@
                 let vm = this
                 if( ! _.isNull( vm.booking ) && _.isNull( vm.bookingConfirmation ) ){
                     axios.get( `${process.env.VUE_APP_BOOKINGS_API_BASE}/booking?id=${vm.booking}` ).then(function(r){
+                        console.log('completed', r.data)
                         if( ! _.isUndefined( r.data ) && parseInt(r.data) === 1 ){
                             vm.bookingConfirmation = 1
                         } else if( ! _.isUndefined( r.data ) && parseInt(r.data) === -1 ){
+                            console.log('erorr here')
                             vm.booking = null
                             vm.stok = null
-                            vm.errorsPayment.push('Could not process payment. Please try again')
+                            vm.errorsPayment.push('Unable to process payment. Try a different card.')
                         } else {
                             setTimeout(vm.checkForPayment, 500)
                         }
@@ -409,7 +412,7 @@
                         vm.errorsPayment.push( 'Could not communicate with server. Please try again.' )
                         vm.stok = null
                     } else {
-                        vm.errorsPayment.push( 'Unfortunately there are no more spots available for this date.' )
+                        vm.errorsPayment.push( 'Unfortunately no more spots are available for this date.' )
                         vm.stok = null
                         vm.step = 4
                     }
@@ -443,7 +446,7 @@
                 if (  !_.isNull(n) ) {
                     vm.requestBooking(n)
                 } else {
-                    vm.loaders = true
+                    vm.loaders = false
                 }
             },
             form: {

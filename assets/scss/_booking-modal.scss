@@ -306,12 +306,14 @@
     }
   }
 
-  #card-errors{
+  #card-errors,
+  .payment-error{
     display: block;
     text-align: center;
     color: $color-red;
     font-size: .875rem;
     font-weight: 500;
+    margin-top: .5rem;
   }
 
   #card-element{
