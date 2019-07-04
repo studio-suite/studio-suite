@@ -3,7 +3,7 @@
   &__content{
     background-color: $color-bg-box;
     border-radius: 5px;
-    padding: 2.5rem;
+    padding: 2.5rem 2.5rem 7.5rem 2.5rem;
     position: relative;
 
     @include breakpoint(laptop){
@@ -376,5 +376,31 @@
   100% {
     -webkit-transform: rotate(360deg);
     transform: rotate(360deg);
+  }
+}
+
+
+.modal--visible{
+  overflow: hidden;
+}
+
+.summary-p{
+  line-height: 1.6;
+  color: $color-gray;
+
+  strong{
+    display: inline-block;
+    position: relative;
+    color: $color-black;
+
+    &::before{
+      content: '';
+      display: block;
+      position: absolute;
+      left: 0;
+      right: 0;
+      bottom: -1px;
+      border-bottom: 1px solid;
+    }
   }
 }

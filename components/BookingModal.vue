@@ -6,7 +6,6 @@
             <div class="loading" v-if="loaders">
                 <div class="loader"></div>
             </div>
-
             <!-- C H I L D R E N -->
             <div v-if="step === 0">
                 <h2>Trial Class Registration</h2>
@@ -73,6 +72,28 @@
             <div v-if="step === 2">
                 <h2>Trial Class Registration</h2>
                 <h3 class="margin-bottom--5"><template v-if="classObject.price > 0">Please provide payment details below</template><template v-else>Please review your registration</template></h3>
+                <p class="summary-p" v-if="classObject.price > 0">
+                    You are about to pay <strong>{{ formSubmit.attendees.length * formSubmit.price | currency }}</strong> for
+                    <template v-if="formSubmit.attendees.length === 1"><strong>{{formSubmit.attendees[0].name}}</strong></template>
+                    <template v-else-if="formSubmit.attendees.length === 2"><strong>{{formSubmit.attendees[0].name}}</strong> and <strong>{{formSubmit.attendees[1].name}}</strong></template>
+                    <template v-else-if="formSubmit.attendees.length > 2">
+                        <template v-for="(att, att_index) in formSubmit.attendees">
+                            <strong>{{att.name}}</strong><template v-if="att_index === formSubmit.attendees.length - 2"> and </template><templatev v-else>, </templatev>
+                        </template>
+                    </template>
+                    to try <strong>{{classObject.title}}</strong> on {{ts | moment_ts( summaryDateFormat ) }}
+                </p>
+                <p class="summary-p" v-else>
+                    You are about to register
+                    <template v-if="formSubmit.attendees.length === 1"><strong>{{formSubmit.attendees[0].name}}</strong></template>
+                    <template v-else-if="formSubmit.attendees.length === 2"><strong>{{formSubmit.attendees[0].name}}</strong> and <strong>{{formSubmit.attendees[1].name}}</strong></template>
+                    <template v-else-if="formSubmit.attendees.length > 2">
+                        <template v-for="(att, att_index) in formSubmit.attendees">
+                            <strong>{{att.name}}</strong><template v-if="att_index === formSubmit.attendees.length - 2"> and </template><templatev v-else>, </templatev>
+                        </template>
+                    </template>
+                    to try <strong>{{classObject.title}}</strong> on {{ts | moment_ts( summaryDateFormat ) }}
+                </p>
                 <form method="post" id="payment-form" ref="paymentForm" class="margin-top--3" v-if="classObject.price > 0">
                     <div class="form-row">
                         <label for="card-element">Credit or debit card</label>
@@ -81,7 +102,7 @@
                     </div>
                 </form>
                 <div class="payment-error" v-if="errorsPayment.length > 0">{{errorsPayment[errorsPayment.length - 1]}}</div>
-                <div class="summary">
+                <!--<div class="summary">
                     <label class="label-summary">Registration summary</label>
                     <strong>{{classObject.title}}</strong>
                     <span>{{ts | moment_ts( summaryDateFormat ) }}</span>
@@ -89,8 +110,8 @@
                         <h5>{{att.name}} <span>{{formSubmit.price | currency }}</span></h5>
                     </div>
                     <div class="total">Total <span>{{ formSubmit.attendees.length * formSubmit.price | currency }}</span></div>
-                </div>
-                <div class="next margin-top--5">
+                </div>-->
+                <div class="next margin-top--2">
                     <a href="#" class="next-button" v-on:click.prevent="completeBooking">Complete Booking</a>
                 </div>
             </div>
@@ -251,6 +272,15 @@
                 }
                 return errs
             },
+            toggleBodyClass(addRemoveClass, className) {
+                const el = document.body;
+
+                if (addRemoveClass === 'addClass') {
+                    el.classList.add(className);
+                } else {
+                    el.classList.remove(className);
+                }
+            },
             validateParent: function () {
                 let vm = this
                 let descriptor = {
@@ -361,9 +391,11 @@
             },
             showModal: function () {
                 this.$modal.show('booking-modal');
+                this.toggleBodyClass('addClass', 'modal--visible')
             },
             hideModal: function () {
                 this.$modal.hide('booking-modal');
+                this.toggleBodyClass('removeClass', 'modal--visible')
             },
             toggleModal: function () {
                 this.$emit('closeModal')

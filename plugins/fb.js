@@ -1,5 +1,5 @@
 export default ({ app, store }) => {
-    console.log('store', store.getters.fb)
+    console.log('store fb', store.getters.fb)
     if (typeof store.getters.fb === 'undefined' || store.getters.fb === null || store.getters.fb.length < 3 ) return
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
