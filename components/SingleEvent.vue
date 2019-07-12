@@ -137,8 +137,7 @@
                 let map = new google.maps.Map( vm.$refs.map, { zoom: 16, center: uluru });
                 new google.maps.Marker({position: uluru, map: map});
             }
-            vm.startDate = !_.isUndefined( vm.ts ) && ! _.isNull(vm.ts) ? moment.unix(vm.ts).utcOffset(0) : vm.startDate
-
+            vm.startDate = !_.isUndefined( vm.ts ) && ! _.isNull(vm.ts) ? moment.unix(parseInt(vm.ts)).utcOffset(0).format() : vm.startDate
             if( ! _.isEmpty( vm.classNextDates ) ){
                 let tss = _.map( vm.classNextDates, function(i){
                     return i.ts
@@ -244,13 +243,11 @@
         },
         computed: {
             classNextDates: function(){
-                console.log('new')
                 let vm = this
                 let schedule = vm.classObject.schedule
                 let dates = []
                 let startDate = moment(this.startDate).utcOffset(0)
                 let endDate = moment(startDate).add(14, 'days')
-
                 if( !_.isUndefined( schedule ) && !_.isUndefined( schedule.days ) && ! _.isEmpty( schedule.days ) ){
                     _.each( schedule.days, function(i){
                         let tempDate = moment(startDate).utcOffset(0)
@@ -270,7 +267,7 @@
                 }
                 if( !_.isUndefined( schedule ) && !_.isUndefined( schedule.specific ) && ! _.isEmpty( schedule.specific ) ){
                     _.each( schedule.specific, function(i){
-                        if( startDate.isSameOrBefore(moment(`${i.d}T00:00:00Z`)) ){
+                        if( startDate.isSameOrBefore(moment(`${i.d}T23:59:00Z`)) ){
                             dates = _.filter( dates, function(d){
                                 return d.d !== i.d
                             })
@@ -284,17 +281,18 @@
                         }
                     })
                 }
+
                 if( !_.isUndefined( schedule ) && !_.isUndefined( schedule.empty ) && ! _.isEmpty( schedule.empty ) ){
                     dates = _.filter( dates, function(d){
                         return schedule.empty.indexOf( d.d ) === -1
                     })
                 }
+
                 if( !_.isUndefined( vm.ts ) && ! _.isEmpty( vm.ts ) ){
                     dates = _.filter( dates, function(d){
                         return parseInt(d.ts) >= parseInt(vm.ts)
                     })
                 }
-
                 dates = _.filter( dates, function(dCheck){
                     return ! vm.isDayBlockedByLocation( vm.classObject, dCheck.d ) && ! vm.isDayBlockedBySeason( vm.classObject, dCheck.d )
                 })
@@ -306,7 +304,8 @@
                 let vm = this
                 let availability = vm.availability
                 let filtered = _.filter( vm.classNextDates, function(i){
-                    return vm.classObject.capacity - ( ! _.isUndefined( _.find(availability, { ts: i.ts }) ) ? _.find(availability, { ts: i.ts }) : 0 ) > 0
+                    let available = _.find(availability, { ts: i.ts })
+                    return vm.classObject.capacity - ( ! _.isUndefined( available ) ? available.count : 0 ) > 0
                 })
                 return filtered
             },

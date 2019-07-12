@@ -246,7 +246,6 @@
                 let validDays = ! _.isUndefined( c.schedule ) ? _.find( c.schedule.days, {d: parseInt(moment(d).format('e')) } ) : undefined
                 let specificDays =  _.isUndefined( c.schedule ) || _.isUndefined( c.schedule.specific ) ? undefined : _.find( c.schedule.specific, { d: d } )
                 let out = _.isUndefined( validDays ) && _.isUndefined( specificDays )
-                //console.log('date', d, c.title, specificDays, out)
                 return out
             },
             isDayBlockedByLocation: function(c, d){

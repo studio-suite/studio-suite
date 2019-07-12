@@ -414,11 +414,9 @@
                 let vm = this
                 if( ! _.isNull( vm.booking ) && _.isNull( vm.bookingConfirmation ) ){
                     axios.get( `${process.env.VUE_APP_BOOKINGS_API_BASE}/booking?id=${vm.booking}` ).then(function(r){
-                        console.log('completed', r.data)
                         if( ! _.isUndefined( r.data ) && parseInt(r.data) === 1 ){
                             vm.bookingConfirmation = 1
                         } else if( ! _.isUndefined( r.data ) && parseInt(r.data) === -1 ){
-                            console.log('erorr here')
                             vm.booking = null
                             vm.stok = null
                             vm.errorsPayment.push('Unable to process payment. Try a different card.')

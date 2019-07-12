@@ -1,5 +1,4 @@
 export default ({ app, store }) => {
-    console.log('store fb', store.getters.fb)
     if (typeof store.getters.fb === 'undefined' || store.getters.fb === null || store.getters.fb.length < 3 ) return
     !function(f,b,e,v,n,t,s)
     {if(f.fbq)return;n=f.fbq=function(){n.callMethod?
@@ -10,9 +9,7 @@ export default ({ app, store }) => {
         s.parentNode.insertBefore(t,s)}(window, document,'script',
         'https://connect.facebook.net/en_US/fbevents.js');
     fbq('init', store.getters.fb);
-    console.log("test", store.getters.fb)
     app.router.afterEach((to, from) => {
-        console.log('track')
         fbq('track', 'PageView');
         if( to.name === 'confirmation' ){
             fbq('track', 'Lead');
