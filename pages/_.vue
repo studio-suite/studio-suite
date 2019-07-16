@@ -31,10 +31,9 @@
             }
 
             if( ! _.isUndefined( this.classObject.image ) && ! _.isEmpty( this.classObject.image ) ){
-                head.meta.push({ hid: 'og:image', name: 'og:image', content: this.getImgSrc({w: 1200, h: 630, fit: 'crop', crop: 'edges' }, this.classObject.image ) })
-                head.meta.push({ hid: 'og:image:alt', name: 'og:image:alt', content: this.classObject.title })
+                head.meta.push({ hid: 'og-image', name: 'og:image', content: this.getImgSrc({w: 1200, h: 630, fit: 'crop', crop: 'edges' }, this.classObject.image ) })
+                head.meta.push({ hid: 'og-image-alt', name: 'og:image:alt', content: this.classObject.title })
             }
-
             return head
         },
         async asyncData({params, error, payload, query}) {
