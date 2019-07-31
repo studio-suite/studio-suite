@@ -1,3 +1,5 @@
+.gitignore
+*.gitignore
 # Created by .ignore support plugin (hsz.mobi)
 ### Node template
 # Logs
@@ -80,4 +82,7 @@ dist
 # IDE
 .idea
 .DS_Store
+.DS_Store
+.DS_Store
+*.DS_Store
 .DS_Store

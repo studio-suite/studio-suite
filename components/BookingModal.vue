@@ -226,10 +226,9 @@
                 let vm = this
                 let avYears = []
                 if (!this.isClassForAdults) {
-                    let yearToday = parseInt(moment().utcOffset(0).format('YYYY'))
-                    for (let i = parseInt(vm.classObject.age[0]); i <= parseInt(vm.classObject.age[1]); i++) {
-                        avYears.push(yearToday - i)
-                    }
+                    let min = moment().utcOffset(0).subtract(parseInt(vm.classObject.age[0]), 'years').year()
+                    let max = moment().utcOffset(0).subtract(parseInt(vm.classObject.age[1]) + 1, 'years').year()
+                    avYears = _.range( max, min + 1 )
                 }
                 return avYears
             },
