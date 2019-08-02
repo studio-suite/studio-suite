@@ -6,6 +6,7 @@
             <div class="loading" v-if="loaders">
                 <div class="loader"></div>
             </div>
+
             <!-- C H I L D R E N -->
             <div v-if="step === 0">
                 <h2>Trial Class Registration</h2>
@@ -23,18 +24,18 @@
                         <div class="month" :class="checkForErrors(`attendees.${ind}.dob.m`)">
                             <select v-model="att.dob.m" :class="checkForErrors(`attendees.${ind}.dob.m`)" title="Choose child month of birth">
                                 <option value="" disabled>Month</option>
-                                <option :value="1">January</option>
-                                <option :value="2">February</option>
-                                <option :value="3">March</option>
-                                <option :value="4">April</option>
-                                <option :value="5">May</option>
-                                <option :value="6">June</option>
-                                <option :value="7">July</option>
-                                <option :value="8">August</option>
-                                <option :value="9">September</option>
-                                <option :value="10">October</option>
-                                <option :value="11">November</option>
-                                <option :value="12">December</option>
+                                <option :value="1" v-if="isMonthAvailable(1, att.dob.y)">January</option>
+                                <option :value="2" v-if="isMonthAvailable(2, att.dob.y)">February</option>
+                                <option :value="3" v-if="isMonthAvailable(3, att.dob.y)">March</option>
+                                <option :value="4" v-if="isMonthAvailable(4, att.dob.y)">April</option>
+                                <option :value="5" v-if="isMonthAvailable(5, att.dob.y)">May</option>
+                                <option :value="6" v-if="isMonthAvailable(6, att.dob.y)">June</option>
+                                <option :value="7" v-if="isMonthAvailable(7, att.dob.y)">July</option>
+                                <option :value="8" v-if="isMonthAvailable(8, att.dob.y)">August</option>
+                                <option :value="9" v-if="isMonthAvailable(9, att.dob.y)">September</option>
+                                <option :value="10" v-if="isMonthAvailable(10, att.dob.y)">October</option>
+                                <option :value="11" v-if="isMonthAvailable(11, att.dob.y)">November</option>
+                                <option :value="12" v-if="isMonthAvailable(12, att.dob.y)">December</option>
                             </select>
                         </div>
                         <div class="day" :class="checkForErrors(`attendees.${ind}.dob.d`)">
@@ -136,7 +137,7 @@
 </template>
 
 <script>
-    import moment from "moment"
+    import moment from "moment-timezone"
     import _ from "lodash"
     import schema from "async-validator"
     import axios from "axios"
@@ -222,21 +223,54 @@
                 out.email = this.form.email
                 return out
             },
+            age_min: function(){
+                return parseInt(this.classObject.age[0])
+            },
+            age_max: function(){
+                return parseInt(this.classObject.age[1])
+            },
             availableYears: function () {
-                let vm = this
                 let avYears = []
-                if (!this.isClassForAdults) {
-                    let min = moment().utcOffset(0).subtract(parseInt(vm.classObject.age[0]), 'years').year()
-                    let max = moment().utcOffset(0).subtract(parseInt(vm.classObject.age[1]) + 1, 'years').year()
-                    avYears = _.range( max, min + 1 )
+                if ( ! this.isClassForAdults ) {
+                    avYears = _.range( this.limits[1], this.limits[0] + 1 )
                 }
                 return avYears
             },
+            limits: function(){
+                let min = moment().utcOffset(0).subtract(this.age_min, 'years').year()
+                let max = moment().utcOffset(0).subtract(this.age_max + 1, 'years').year()
+                return [ min, max ]
+            },
             isClassForAdults: function () {
                 return this.classObject.age[0] === this.classObject.age[1] && this.classObject.age[1] === 18
+            },
+            locations: function(){
+                return this.$store.getters.locations
+            },
+            location: function(){
+                return _.find( this.locations, { id: this.classObject.locationId } )
             }
         },
         methods: {
+            isMonthAvailable: function(m, y){
+                if( ! _.isUndefined(y)  && ! _.isNull(y) && parseInt(y) > 0 ){
+                    if( this.limits[0] === y ){
+                        let ev = moment.unix(this.ts).tz(this.location.timezone)
+                        if( moment().tz(this.location.timezone).month(m-1).isAfter(ev, 'day') ){
+                            return false
+                        }
+                    }
+                    if( this.limits[1] === y ){
+                        let ev = moment().tz(this.location.timezone)
+                        if( moment().tz(this.location.timezone).month(m-1).isBefore(ev, 'day') ){
+                            return false
+                        }
+                    }
+                } else {
+                    return false
+                }
+                return true
+            },
             allowCloseModal: function(e){
                 if( this.visible ){
                     e.stop()
@@ -248,12 +282,25 @@
             },
             availableDays: function(dob){
                 let days = []
+                let vm = this
                 if( ! _.isUndefined( dob.y )  && ! _.isUndefined( dob.m ) && parseInt( dob.y ) > 0 && parseInt( dob.m ) > 0 ){
                     let date = moment().utcOffset(0).year(dob.y).month(dob.m -1).day(1).endOf('month').format('D')
                     for( let d = 1; d <= parseInt( date ); d++ ){
                         days.push(d)
                     }
                 }
+                /*if( this.limits[0] === dob.y ){
+                    days = _.filter( days, function(d){
+                        return ! moment().tz(vm.location.timezone).month(dob.m-1).date(d).isAfter(moment.unix(vm.ts).tz(vm.location.timezone), 'day')
+                    })
+
+                }
+                if( this.limits[1] === dob.y ){
+                    days = _.filter( days, function(d){
+                        return ! moment().tz(vm.location.timezone).month(dob.m-1).date(d).isBefore(moment().tz(vm.location.timezone), 'day')
+                    })
+                }*/
+
                 return days
             },
             saveParent: function () {
