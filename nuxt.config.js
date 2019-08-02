@@ -161,11 +161,11 @@ module.exports = {
     ** Build configuration
     */
     build: {
-        extractCSS: true
-    },
-    filenames: {
-        app: ({ isDev }) => isDev ? '[name].js' : '[name].js',
-        chunk: ({ isDev }) => isDev ? '[name].js' : '[name].js',
-        css: ({ isDev }) => isDev ? '[name].css' : '[name].css'
+        extractCSS: true,
+        filenames: {
+            app: ({ isDev }) => isDev ? '[name].js' : '[name].js',
+            chunk: ({ isDev }) => isDev ? '[name].js' : '[name].js',
+            css: ({ isDev }) => isDev ? '[name].css' : '[name].css'
+        }
     }
 }
