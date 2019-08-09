@@ -53,7 +53,7 @@
             Filters,
             Schedule
         },
-        asyncData: async function({params}){
+        asyncData: async function({params, payload, store }){
             try{
                 let tenantId = process.env.VUE_APP_TENANT_ID.replace('|','%7c')
                 let r = await axios({
@@ -64,11 +64,14 @@
                     }
                 })
                 return {
+                    schedule: payload || _.find( store.getters.schedules, { slug: params.slug } ) || {},
                     classes: r.data || [],
                     slug: params.slug
                 }
             } catch (e) {
+                console.log('error get', e)
                 return {
+                    schedule: payload || _.find( store.getters.schedules, { slug: params.slug } ) || {},
                     classes: [],
                     slug: params.slug
                 }
@@ -123,9 +126,6 @@
                     return test
                 })
                 return out
-            },
-            schedule: function(){
-                return _.find( this.$store.getters.schedules, { slug: this.slug } ) || {}
             }
         }
     }
