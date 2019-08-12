@@ -183,6 +183,7 @@
                 if( ! _.isUndefined( classObj.schedule ) && ! _.isUndefined( classObj.schedule.specific ) && ! _.isEmpty( classObj.schedule.specific ) ){
                     let matched = _.find( classObj.schedule.specific, { d: date } )
                     if( ! _.isUndefined( matched ) ){
+                        dayIntervals = []
                         dayIntervals = _.concat( dayIntervals, matched )
                     }
                 }
