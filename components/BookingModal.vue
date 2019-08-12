@@ -224,10 +224,10 @@
                 return out
             },
             age_min: function(){
-                return parseInt(this.classObject.age[0])
+                return ! _.isUndefined( this.classObject.age ) ? parseInt(this.classObject.age[0]) : 0
             },
             age_max: function(){
-                return parseInt(this.classObject.age[1])
+                return ! _.isUndefined( this.classObject.age ) ? parseInt(this.classObject.age[1]) : 99
             },
             availableYears: function () {
                 let avYears = []
@@ -242,7 +242,7 @@
                 return [ min, max ]
             },
             isClassForAdults: function () {
-                return this.classObject.age[0] === this.classObject.age[1] && this.classObject.age[1] === 18
+                return ! _.isUndefined( this.classObject.age ) && this.classObject.age[0] === this.classObject.age[1] && this.classObject.age[1] === 18
             },
             locations: function(){
                 return this.$store.getters.locations
