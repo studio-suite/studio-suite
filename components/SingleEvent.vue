@@ -186,17 +186,31 @@
                 }
             },
             isDayBlockedBySeason: function(c, d){
-                let blocked  = false
                 let vm = this
+                if( vm.$store.state.seasons.list === 0 ){
+                    return false
+                }
+                let blocked  = 0
                 if( ! _.isUndefined( c.seasonsIds ) && ! _.isEmpty( c.seasonsIds ) ){
-                    _.each( c.seasonsIds, function(season){
+                    let seasons = JSON.parse( JSON.stringify( vm.$store.state.seasons.list ) )
+                    let ids = JSON.parse( JSON.stringify( c.seasonsIds ) )
+                        ids = _.filter( ids, function(i){
+                            return _.map(seasons, function(s){
+                                return s.id
+                            }).indexOf(i) >= 0
+                        })
+                    _.each( ids, function(season){
                         let validSeason = _.find( vm.$store.state.seasons.list, { id: season } )
-                        if( ! blocked && ! _.isUndefined( validSeason ) && ( moment(validSeason.range[0]).isAfter(d) || moment(validSeason.range[1]).isBefore(d) ) ){
-                            blocked = true
+                        if( ! _.isUndefined( validSeason ) && ( moment(validSeason.range[0]).isAfter(d) || moment(validSeason.range[1]).isBefore(d) ) ){
+                            blocked++
                         }
                     })
+                    if( ids.length === 1 ){
+                        return blocked > 0
+                    }
                 }
-                return blocked
+
+                return blocked === vm.$store.state.seasons.list.length
             },
             marked: function(v){
               return marked(v)
@@ -296,7 +310,6 @@
                 dates = _.filter( dates, function(dCheck){
                     return ! vm.isDayBlockedByLocation( vm.classObject, dCheck.d ) && ! vm.isDayBlockedBySeason( vm.classObject, dCheck.d )
                 })
-
                 dates = _.orderBy( dates, ['ts'] )
                 return dates
             },
