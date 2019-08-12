@@ -1,10 +1,10 @@
 <template>
     <section class="main-wrapper">
         <div class="container page--schedule">
-            <div v-if="schedule">
-                <h1 class="page-title" v-if="schedule.appearance && schedule.appearance.show_title">{{schedule.headline || schedule.title}}</h1>
-                <div class="page-description margin-bottom--3" v-if="schedule.description" v-html="schedule.description ? marked(schedule.description) : ''"></div>
-                <Filters v-if="hasFilters" v-model="filters" :schedule="schedule"  class="margin-bottom--3"></Filters>
+            <div>
+                <h1 class="page-title" v-show="schedule.appearance && schedule.appearance.show_title">{{schedule.headline || schedule.title}}</h1>
+                <div class="page-description margin-bottom--3" v-show="schedule.description" v-html="schedule.description ? marked(schedule.description) : ''"></div>
+                <Filters v-show="hasFilters" v-model="filters" :schedule="schedule"  class="margin-bottom--3"></Filters>
                 <Schedule :schedule="schedule" :filters="filters" :classes="classes_filtered"></Schedule>
             </div>
         </div>
@@ -53,7 +53,7 @@
             Filters,
             Schedule
         },
-        asyncData: async function({params}){
+        asyncData: async function({params, payload, store }){
             try{
                 let tenantId = process.env.VUE_APP_TENANT_ID.replace('|','%7c')
                 let r = await axios({
@@ -64,11 +64,14 @@
                     }
                 })
                 return {
+                    schedule: payload || _.find( store.getters.schedules, { slug: params.slug.toLowerCase() } ) || {},
                     classes: r.data || [],
                     slug: params.slug
                 }
             } catch (e) {
+                console.log('error get', e)
                 return {
+                    schedule: payload || _.find( store.getters.schedules, { slug: params.slug.toLowerCase() } ) || {},
                     classes: [],
                     slug: params.slug
                 }
@@ -123,9 +126,6 @@
                     return test
                 })
                 return out
-            },
-            schedule: function(){
-                return _.find( this.$store.getters.schedules, { slug: this.slug } ) || {}
             }
         }
     }

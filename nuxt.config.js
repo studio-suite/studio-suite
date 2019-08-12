@@ -30,12 +30,12 @@ async function getClassesRoutes() {
 }
 
 async function getSchedulesRoutes() {
-    let classesAll = []
+    let schedulesAll = []
     let lastId = false
     let baseUrl = `${VUE_APP_API_URL_SCHEDULES}/get-routes?type=schedule&id=${VUE_APP_TENANT_ID}`
     while (!_.isNull(lastId) || lastId === false) {
         let url = !_.isNull(lastId) && lastId !== false ? baseUrl + '&ExclusiveStartKey=' + lastId : baseUrl
-        let classes = await axios.get(url).then(function (r) {
+        let schedules = await axios.get(url).then(function (r) {
             if (!_.isUndefined(r.data.LastEvaluatedKey)) {
                 lastId = r.data.LastEvaluatedKey.id
             } else {
@@ -48,9 +48,9 @@ async function getSchedulesRoutes() {
                 }
             })
         })
-        classesAll = _.concat(classesAll, classes)
+        schedulesAll = _.concat(schedulesAll, schedules)
     }
-    return classesAll
+    return schedulesAll
 }
 
 async function getRoutes() {
