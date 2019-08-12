@@ -54,7 +54,7 @@
                 this.$router.push({
                     path: `/${slug}`,
                     query: {
-                        ts:  ts
+                        ts:  parseInt( moment(sdate).utcOffset(0).format('X') )
                     }
                 } )
             },
