@@ -64,14 +64,14 @@
                     }
                 })
                 return {
-                    schedule: payload || _.find( store.getters.schedules, { slug: params.slug } ) || {},
+                    schedule: payload || _.find( store.getters.schedules, { slug: params.slug.toLowerCase() } ) || {},
                     classes: r.data || [],
                     slug: params.slug
                 }
             } catch (e) {
                 console.log('error get', e)
                 return {
-                    schedule: payload || _.find( store.getters.schedules, { slug: params.slug } ) || {},
+                    schedule: payload || _.find( store.getters.schedules, { slug: params.slug.toLowerCase() } ) || {},
                     classes: [],
                     slug: params.slug
                 }

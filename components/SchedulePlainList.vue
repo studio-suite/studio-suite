@@ -49,12 +49,14 @@
         },
         methods: {
             openClassPage: function(slug, sdate){
-                this.$router.push({
+                let ts = parseInt( moment(sdate).utcOffset(0).format('X') )
+                window.location = `/${slug}?ts=${ts}`;
+                /*this.$router.push({
                     path: `/${slug}`,
                     query: {
-                        ts:  parseInt( moment(sdate).utcOffset(0).format('X') )
+                        ts:  ts
                     }
-                } )
+                } )*/
             },
             openModal: function(c, sdate){
                 if( this.schedule.modal === 1 ){
