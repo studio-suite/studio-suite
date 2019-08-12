@@ -1,10 +1,10 @@
 <template>
     <section class="main-wrapper">
         <div class="container page--schedule">
-            <div v-if="schedule">
-                <h1 class="page-title" v-if="schedule.appearance && schedule.appearance.show_title">{{schedule.headline || schedule.title}}</h1>
-                <div class="page-description margin-bottom--3" v-if="schedule.description" v-html="schedule.description ? marked(schedule.description) : ''"></div>
-                <Filters v-if="hasFilters" v-model="filters" :schedule="schedule"  class="margin-bottom--3"></Filters>
+            <div>
+                <h1 class="page-title" v-show="schedule.appearance && schedule.appearance.show_title">{{schedule.headline || schedule.title}}</h1>
+                <div class="page-description margin-bottom--3" v-show="schedule.description" v-html="schedule.description ? marked(schedule.description) : ''"></div>
+                <Filters v-show="hasFilters" v-model="filters" :schedule="schedule"  class="margin-bottom--3"></Filters>
                 <Schedule :schedule="schedule" :filters="filters" :classes="classes_filtered"></Schedule>
             </div>
         </div>

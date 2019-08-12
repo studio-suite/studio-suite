@@ -2,8 +2,8 @@
     <div class="class_list">
         <article v-for="c in classes" class="class">
             <div class="class__image" :class="{ 'class__image--empty': !c.image }">
-                <img v-if="c.image" :src="getImgSrc({w: 250, h: 250, fit: 'crop', crop: 'edges'}, c.image)" class="thumb">
-                <img v-if="c.image" :src="getImgSrc({w: 600 }, c.image)" class="thumb-mobile">
+                <img v-if="c.image" :src="getImgSrc({w: 250, h: 250, fit: 'crop', crop: 'edges'}, c.image)" class="thumb" :alt="c.title">
+                <img v-if="c.image" :src="getImgSrc({w: 600 }, c.image)" class="thumb-mobile" :alt="c.title">
                 <span v-if="!c.image"></span>
             </div>
             <div class="class__date">

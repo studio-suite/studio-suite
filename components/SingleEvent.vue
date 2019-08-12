@@ -10,7 +10,7 @@
                     <span class="margin-right--025"><i class="fal fa-users-class"></i> {{classAgeInterval}}</span> <span v-if="classTypes" class="no-wrap"><i class="middot"></i> {{classTypes}}</span>
                 </div>
                 <div v-if="classObject.image" class="image margin-bottom--4">
-                    <img :src="getImgSrc({w: 1300}, classObject.image)">
+                    <img :src="getImgSrc({w: 1300}, classObject.image)" :alt="classObject.title">
                 </div>
                 <div class="short-description margin-bottom--4" v-if="classObject.excerpt">{{classObject.excerpt}}</div>
                 <div class="content margin-bottom--6" v-if="!isModal && classObject.content" v-html="classObject.content ? marked(classObject.content) : ''"></div>
