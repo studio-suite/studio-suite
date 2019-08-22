@@ -268,7 +268,7 @@
             },
             isDayBlockedBySeason: function(c, d){
                 let vm = this
-                if( vm.$store.state.seasons.list === 0 ){
+                if( vm.$store.state.seasons.list.length === 0 ){
                     return false
                 }
                 let blocked  = 0
