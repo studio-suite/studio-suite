@@ -190,7 +190,7 @@
             },
             isDayBlockedBySeason: function(c, d){
                 let vm = this
-                if( vm.$store.state.seasons.list === 0 ){
+                if( vm.$store.state.seasons.list.length === 0 ){
                     return false
                 }
                 let blocked  = 0
@@ -310,6 +310,7 @@
                         return parseInt(d.ts) >= parseInt(vm.ts)
                     })
                 }
+
                 dates = _.filter( dates, function(dCheck){
                     return ! vm.isDayBlockedByLocation( vm.classObject, dCheck.d ) && ! vm.isDayBlockedBySeason( vm.classObject, dCheck.d )
                 })
