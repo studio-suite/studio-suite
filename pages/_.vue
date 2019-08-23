@@ -36,6 +36,13 @@
             }
             return head
         },
+        mounted: function(){
+            if( ! _.isUndefined( this.$route.query ) && ! _.isUndefined( this.$route.query.ts ) ){
+                if( _.isUndefined( this.ts ) || _.isNull( this.ts ) ){
+                    this.ts = parseInt( this.$route.query.ts )
+                }
+            }
+        },
         async asyncData({params, error, payload, query}) {
             if (payload) return { classObject: payload, ts: query.ts }
             else return {

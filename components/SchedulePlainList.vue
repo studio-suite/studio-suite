@@ -25,7 +25,7 @@
             </div>
             <div v-if="schedule.modal !== 2" class="class__buttons">
                 <div>
-                    <a href="#" v-if="schedule.appearance.show_excerpt" class="btn-class-details" v-on:click.prevent="openClassPage(c.slug, c.starting_time)">Details</a>
+                    <a :href="`/${c.slug}?ts=${openClassPage(c.starting_time)}`" v-if="schedule.appearance.show_excerpt" class="btn-class-details" >Details</a>
                     <a href="#" class="btn-class-book" v-on:click.prevent="openModal(c, c.starting_time)">Book</a>
                 </div>
             </div>
@@ -48,15 +48,8 @@
             }
         },
         methods: {
-            openClassPage: function(slug, sdate){
-                /*let ts = parseInt( moment(sdate).utcOffset(0).format('X') )
-                window.location = `/${slug}?ts=${ts}`;*/
-                this.$router.push({
-                    path: `/${slug}`,
-                    query: {
-                        ts:  parseInt( moment(sdate).utcOffset(0).format('X') )
-                    }
-                } )
+            openClassPage: function(sdate){
+                return parseInt( moment(sdate).utcOffset(0).format('X') )
             },
             openModal: function(c, sdate){
                 if( this.schedule.modal === 1 ){

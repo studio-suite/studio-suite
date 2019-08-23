@@ -1,15 +1,15 @@
 <template>
     <div class="filters-wrapper">
-        <label for="filters"><i class="far fa-filter margin-right--1"></i> <template v-if="!show_filters">Show</template><template v-else>Hide</template> Filters</label>
+        <label for="filters"><i class="far fa-filter margin-right--1"></i> <span v-show="!show_filters">Show</span><span v-show="show_filters">Hide</span> Filters</label>
         <input v-model="show_filters" type="checkbox" id="filters"/>
         <div class="filters-container" :class="{ 'filters-container--visible' : show_filters }">
             <div class="filters" :class="`filters--count-${filtersCount()}`">
-                <FilterAge v-if="hasFilter('filterAge')" v-model="filters.age" :age="schedule.age" :placeholder="schedule.appearance.labelFilterAge"></FilterAge>
-                <FilterClassTypes v-if="hasFilter('filterClassTypes')" v-model="filters.classTypes" :placeholder="schedule.appearance.labelFilterClassTypes"></FilterClassTypes>
-                <FilterDays v-if="hasFilter('filterDays')" v-model="filters.days" :days="schedule.filterDays" :placeholder="schedule.appearance.labelFilterDays"></FilterDays>
-                <FilterLocations v-if="hasFilter('filterLocations')" v-model="filters.locations" :placeholder="schedule.appearance.labelFilterLocations"></FilterLocations>
-                <FilterTime v-if="hasFilter('filterTimes')" v-model="filters.times" :times="schedule.filterTimes" :placeholder="schedule.appearance.labelFilterTimes"></FilterTime>
-                <FilterInstructors v-if="hasFilter('filterInstructors')" v-model="filters.instructors" :placeholder="schedule.appearance.labelFilterInstructors"></FilterInstructors>
+                <FilterAge v-show="hasFilter('filterAge')" v-model="filters.age" :age="schedule.age" :placeholder="schedule.appearance.labelFilterAge"></FilterAge>
+                <FilterClassTypes v-show="hasFilter('filterClassTypes')" v-model="filters.classTypes" :placeholder="schedule.appearance.labelFilterClassTypes"></FilterClassTypes>
+                <FilterDays v-show="hasFilter('filterDays')" v-model="filters.days" :days="schedule.filterDays" :placeholder="schedule.appearance.labelFilterDays"></FilterDays>
+                <FilterLocations v-show="hasFilter('filterLocations')" v-model="filters.locations" :placeholder="schedule.appearance.labelFilterLocations"></FilterLocations>
+                <FilterTime v-show="hasFilter('filterTimes')" v-model="filters.times" :times="schedule.filterTimes" :placeholder="schedule.appearance.labelFilterTimes"></FilterTime>
+                <FilterInstructors v-show="hasFilter('filterInstructors')" v-model="filters.instructors" :placeholder="schedule.appearance.labelFilterInstructors"></FilterInstructors>
             </div>
         </div>
     </div>

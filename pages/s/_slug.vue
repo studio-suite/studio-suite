@@ -5,7 +5,7 @@
                 <h1 class="page-title" v-show="schedule.appearance && schedule.appearance.show_title">{{schedule.headline || schedule.title}}</h1>
                 <div class="page-description margin-bottom--3" v-show="schedule.description" v-html="schedule.description ? marked(schedule.description) : ''"></div>
                 <Filters v-show="hasFilters" v-model="filters" :schedule="schedule"  class="margin-bottom--3"></Filters>
-                <Schedule :schedule="schedule" :filters="filters" :classes="classes_filtered"></Schedule>
+                <client-only placeholder="Loading..."><Schedule :schedule="schedule" :filters="filters" :classes="classes_filtered"></Schedule></client-only>
             </div>
         </div>
     </section>

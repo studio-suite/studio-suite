@@ -127,6 +127,9 @@
                         vm.getBookings( this.classObject.id, _.min( tss ), _.max( tss ) )
                     }
                 }
+            },
+            ts: function(n){
+                this.startDate = !_.isUndefined( n ) && ! _.isNull(n) ? moment.unix(parseInt(n)).utcOffset(0).format() : this.startDate
             }
         },
         mounted: function(){

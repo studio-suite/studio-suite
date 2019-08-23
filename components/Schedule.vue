@@ -1,14 +1,11 @@
 <template>
     <div class="schedule" :class="schedule_classes">
-        <SchedulePlainList v-if="schedule.style === 0" :classes="classes_list" :schedule="schedule" @openClassModal="openClassModal"></SchedulePlainList>
-        <ScheduleCompactList v-if="schedule.style === 1" :classes="classes_list" :schedule="schedule" @openClassModal="openClassModal"></ScheduleCompactList>
-        <ScheduleWeekly
-                v-if="schedule.style === 2"
-                :classes="classes_list"
-                :schedule="schedule"
-                :start="schedule_start"
-                :stop="schedule_stop"
-                @openClassModal="openClassModal"></ScheduleWeekly>
+        <div v-show="ready">
+            <SchedulePlainList v-if="schedule.style === 0" :classes="classes_list" :schedule="schedule" @openClassModal="openClassModal"></SchedulePlainList>
+            <ScheduleCompactList v-if="schedule.style === 1" :classes="classes_list" :schedule="schedule" @openClassModal="openClassModal"></ScheduleCompactList>
+            <ScheduleWeekly v-if="schedule.style === 2" :classes="classes_list" :schedule="schedule" :start="schedule_start" :stop="schedule_stop" @openClassModal="openClassModal"></ScheduleWeekly>
+        </div>
+        <div v-show="!ready"></div>
         <ClassModal :visible="showModal" :ts="ts" :classId="classId" @closeModal="showModal = false"></ClassModal>
     </div>
 </template>
@@ -40,7 +37,8 @@
               bookings: [],
               bookings_page: 0,
               bookings_pages: 0,
-              bookings_count: 0
+              bookings_count: 0,
+              ready: false
           }
         },
         computed: {
@@ -132,6 +130,7 @@
         },
         mounted: function(){
             let vm = this
+            vm.ready = true
             vm.getBookings()
         },
         watch: {

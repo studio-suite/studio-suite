@@ -74,11 +74,15 @@ module.exports = {
     */
     head: {
         title: pkg.name,
+        htmlAttrs: {
+            lang: 'en',
+        },
         meta: [
             {charset: 'utf-8'},
             {name: 'viewport', content: 'width=device-width, initial-scale=1'},
             {hid: 'description', name: 'description', content: pkg.description},
-            {hid: 'robots', name: 'robots', content: 'index, follow'}
+            {hid: 'robots', name: 'robots', content: 'index, follow'},
+            {hid: 'revised', content: new Date()}
         ],
         link: [
             {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'}
@@ -162,10 +166,10 @@ module.exports = {
     */
     build: {
         extractCSS: true,
-        filenames: {
+        /*filenames: {
             app: ({ isDev }) => isDev ? '[name].js' : '[name].js',
             chunk: ({ isDev }) => isDev ? '[name].js' : '[name].js',
             css: ({ isDev }) => isDev ? '[name].css' : '[name].css'
-        }
+        }*/
     }
 }
