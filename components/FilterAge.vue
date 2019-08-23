@@ -20,7 +20,7 @@
                 value: 1,
                 label: '1 year old'
             }]
-            _.each(_.range(2, 18), function(i){
+            _.each(_.range(2, 19), function(i){
               ages.push({
                   value: i,
                   label: `${i} years old`
@@ -44,11 +44,7 @@
                 }
             },
             options: function(){
-                let vm = this
-                return _.filter(vm.ages, function(i){
-                    return true
-                    return _.range(vm.age[0], vm.age[1]).indexOf(i.value) >= 0
-                })
+                return this.ages
             }
         }
     }

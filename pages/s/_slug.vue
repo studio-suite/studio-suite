@@ -99,26 +99,26 @@
                     let test = true
                     if( ! _.isUndefined( vm.filters.age ) && ! _.isNull( vm.filters.age ) ){
                         if( parseInt( vm.filters.age ) === 19 ){
-                            if( i.age[0] !== 18 && i.age[1] !== 18 ){
+                            if( i.age[0] < 18 || i.age[1] < 18  ){
                                 test = false
                             }
                         } else {
-                            if( _.range( i.age[0], i.age[1] + 1 ).indexOf( vm.filters.age ) === -1 ){
+                            if( _.range( i.age[0], i.age[1] + 1 ).indexOf( vm.filters.age ) === -1 || i.age[0] >= 18 ){
                                 test = false
                             }
                         }
                     }
-                    if( ! _.isUndefined( vm.filters.classTypes ) && ! _.isNull( vm.filters.classTypes ) ){
+                    if( test && ! _.isUndefined( vm.filters.classTypes ) && ! _.isNull( vm.filters.classTypes ) ){
                         if( _.isUndefined( i.classTypesIds ) || i.classTypesIds.indexOf(vm.filters.classTypes) === -1 ){
                             test = false
                         }
                     }
-                    if( ! _.isUndefined( vm.filters.locations ) && ! _.isNull( vm.filters.locations ) ){
+                    if( test && ! _.isUndefined( vm.filters.locations ) && ! _.isNull( vm.filters.locations ) ){
                         if( i.locationId.indexOf(vm.filters.locations) === -1 ){
                             test = false
                         }
                     }
-                    if( ! _.isUndefined( vm.filters.instructors ) && ! _.isEmpty( vm.filters.instructors ) ){
+                    if( test && ! _.isUndefined( vm.filters.instructors ) && ! _.isEmpty( vm.filters.instructors ) ){
                         if( _.isUndefined( i.instructorsIds ) || i.instructorsIds.indexOf(vm.filters.instructors) === -1 ){
                             test = false
                         }

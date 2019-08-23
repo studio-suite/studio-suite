@@ -126,7 +126,7 @@
             },
             schedule_stop: function(){
                 if( this.schedule.style === 2 ) return moment(this.schedule_start).add(7, 'days').format('YYYY-MM-DD')
-                if( this.schedule.stop === 1 ) return moment(this.schedule.stopSpecific).format('YYYY-MM-DD')
+                if( this.schedule.stop === 1 ) return moment(this.schedule.stopSpecific).add(1, 'day').format('YYYY-MM-DD')
                 return moment().add(this.schedule.stopDays, 'days').format('YYYY-MM-DD')
             }
         },
