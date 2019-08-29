@@ -200,7 +200,8 @@
                 let vm = this
                 let cap = this.classObject.capacity || 0
                 if( vm.ts ){
-                    cap -= ! _.isUndefined( vm.availability[vm.ts.toString()] ) ? vm.availability[vm.ts.toString()] : 0
+                    let a = _.find(vm.availability, { ts: parseInt( vm.ts ) })
+                    cap -= ! _.isUndefined( a ) ? a.count : 0
                 }
                 return cap
             },

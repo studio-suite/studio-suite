@@ -86,7 +86,8 @@
                 let vm = this
                 let cap = this.capacity || 0
                 if( vm.next_class ){
-                    cap -= ! _.isUndefined( vm.availability[vm.next_class.ts.toString()] ) ? vm.availability[vm.next_class.ts.toString()] : 0
+                    let a = _.find(vm.availability, { ts: parseInt( vm.next_class.ts ) })
+                    cap -= ! _.isUndefined( a ) ? a.count : 0
                 }
                 return cap
             }
