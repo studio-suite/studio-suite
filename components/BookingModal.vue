@@ -82,7 +82,7 @@
                             <strong>{{att.name}}</strong><template v-if="att_index === formSubmit.attendees.length - 2"> and </template><templatev v-else>, </templatev>
                         </template>
                     </template>
-                    to try <strong>{{classObject.title}}</strong> on {{ts | moment_ts( summaryDateFormat ) }}
+                    to try <strong>{{classObject.title}}</strong> on {{ts | moment_ts_location( summaryDateFormat, tz ) }}
                 </p>
                 <p class="summary-p" v-else>
                     You are about to register
@@ -93,7 +93,7 @@
                             <strong>{{att.name}}</strong><template v-if="att_index === formSubmit.attendees.length - 2"> and </template><templatev v-else>, </templatev>
                         </template>
                     </template>
-                    to try <strong>{{classObject.title}}</strong> on {{ts | moment_ts( summaryDateFormat ) }}
+                    to try <strong>{{classObject.title}}</strong> on {{ts | moment_ts_location( summaryDateFormat, tz ) }}
                 </p>
                 <form method="post" id="payment-form" ref="paymentForm" class="margin-top--3" v-if="classObject.price > 0">
                     <div class="form-row">
@@ -103,15 +103,6 @@
                     </div>
                 </form>
                 <div class="payment-error" v-if="errorsPayment.length > 0">{{errorsPayment[errorsPayment.length - 1]}}</div>
-                <!--<div class="summary">
-                    <label class="label-summary">Registration summary</label>
-                    <strong>{{classObject.title}}</strong>
-                    <span>{{ts | moment_ts( summaryDateFormat ) }}</span>
-                    <div class="item" v-for="att in formSubmit.attendees">
-                        <h5>{{att.name}} <span>{{formSubmit.price | currency }}</span></h5>
-                    </div>
-                    <div class="total">Total <span>{{ formSubmit.attendees.length * formSubmit.price | currency }}</span></div>
-                </div>-->
                 <div class="next margin-top--2">
                     <a href="#" class="next-button" v-on:click.prevent="completeBooking">Complete Booking</a>
                 </div>
@@ -123,7 +114,6 @@
                 <img src="~/assets/ok.svg">
                 <p class="text-align--center margin-top--4"><template v-if="classObject.price > 0">Your payment of <strong>{{ formSubmit.attendees.length * formSubmit.price | currency(tenantCurrency) }}</strong> processed successfully.</template> We sent you an email confirmation.</p>
             </div>
-
 
             <!-- N O   M O R E   S P O T S -->
             <div v-if="step === 4">
@@ -144,7 +134,7 @@
 
     export default {
         name: "BookingModal",
-        props: ['classObject', 'visible', 'ts', 'availability'],
+        props: ['classObject', 'visible', 'ts', 'availability', 'tz'],
         data: function () {
             return {
                 step: 0,
@@ -171,8 +161,9 @@
             }
         },
         filters: {
-            convertTimestamp: function (e, format) {
-                return moment.unix(e).utcOffset(0).format(format)
+            moment_ts_location: function(v, f, t){
+                t = ! _.isUndefined( t ) ? t : 'Europe/London'
+                return moment.unix(v).tz(t).format(f)
             }
         },
         mounted: function () {
@@ -184,6 +175,9 @@
             }
         },
         computed: {
+            moment_ts_location: function(){
+                return moment.unix(this.ts).tz(this.tz).format()
+            },
             default_form: function(){
               return {
                   firstName: '',
@@ -237,8 +231,8 @@
                 return avYears
             },
             limits: function(){
-                let min = moment().utcOffset(0).subtract(this.age_min, 'years').year()
-                let max = moment().utcOffset(0).subtract(this.age_max + 1, 'years').year()
+                let min = moment().tz(this.tz).subtract(this.age_min, 'years').year()
+                let max = moment().tz(this.tz).subtract(this.age_max + 1, 'years').year()
                 return [ min, max ]
             },
             isClassForAdults: function () {
@@ -255,14 +249,14 @@
             isMonthAvailable: function(m, y){
                 if( ! _.isUndefined(y)  && ! _.isNull(y) && parseInt(y) > 0 ){
                     if( this.limits[0] === y ){
-                        let ev = moment.unix(this.ts).tz(this.location.timezone)
-                        if( moment().tz(this.location.timezone).month(m-1).isAfter(ev, 'day') ){
+                        let ev = moment.unix(this.ts).tz(this.tz)
+                        if( moment().tz(this.tz).month(m-1).isAfter(ev, 'day') ){
                             return false
                         }
                     }
                     if( this.limits[1] === y ){
-                        let ev = moment().tz(this.location.timezone)
-                        if( moment().tz(this.location.timezone).month(m-1).isBefore(ev, 'day') ){
+                        let ev = moment().tz(this.tz)
+                        if( moment().tz(this.tz).month(m-1).isBefore(ev, 'day') ){
                             return false
                         }
                     }
@@ -284,23 +278,11 @@
                 let days = []
                 let vm = this
                 if( ! _.isUndefined( dob.y )  && ! _.isUndefined( dob.m ) && parseInt( dob.y ) > 0 && parseInt( dob.m ) > 0 ){
-                    let date = moment().utcOffset(0).year(dob.y).month(dob.m -1).day(1).endOf('month').format('D')
+                    let date = moment().tz(vm.tz).year(dob.y).month(dob.m -1).day(1).endOf('month').format('D')
                     for( let d = 1; d <= parseInt( date ); d++ ){
                         days.push(d)
                     }
                 }
-                /*if( this.limits[0] === dob.y ){
-                    days = _.filter( days, function(d){
-                        return ! moment().tz(vm.location.timezone).month(dob.m-1).date(d).isAfter(moment.unix(vm.ts).tz(vm.location.timezone), 'day')
-                    })
-
-                }
-                if( this.limits[1] === dob.y ){
-                    days = _.filter( days, function(d){
-                        return ! moment().tz(vm.location.timezone).month(dob.m-1).date(d).isBefore(moment().tz(vm.location.timezone), 'day')
-                    })
-                }*/
-
                 return days
             },
             saveParent: function () {

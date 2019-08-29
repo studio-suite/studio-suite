@@ -2,11 +2,12 @@
     <div class="booking-box-wrapper">
         <div class="booking-box__button" v-on:click.prevent="show_booking = !show_booking" v-if="dates.length > 0">
             <span class="booking-box__pre-title">Next Class</span>
-            <span class="booking-box__date">{{next_class.ts | moment_ts( getClassDateFormat() ) }}</span>
+            {{next_class.ts}}
+            <span class="booking-box__date">{{next_class.ts | moment_ts_location( getClassDateFormat(), tz ) }}</span>
             <span class="booking-box__time">
-                <span>{{ next_class.ts | moment_ts( getClassTimeFormat() ) }}</span>
+                <span>{{ next_class.ts | moment_ts_location( getClassTimeFormat(), tz ) }}</span>
                 <span class="spacer">-</span>
-                <span>{{ ( next_class.ts + ( next_class.dr * 60 ) ) | moment_ts( getClassTimeFormat() ) }}</span>
+                <span>{{ ( next_class.ts + ( next_class.dr * 60 ) ) | moment_ts_location( getClassTimeFormat(), tz ) }}</span>
             </span>
         </div>
         <div class="booking-box" :class="{ 'booking-box--visible': show_booking }">
@@ -15,11 +16,11 @@
             </div>
             <template v-if="dates.length > 0">
                 <span class="booking-box__pre-title">Next Class</span>
-                <span class="booking-box__date">{{next_class.ts | moment_ts( getClassDateFormat() ) }}</span>
+                <span class="booking-box__date">{{next_class.ts | moment_ts_location( getClassDateFormat(), tz ) }}</span>
                 <span class="booking-box__time">
-                    <span>{{ next_class.ts | moment_ts( getClassTimeFormat() ) }}</span>
+                    <span>{{ next_class.ts | moment_ts_location( getClassTimeFormat(), tz ) }}</span>
                     <span class="spacer">-</span>
-                    <span>{{ ( next_class.ts + ( next_class.dr * 60 ) ) | moment_ts( getClassTimeFormat() ) }}</span>
+                    <span>{{ ( next_class.ts + ( next_class.dr * 60 ) ) | moment_ts_location( getClassTimeFormat(), tz ) }}</span>
                 </span>
                 <span class="booking-box__price"><template v-if="price  === 0">Free</template><template v-else>{{price | currency(tenantCurrency)}}</template></span>
                 <span class="booking-box__availability"><template v-if="next_class_capacity > 1">{{next_class_capacity}} spots available</template><template v-else-if="next_class_capacity > 0">{{next_class_capacity}} spot available</template><template v-else>No Spots available</template></span>
@@ -29,7 +30,7 @@
                     <span class="booking-box__choose" v-on:click.prevent="chooseDate = !chooseDate">Choose a different date</span>
                     <div v-if="chooseDate" class="booking-box__dates-list">
                         <div v-for="date in dates" class="booking-box__dates-list-item" v-on:click="openModal( date.ts )">
-                            {{date.ts | moment_ts( `${getClassDateFormat()}` )}} at {{ date.ts | moment_ts( getClassTimeFormat() )}}
+                            {{date.ts | moment_ts_location( getClassDateFormat(), tz )}} at {{ date.ts | moment_ts_location( getClassTimeFormat(), tz )}}
                         </div>
                     </div>
                 </template>
@@ -42,6 +43,7 @@
 
 <script>
     import _ from "lodash"
+    import moment from "moment-timezone"
     export default {
         name: "BookingBox",
         data: function(){
@@ -60,7 +62,13 @@
               return ! this.availabilityRequest
             }
         },
-        props: [ 'dates_next', 'dates_available', 'capacity', 'classNextDates', 'price', 'availability', 'availabilityRequest' ],
+        filters: {
+          moment_ts_location: function(v, f, t){
+              t = ! _.isUndefined( t ) ? t : 'Europe/London'
+              return moment.unix(v).tz(t).format(f)
+          }
+        },
+        props: [ 'dates_next', 'dates_available', 'capacity', 'classNextDates', 'price', 'availability', 'availabilityRequest', 'tz' ],
         computed: {
             sold_out: function(){
               return  ! _.isUndefined( this.dates_available ) && _.isEmpty( this.dates_available )

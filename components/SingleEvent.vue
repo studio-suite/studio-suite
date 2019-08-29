@@ -56,6 +56,7 @@
                             :dates_available="classNextAvailableDates"
                             :dates_next="classNextDates"
                             :availabilityRequest="availabilityRequest"
+                            :tz="tz"
                             @openModal="openModal">
                     </BookingBox>
                     <template v-if="!isModal">
@@ -67,7 +68,7 @@
                 </div>
             </aside>
         </div>
-        <BookingModal :classObject="classObject" :ts="classNextTs" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="updateAvailability"></BookingModal>
+        <BookingModal :classObject="classObject" :ts="classNextTs" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="updateAvailability" :tz="tz"></BookingModal>
     </section>
 </template>
 
@@ -75,7 +76,7 @@
     import axios from "axios"
     import _ from "lodash"
     import marked from "marked"
-    import moment from "moment"
+    import moment from "moment-timezone"
     import BookingModal from '@/components/BookingModal'
     import BookingBox from '@/components/BookingBox'
     import queryString from 'querystring'
@@ -98,7 +99,7 @@
                 map: null,
                 loaders: false,
                 bookings: [],
-                startDate: moment().format(),
+                startDate: moment.tz(this.tz).format(),
                 startSteps: 0
             }
         },
@@ -117,7 +118,7 @@
             classNextDates: function(n){
                 let vm = this
                 if( _.isEmpty(n) && vm.startSteps < 20 ){
-                    vm.startDate = moment(vm.startDate).add(14, 'days').format()
+                    vm.startDate = moment.tz(vm.startDate, vm.tz).add(14, 'days').format()
                     vm.startSteps++
                 } else if( ! _.isEmpty( n ) ){
                     let tss = _.map( n, function(i){
@@ -129,7 +130,7 @@
                 }
             },
             ts: function(n){
-                this.startDate = !_.isUndefined( n ) && ! _.isNull(n) ? moment.unix(parseInt(n)).utcOffset(0).format() : this.startDate
+                this.startDate = !_.isUndefined( n ) && ! _.isNull(n) ? moment.unix(parseInt(n)).tz(this.tz).format() : this.startDate
             }
         },
         mounted: function(){
@@ -140,14 +141,14 @@
                 let map = new google.maps.Map( vm.$refs.map, { zoom: 16, center: uluru });
                 new google.maps.Marker({position: uluru, map: map});
             }
-            vm.startDate = !_.isUndefined( vm.ts ) && ! _.isNull(vm.ts) ? moment.unix(parseInt(vm.ts)).utcOffset(0).format() : vm.startDate
+            vm.startDate = !_.isUndefined( vm.ts ) && ! _.isNull(vm.ts) ? moment.unix(parseInt(vm.ts)).tz(vm.tz).format() : vm.startDate
             if( ! _.isEmpty( vm.classNextDates ) ){
                 let tss = _.map( vm.classNextDates, function(i){
                     return i.ts
                 })
                 vm.getBookings( this.classObject.id, _.min( tss ), _.max( tss ) )
             } else {
-                vm.startDate = moment(vm.startDate).add(14, 'days').format()
+                vm.startDate = moment.tz(vm.startDate, vm.tz).add(14, 'days').format()
             }
 
         },
@@ -179,9 +180,9 @@
                     if( ! _.isUndefined( locationSchedule.schedule ) && ! _.isUndefined( locationSchedule.schedule.empty ) && locationSchedule.schedule.empty.indexOf(d) >= 0 ){
                         return true
                     }
-                    let validSpecific = ! _.isUndefined( locationSchedule.specific ) ? _.find( locationSchedule.specific,  {d: parseInt(moment(d).format('e')) }) : undefined
+                    let validSpecific = ! _.isUndefined( locationSchedule.specific ) ? _.find( locationSchedule.specific,  {d: parseInt(moment.tz(d, vm.tz).format('e')) }) : undefined
                     validSpecific = !_.isUndefined( validSpecific ) ? vm.fitsIntervals( d, validSpecific.i, c.schedule.specific ) : validSpecific
-                    let validDays = _.find( locationSchedule.schedule.days, {d: parseInt(moment(d).format('e')) } )
+                    let validDays = _.find( locationSchedule.schedule.days, {d: parseInt(moment.tz(d, vm.tz).format('e')) } )
                     validDays = !_.isUndefined( validDays ) ? vm.fitsIntervals( d, validSpecific.i, c.schedule.days ) : validDays
                     return !_.isUndefined(validDays) || _.isUndefined( validDays ) && !_.isUndefined( validSpecific )
                 } catch (e) {
@@ -204,7 +205,7 @@
                         })
                     _.each( ids, function(season){
                         let validSeason = _.find( vm.$store.state.seasons.list, { id: season } )
-                        if( ! _.isUndefined( validSeason ) && ( moment(validSeason.range[0]).isAfter(d) || moment(validSeason.range[1]).isBefore(d) ) ){
+                        if( ! _.isUndefined( validSeason ) && ( moment.tz(validSeason.range[0], vm.tz).isAfter(d) || moment.tz(validSeason.range[1], vm.tz).isBefore(d) ) ){
                             blocked++
                         }
                     })
@@ -256,22 +257,28 @@
                 }
                 return false
             },
-            
+            getTimezone: function(id){
+                let l = _.find( this.$store.getters.locations, { id: id } )
+                return l.timezone || 'Europe/London'
+            }
         },
         computed: {
+            tz: function(){
+               return ! _.isUndefined( this.classLocation ) && ! _.isUndefined( this.classLocation.timezone ) ? this.classLocation.timezone || 'Europe/London' : 'Europe/London'
+            },
             classNextDates: function(){
                 let vm = this
                 let schedule = vm.classObject.schedule
                 let dates = []
-                let startDate = moment(this.startDate).utcOffset(0)
-                let endDate = moment(startDate).add(14, 'days')
+                let startDate = moment.tz(this.startDate, vm.tz)
+                let endDate = moment.tz(startDate, vm.tz).add(14, 'days')
                 if( !_.isUndefined( schedule ) && !_.isUndefined( schedule.days ) && ! _.isEmpty( schedule.days ) ){
                     _.each( schedule.days, function(i){
-                        let tempDate = moment(startDate).utcOffset(0)
+                        let tempDate = moment.tz(startDate, vm.tz)
                         _.each( i.i, function(int){
                             while( tempDate.isSameOrBefore(endDate) ){
                                 let inc_factor = tempDate.day() > i.d ? i.d + 7 : i.d
-                                let temp_date = moment(tempDate).utcOffset(0).set({hour:0,minute:0,second:0,millisecond:0}).day(inc_factor).add(int.s, 'minutes')
+                                let temp_date = moment.tz(tempDate, vm.tz).set({hour:0,minute:0,second:0,millisecond:0}).day(inc_factor).add(int.s, 'minutes')
                                 dates.push({
                                     d: temp_date.format('YYYY-MM-DD'),
                                     dr: parseInt( int.e ) - parseInt( int.s ),
@@ -284,7 +291,7 @@
                 }
                 if( !_.isUndefined( schedule ) && !_.isUndefined( schedule.specific ) && ! _.isEmpty( schedule.specific ) ){
                     _.each( schedule.specific, function(i){
-                        if( startDate.isSameOrBefore(moment(`${i.d}T23:59:00Z`)) ){
+                        if( startDate.isSameOrBefore(moment.tz( `${i.d}T23:59:00Z`, vm.getTimezone(vm.classObject.locationId) )) ){
                             dates = _.filter( dates, function(d){
                                 return d.d !== i.d
                             })
@@ -292,7 +299,7 @@
                                 dates.push({
                                     d: i.d,
                                     dr: parseInt( int.e ) - parseInt( int.s ),
-                                    ts: parseInt( moment(`${i.d}T00:00:00Z`).add(int.s, 'minutes').format('X') )
+                                    ts: parseInt( moment.tz( `${i.d}T00:00:00Z`, vm.getTimezone(vm.classObject.locationId) ).add(int.s, 'minutes').format('X') )
                                 })
                             })
                         }

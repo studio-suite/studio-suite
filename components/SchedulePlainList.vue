@@ -8,24 +8,35 @@
             </div>
             <div class="class__date">
                 <div>
-                    <span>{{ c.starting_time | moment('D' ) }}</span>
-                    {{ c.starting_time | moment('MMMM') }}
+                    <span>{{ c.starting_time | moment_location('D', getTimezone(c.locationId)  ) }}</span>
+                    {{ c.starting_time | moment_location('MMMM', getTimezone(c.locationId) ) }}
                 </div>
             </div>
             <div class="class__content">
                 <div>
                     <h2>{{c.title}}</h2>
-                    <div class="class__date-mobile">{{ c.starting_time | moment('D') }} {{ c.starting_time | moment('MMMM') }}</div>
+                    <div class="class__date-mobile">{{ c.starting_time | moment_location('D', getTimezone(c.locationId)) }} {{ c.starting_time | moment_location('MMMM', getTimezone(c.locationId)) }}</div>
                     <div class="details">
-                        <span class="margin-right--05"><i class="far fa-clock margin-right--025"></i> {{ c.starting_time | moment( getClassTimeFormat() ) }} <template v-if="schedule.appearance.show_ending">- {{ c.ending_time | moment( getClassTimeFormat() ) }}</template></span>
-                        <span class="margin-right--05" v-if="schedule.appearance.show_duration"><i class="middot" v-if="schedule.appearance.show_duration"></i> {{c.duration}} minutes</span>
+                        <span class="margin-right--05"><i class="far fa-clock margin-right--025"></i> {{ c.starting_time | moment_location( getClassTimeFormat(), getTimezone(c.locationId) ) }} <template v-if="schedule.appearance.show_ending">- {{ c.ending_time | moment_location( getClassTimeFormat(), getTimezone(c.locationId) ) }}</template></span>
+                        <span class="margin-right--05" v-if="schedule.appearance.show_duration">
+                            <i class="middot" v-if="schedule.appearance.show_duration"></i>
+                            <template v-if="c.duration / 60 > 1">
+                                <template v-if="Math.ceil( c.duration / 60 ) > 1">{{Math.ceil( c.duration / 60 )}} hours </template>
+                                <template v-else>1 hour</template>
+                                <template v-if="c.duration % 60 > 0"> {{c.duration % 60}} minutes</template>
+                            </template>
+                            <template v-else-if="c.duration / 60 === 1">1 hour</template>
+                            <template v-else>
+                                {{c.duration}} minutes
+                            </template>
+                        </span>
                         <span class="no-wrap" v-if="schedule.appearance.show_classTypes"><i class="middot" v-if="getClassClassTypes(c.classTypesIds)"></i> {{getClassClassTypes(c.classTypesIds)}}</span>
                     </div>
                 </div>
             </div>
             <div v-if="schedule.modal !== 2" class="class__buttons">
                 <div>
-                    <a :href="`/${c.slug}?ts=${openClassPage(c.starting_time)}`" v-if="schedule.appearance.show_excerpt" class="btn-class-details" >Details</a>
+                    <a :href="`/${c.slug}?ts=${getClassTs(c.starting_time, c.locationId)}`" v-if="schedule.appearance.show_excerpt" class="btn-class-details" >Details</a>
                     <a href="#" class="btn-class-book" v-on:click.prevent="openModal(c, c.starting_time)">Book</a>
                 </div>
             </div>
@@ -44,22 +55,18 @@
         props: ['classes', 'schedule'],
         filters: {
             moment_location: function(v, f, tz){
-                return moment(v).tz( tz ).format(f)
+                return moment.tz(v, tz).format(f)
             }
         },
         methods: {
-            openClassPage: function(sdate){
-                return parseInt( moment(sdate).utcOffset(0).format('X') )
+            getClassTs: function(sdate, lId){
+                return parseInt( moment.tz(sdate, this.getTimezone(lId)).format('X') )
             },
             openModal: function(c, sdate){
-                if( this.schedule.modal === 1 ){
-                    this.openClassPage(c.slug, sdate)
-                } else {
-                    this.$emit('openClassModal', {
-                        classId: c.id,
-                        ts: parseInt( moment(sdate).utcOffset(0).format('X') )
-                    })
-                }
+                this.$emit('openClassModal', {
+                    classId: c.id,
+                    ts: parseInt( moment.tz(sdate, this.getTimezone(c.locationId)).format('X') )
+                })
             },
             getTimezone: function(id){
                 let l = _.find( this.$store.getters.locations, { id: id } )

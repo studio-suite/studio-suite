@@ -12,7 +12,7 @@
 
 <script>
     import _ from 'lodash'
-    import moment from 'moment'
+    import moment from 'moment-timezone';
     import SchedulePlainList from '@/components/SchedulePlainList'
     import ScheduleCompactList from '@/components/ScheduleCompactList'
     import ScheduleWeekly from '@/components/ScheduleWeekly'
@@ -88,13 +88,13 @@
                 // Filter by day of the week
                 if( ! _.isUndefined( vm.filters ) && ! _.isUndefined( vm.filters.days ) && ! _.isNull( vm.filters.days ) && ! _.isUndefined( vm.filters.days ) && ! _.isNull( vm.filters.days ) ){
                     classes = _.filter( classes, function(c){
-                        return parseInt( moment(c.starting_time).utcOffset(0).format('d') ) === parseInt(vm.filters.days )
+                        return parseInt( moment.tz(c.starting_time, vm.getTimezone(c.locationId)).format('d') ) === parseInt(vm.filters.days )
                     })
                 }
                 // Filter by time of the day
                 if( ! _.isUndefined( vm.filters ) && ! _.isUndefined( vm.filters.times ) && ! _.isNull( vm.filters.times ) && ! _.isUndefined( vm.filters.times ) && ! _.isNull( vm.filters.times ) ){
                     classes = _.filter( classes, function(c){
-                        let h = parseInt( moment(c.starting_time).utcOffset(0).format('H') )
+                        let h = parseInt( moment.tz(c.starting_time, c.starting_time, vm.getTimezone(c.locationId)).format('H') )
                         switch ( vm.filters.times ) {
                             case 0 : return  h <= 11
                             case 1 : return h > 11 && h <= 16
@@ -176,8 +176,10 @@
                 }
             },
             buildInstances: function(classObj, date){
+                let tz = _.find( this.$store.getters.locations, { id: classObj.locationId } )
+                    tz = ! _.isUndefined( tz ) ? tz.timezone : 'Europe/London'
                 let instances = []
-                let dayIntervals =  _.find(classObj.schedule.days, {d: parseInt(moment(date).format('e'))})
+                let dayIntervals =  _.find(classObj.schedule.days, {d: parseInt(moment.tz(date, tz).format('e'))})
                     dayIntervals = ! _.isUndefined( dayIntervals ) ? [ dayIntervals ] : []
                 if( ! _.isUndefined( classObj.schedule ) && ! _.isUndefined( classObj.schedule.specific ) && ! _.isEmpty( classObj.schedule.specific ) ){
                     let matched = _.find( classObj.schedule.specific, { d: date } )
@@ -195,26 +197,16 @@
                 }
                 instances = _.orderBy( instances, ['s'] )
                 instances = _.map(instances, function(i){
-                    let h = parseInt( i.s / 60 )
-                        h = h < 10 ? `0${h}` : h
-                    let min = i.s % 60
-                        min = min < 10 ? `0${min}` : min
-                    let starting_time = h + ':' + min
-                        h = parseInt( i.e / 60 )
-                        h = h < 10 ? `0${h}` : h
-                        min = i.e % 60
-                        min = min < 10 ? `0${min}` : min
-                    let ending_time = h + ':' + min
                     return {
                         ...classObj,
                         duration: i.e - i.s,
-                        starting_time: `${date}T${starting_time}Z`,
-                        ending_time: `${date}T${ending_time}Z`,
+                        starting_time: moment.tz(date, tz).hours( Math.floor( i.s / 60 ) ).set('minutes', i.s % 60 ).set('seconds', 0).set('milliseconds', 0).format(), //`${date}T${starting_time}Z`,
+                        ending_time: moment.tz(date, tz).hours( Math.floor( i.e / 60 ) ).set('minutes', i.e % 60 ).set('seconds', 0).set('milliseconds', 0).format() //`${date}T${ending_time}Z`,
                     }
                 })
                 instances = _.filter(instances, function(i){
                     if( ! _.isUndefined( classObj.fully_booked ) ){
-                        let ts = moment(i.starting_time).utcOffset(0).format('X').toString()
+                        let ts = moment.tz(i.starting_time, tz).format('X').toString()
                         let fully_booked = _.find( classObj.fully_booked, function(v){
                             return v === ts
                         })
@@ -243,7 +235,7 @@
                 if(  ! _.isUndefined(c.schedule) && ! _.isUndefined( c.schedule.empty ) && c.schedule.empty.indexOf(d) >= 0 ){
                     return true
                 }
-                let validDays = ! _.isUndefined( c.schedule ) ? _.find( c.schedule.days, {d: parseInt(moment(d).format('e')) } ) : undefined
+                let validDays = ! _.isUndefined( c.schedule ) ? _.find( c.schedule.days, {d: parseInt(moment.tz(d, this.getTimezone(c.locationId)).format('e')) } ) : undefined
                 let specificDays =  _.isUndefined( c.schedule ) || _.isUndefined( c.schedule.specific ) ? undefined : _.find( c.schedule.specific, { d: d } )
                 let out = _.isUndefined( validDays ) && _.isUndefined( specificDays )
                 return out
@@ -256,9 +248,9 @@
                     if( ! _.isUndefined( locationSchedule ) && ! _.isUndefined( locationSchedule.schedule ) && ! _.isUndefined( locationSchedule.schedule.empty ) && locationSchedule.schedule.empty.indexOf(d) >= 0 ){
                         return true
                     }
-                    let validSpecific = ! _.isUndefined( locationSchedule.specific ) ? _.find( locationSchedule.specific,  {d: parseInt(moment(d).format('e')) }) : undefined
+                    let validSpecific = ! _.isUndefined( locationSchedule.specific ) ? _.find( locationSchedule.specific,  {d: parseInt(moment.tz(d, vm.getTimezone(c.locationId)).format('e')) }) : undefined
                         validSpecific = !_.isUndefined( validSpecific ) ? vm.fitsIntervals( d, validSpecific.i, c.schedule.specific ) : validSpecific
-                    let validDays = _.find( locationSchedule.schedule.days, {d: parseInt(moment(d).format('e')) } )
+                    let validDays = _.find( locationSchedule.schedule.days, {d: parseInt(moment.tz(d, vm.getTimezone(c.locationId)).format('e')) } )
                         validDays = !_.isUndefined( validDays ) ? vm.fitsIntervals( d, validSpecific.i, c.schedule.days ) : validDays
                     return !_.isUndefined(validDays) || _.isUndefined( validDays ) && !_.isUndefined( validSpecific )
                 } catch (e) {
@@ -281,7 +273,7 @@
                     })
                     _.each( ids, function(season){
                         let validSeason = _.find( vm.$store.state.seasons.list, { id: season } )
-                        if( ! _.isUndefined( validSeason ) && ( moment(validSeason.range[0]).isAfter(d) || moment(validSeason.range[1]).isBefore(d) ) ){
+                        if( ! _.isUndefined( validSeason ) && ( moment.tz(validSeason.range[0], vm.getTimezone(c.locationId)).isAfter(d) || moment.tz(validSeason.range[1], vm.getTimezone(c.locationId)).isBefore(d) ) ){
                             blocked++
                         }
                     })
@@ -291,6 +283,10 @@
                 }
 
                 return blocked === vm.$store.state.seasons.list.length
+            },
+            getTimezone: function(id){
+                let l = _.find( this.$store.getters.locations, { id: id } )
+                return l.timezone || 'Europe/London'
             }
         }
     }
