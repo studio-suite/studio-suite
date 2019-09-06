@@ -205,7 +205,7 @@
                         })
                     _.each( ids, function(season){
                         let validSeason = _.find( vm.$store.state.seasons.list, { id: season } )
-                        if( ! _.isUndefined( validSeason ) && ( moment.tz(validSeason.range[0], vm.tz).isAfter(d) || moment.tz(validSeason.range[1], vm.tz).isBefore(d) ) ){
+                        if( ! _.isUndefined( validSeason ) && ( moment.tz(validSeason.range[0], vm.tz).isAfter(d) && moment.tz(validSeason.range[1], vm.tz).isBefore(d) ) ){
                             blocked++
                         }
                     })

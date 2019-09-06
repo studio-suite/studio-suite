@@ -2,7 +2,7 @@ const pkg = require('./package')
 import axios from 'axios'
 import _ from 'lodash'
 
-let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || 'auth0|5d478ee010089e0da6dad713' //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
+let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || 'auth0|5c7562be93fbcd7097e2bb4e' //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
 let VUE_APP_API_URL_SCHEDULES = process.env.VUE_APP_API_BASE || 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod'
 
 async function getClassesRoutes() {
@@ -87,8 +87,9 @@ module.exports = {
         link: [
             {rel: 'icon', type: 'image/x-icon', href: '/favicon.ico'}
         ],
-        script: [{
-            src: 'https://js.stripe.com/v3/'
+        script: [
+            {
+                src: 'https://js.stripe.com/v3/'
             },
             {
                 src: `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_GMAPS_PUBLIC_API || 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8'}`,
