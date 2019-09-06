@@ -291,7 +291,7 @@
                 }
                 if( !_.isUndefined( schedule ) && !_.isUndefined( schedule.specific ) && ! _.isEmpty( schedule.specific ) ){
                     _.each( schedule.specific, function(i){
-                        if( startDate.isSameOrBefore(moment.tz( `${i.d}T23:59:00Z`, vm.getTimezone(vm.classObject.locationId) )) ){
+                        if( startDate.isSameOrBefore(moment.tz( `${i.d}T23:59:00`, vm.getTimezone(vm.classObject.locationId) )) ){
                             dates = _.filter( dates, function(d){
                                 return d.d !== i.d
                             })
@@ -299,25 +299,22 @@
                                 dates.push({
                                     d: i.d,
                                     dr: parseInt( int.e ) - parseInt( int.s ),
-                                    ts: parseInt( moment.tz( `${i.d}T00:00:00Z`, vm.getTimezone(vm.classObject.locationId) ).add(int.s, 'minutes').format('X') )
+                                    ts: parseInt( moment.tz( `${i.d}T00:00:00`, vm.getTimezone(vm.classObject.locationId) ).add(int.s, 'minutes').format('X') )
                                 })
                             })
                         }
                     })
                 }
-
                 if( !_.isUndefined( schedule ) && !_.isUndefined( schedule.empty ) && ! _.isEmpty( schedule.empty ) ){
                     dates = _.filter( dates, function(d){
                         return schedule.empty.indexOf( d.d ) === -1
                     })
                 }
-
                 if( !_.isUndefined( vm.ts ) && ! _.isEmpty( vm.ts ) ){
                     dates = _.filter( dates, function(d){
                         return parseInt(d.ts) >= parseInt(vm.ts)
                     })
                 }
-
                 dates = _.filter( dates, function(dCheck){
                     return ! vm.isDayBlockedByLocation( vm.classObject, dCheck.d ) && ! vm.isDayBlockedBySeason( vm.classObject, dCheck.d )
                 })
