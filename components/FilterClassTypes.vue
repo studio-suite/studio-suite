@@ -14,18 +14,25 @@
 
     export default {
         name: "FilterClassTypes",
-        props: ['value', 'placeholder'],
+        props: ['value', 'placeholder', 'available_filters'],
         mounted: function(){
 
         },
         computed: {
             options: function(){
-              return _.map(this.class_types, function(i){
+                let class_types = JSON.parse( JSON.stringify( this.class_types ) )
+                if( ! _.isUndefined( this.available_filters ) && ! _.isNull( this.available_filters ) && this.available_filters.length > 0 && this.available_filters[0] !== '0' ){
+                    let available = this.available_filters
+                    class_types = _.filter(class_types, function(ct){
+                        return available.indexOf( ct.id ) >= 0
+                    })
+                }
+                return _.map(class_types, function(i){
                   return {
                       label: i.name,
                       value: i.id
                   }
-              })
+                })
             },
             filter: {
                 get: function(){

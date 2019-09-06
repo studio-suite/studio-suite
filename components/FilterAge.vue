@@ -13,8 +13,8 @@
     import _ from 'lodash'
 
     export default {
-        name: "FilterClassTypes",
-        props: ['value', 'age', 'placeholder'],
+        name: "FilterAge",
+        props: ['value', 'age', 'placeholder', 'available_filters'],
         data: function(){
             let ages  = [{
                 value: 1,
@@ -44,7 +44,14 @@
                 }
             },
             options: function(){
-                return this.ages
+                let age = this.age
+                return _.filter( this.ages, function(a){
+                    if( age[0] === age[1] && age[0] === 18 ){
+                        return a.value >= 19 && a.value <= 19
+                    } else {
+                        return a.value >= age[0] && a.value <= age[1]
+                    }
+                })
             }
         }
     }

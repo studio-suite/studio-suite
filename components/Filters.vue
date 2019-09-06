@@ -5,11 +5,11 @@
         <div class="filters-container" :class="{ 'filters-container--visible' : show_filters }">
             <div class="filters" :class="`filters--count-${filtersCount()}`">
                 <FilterAge v-show="hasFilter('filterAge')" v-model="filters.age" :age="schedule.age" :placeholder="schedule.appearance.labelFilterAge"></FilterAge>
-                <FilterClassTypes v-show="hasFilter('filterClassTypes')" v-model="filters.classTypes" :placeholder="schedule.appearance.labelFilterClassTypes"></FilterClassTypes>
+                <FilterClassTypes v-show="hasFilter('filterClassTypes')" v-model="filters.classTypes" :placeholder="schedule.appearance.labelFilterClassTypes" :available_filters="schedule.filterClassTypes"></FilterClassTypes>
                 <FilterDays v-show="hasFilter('filterDays')" v-model="filters.days" :days="schedule.filterDays" :placeholder="schedule.appearance.labelFilterDays"></FilterDays>
-                <FilterLocations v-show="hasFilter('filterLocations')" v-model="filters.locations" :placeholder="schedule.appearance.labelFilterLocations"></FilterLocations>
-                <FilterTime v-show="hasFilter('filterTimes')" v-model="filters.times" :times="schedule.filterTimes" :placeholder="schedule.appearance.labelFilterTimes"></FilterTime>
-                <FilterInstructors v-show="hasFilter('filterInstructors')" v-model="filters.instructors" :placeholder="schedule.appearance.labelFilterInstructors"></FilterInstructors>
+                <FilterLocations v-show="hasFilter('filterLocations')" v-model="filters.locations" :placeholder="schedule.appearance.labelFilterLocations" :available_filters="schedule.filterLocations"></FilterLocations>
+                <FilterTime v-show="hasFilter('filterTimes')" v-model="filters.times" :times="schedule.filterTimes" :placeholder="schedule.appearance.labelFilterTimes" :available_filters="schedule.filterTimes"></FilterTime>
+                <FilterInstructors v-show="hasFilter('filterInstructors')" v-model="filters.instructors" :placeholder="schedule.appearance.labelFilterInstructors" :available_filters="schedule.filterInstructors"></FilterInstructors>
             </div>
         </div>
     </div>

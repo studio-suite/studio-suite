@@ -13,7 +13,7 @@
     import _ from 'lodash'
 
     export default {
-        name: "FilterClassTypes",
+        name: "FilterDays",
         props: ['value', 'days', 'placeholder'],
         data: function(){
             return {

@@ -14,13 +14,20 @@
 
     export default {
         name: "FilterInstructors",
-        props: ['value', 'placeholder'],
+        props: ['value', 'placeholder', 'available_filters'],
         mounted: function(){
 
         },
         computed: {
             options: function(){
-              return _.map(this.class_types, function(i){
+                let instructors = JSON.parse( JSON.stringify( this.instructors ) )
+                if( ! _.isUndefined( this.available_filters ) && ! _.isNull( this.available_filters ) && this.available_filters.length > 0 && this.available_filters[0] !== '0' ){
+                    let available = this.available_filters
+                    instructors = _.filter(instructors, function(ct){
+                        return available.indexOf( ct.id ) >= 0
+                    })
+                }
+              return _.map(instructors, function(i){
                   return {
                       label: `${i.firstName} ${i.lastName}`,
                       value: i.id
@@ -35,7 +42,7 @@
                     this.$emit('input', i)
                 }
             },
-            class_types: function(){
+            instructors: function(){
                 return _.orderBy(this.$store.state.instructors.list, ['name'])
             }
         },

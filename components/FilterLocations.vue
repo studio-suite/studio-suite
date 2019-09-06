@@ -14,13 +14,20 @@
 
     export default {
         name: "FilterLocations",
-        props: ['value', 'placeholder'],
+        props: ['value', 'placeholder', 'available_filters'],
         mounted: function(){
 
         },
         computed: {
             options: function(){
-              return _.map(this.locations, function(i){
+                let locations = JSON.parse( JSON.stringify( this.locations ) )
+                if( ! _.isUndefined( this.available_filters ) && ! _.isNull( this.available_filters ) && this.available_filters.length > 0 && this.available_filters[0] !== '0' ){
+                    let available = this.available_filters
+                    locations = _.filter(locations, function(ct){
+                        return available.indexOf( ct.id ) >= 0
+                    })
+                }
+              return _.map(locations, function(i){
                   return {
                       label: i.name,
                       value: i.id
