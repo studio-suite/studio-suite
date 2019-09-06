@@ -18,18 +18,7 @@
                     <div class="class__date-mobile">{{ c.starting_time | moment_location('D', getTimezone(c.locationId)) }} {{ c.starting_time | moment_location('MMMM', getTimezone(c.locationId)) }}</div>
                     <div class="details">
                         <span class="margin-right--05"><i class="far fa-clock margin-right--025"></i> {{ c.starting_time | moment_location( getClassTimeFormat(), getTimezone(c.locationId) ) }} <template v-if="schedule.appearance.show_ending">- {{ c.ending_time | moment_location( getClassTimeFormat(), getTimezone(c.locationId) ) }}</template></span>
-                        <span class="margin-right--05" v-if="schedule.appearance.show_duration">
-                            <i class="middot" v-if="schedule.appearance.show_duration"></i>
-                            <template v-if="c.duration / 60 > 1">
-                                <template v-if="Math.ceil( c.duration / 60 ) > 1">{{Math.ceil( c.duration / 60 )}} hours </template>
-                                <template v-else>1 hour</template>
-                                <template v-if="c.duration % 60 > 0"> {{c.duration % 60}} minutes</template>
-                            </template>
-                            <template v-else-if="c.duration / 60 === 1">1 hour</template>
-                            <template v-else>
-                                {{c.duration}} minutes
-                            </template>
-                        </span>
+                        <span class="margin-right--05" v-if="schedule.appearance.show_duration"><i class="middot" v-if="schedule.appearance.show_duration"></i> {{c.duration}} minutes</span>
                         <span class="no-wrap" v-if="schedule.appearance.show_classTypes"><i class="middot" v-if="getClassClassTypes(c.classTypesIds)"></i> {{getClassClassTypes(c.classTypesIds)}}</span>
                     </div>
                 </div>

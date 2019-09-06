@@ -11,15 +11,7 @@
                         <div class="meta">
                             <div>{{ event.starting_time | moment_location( getClassTimeFormat(), getTimezone(event.locationId) ) }} <template v-if="schedule.appearance.show_ending">- {{ event.ending_time | moment_location( getClassTimeFormat(), getTimezone(event.locationId) ) }}</template></div>
                             <div v-if="schedule.appearance.show_duration">
-                                <template v-if="event.duration / 60 > 1">
-                                    <template v-if="Math.ceil( event.duration / 60 ) > 1">{{Math.ceil( event.duration / 60 )}} hours </template>
-                                    <template v-else>1 hour</template>
-                                    <template v-if="event.duration % 60 > 0"> {{event.duration % 60}} minutes</template>
-                                </template>
-                                <template v-else-if="event.duration / 60 === 1">1 hour</template>
-                                <template v-else>
-                                    {{event.duration}} minutes
-                                </template>
+                                {{event.duration}} minutes
                             </div>
                             <div v-if="getClassClassTypes(event.classTypesIds)">{{getClassClassTypes(event.classTypesIds)}}</div>
                         </div>
