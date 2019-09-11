@@ -21,7 +21,7 @@
         computed: {
             options: function(){
                 let locations = JSON.parse( JSON.stringify( this.locations ) )
-                if( ! _.isUndefined( this.available_filters ) && ! _.isNull( this.available_filters ) && this.available_filters.length > 0 && this.available_filters[0] !== '0' ){
+                if( ! _.isUndefined( this.available_filters ) && ! _.isNull( this.available_filters ) && this.available_filters.length > 0 && this.available_filters[0] !== '*' ){
                     let available = this.available_filters
                     locations = _.filter(locations, function(ct){
                         return available.indexOf( ct.id ) >= 0

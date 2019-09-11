@@ -21,7 +21,7 @@
         computed: {
             options: function(){
                 let class_types = JSON.parse( JSON.stringify( this.class_types ) )
-                if( ! _.isUndefined( this.available_filters ) && ! _.isNull( this.available_filters ) && this.available_filters.length > 0 && this.available_filters[0] !== '0' ){
+                if( ! _.isUndefined( this.available_filters ) && ! _.isNull( this.available_filters ) && this.available_filters.length > 0 && this.available_filters[0] !== '*' ){
                     let available = this.available_filters
                     class_types = _.filter(class_types, function(ct){
                         return available.indexOf( ct.id ) >= 0
