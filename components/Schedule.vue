@@ -67,15 +67,19 @@
             },
             classes_list: function(){
                 let classes = []
+                let count = 100
                 let vm = this
                 for( let day = moment(vm.schedule_start); day.isBefore(vm.schedule_stop); day.add(1, 'days') ){
                     let date = day.format('YYYY-MM-DD')
                     _.each(vm.available_classes, function(i){
-                        if( ! vm.isClassBlocked(i, date) && ! vm.isDayBlockedBySeason(i, date) && ! vm.isDayBlockedByLocation(i, date) ){
+                        if( ! vm.isClassBlocked(i, date) && ! vm.isDayBlockedBySeason(i, date) && ! vm.isDayBlockedByLocation(i, date) && count > 0 ){
                             let instances = vm.buildInstances( i, date )
                             if( ! _.isUndefined( instances ) ){
                                 _.each(instances, function(ii){
-                                    classes.push(ii)
+                                    if( count > 0 ){
+                                        classes.push(ii)
+                                        count--
+                                    }
                                 })
                             }
                         }
@@ -94,7 +98,7 @@
                 // Filter by time of the day
                 if( ! _.isUndefined( vm.filters ) && ! _.isUndefined( vm.filters.times ) && ! _.isNull( vm.filters.times ) && ! _.isUndefined( vm.filters.times ) && ! _.isNull( vm.filters.times ) ){
                     classes = _.filter( classes, function(c){
-                        let h = parseInt( moment.tz(c.starting_time, c.starting_time, vm.getTimezone(c.locationId)).format('H') )
+                        let h = parseInt( moment.tz(c.starting_time, vm.getTimezone(c.locationId)).format('H') )
                         switch ( vm.filters.times ) {
                             case 0 : return  h <= 11
                             case 1 : return h > 11 && h <= 16

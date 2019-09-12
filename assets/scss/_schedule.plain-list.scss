@@ -138,6 +138,7 @@
           margin-right: 1rem;
           margin-bottom: auto;
           padding: 0 0 0 1rem;
+          flex-shrink: 0;
         }
         &__date-mobile{
           display: none;
@@ -150,6 +151,7 @@
           margin-right: 1rem;
           display: flex;
           margin-top: 0;
+          flex-shrink: 0;
 
           span{
             display: block;
