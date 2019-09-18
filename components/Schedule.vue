@@ -149,7 +149,7 @@
             getBookings: function(page){
                 let vm = this
                 let client = algoliasearch( '04QHF1E2Q9', this.$store.getters.tenant.algoliaPublicApiKey );
-                let index = client.initIndex('ss_prod_bookings');
+                let index = client.initIndex(process.env.VUE_APP_ALGOLIA_BOOKINGS_INDEX);
                 let filters = ''
                 let min = parseInt( moment(`${vm.schedule_start}T00:00:00Z`).format('X') )
                 let max = parseInt( moment( `${vm.schedule_stop}T23:59:59Z` ).format('X') )

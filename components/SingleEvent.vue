@@ -157,7 +157,7 @@
                 let vm = this
                 vm.loaders = true
                 let client = algoliasearch( '04QHF1E2Q9', this.$store.getters.tenant.algoliaPublicApiKey );
-                let index = client.initIndex('ss_prod_bookings');
+                let index = client.initIndex(process.env.VUE_APP_ALGOLIA_BOOKINGS_INDEX);
                 let filters = ''
                 filters += `ts:${min} TO ${max}`
                 index.search({
