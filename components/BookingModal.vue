@@ -178,10 +178,10 @@
                 return `${this.location.address.address1}, ${this.location.address.city}, ${this.location.address.state} ${this.location.address.zip}`
             },
             starting_time: function(){
-                return moment.unix(this.ts).tz(this.tz).format()
+                return moment.unix(this.ts).format()
             },
             ending_time: function(){
-                return moment.unix(this.ts + this.classNextDuration * 60).tz(this.tz).format()
+                return moment.unix(this.ts + this.classNextDuration * 60).format()
             },
             duration: function(){
               let schedule = this.classObject.schedule
