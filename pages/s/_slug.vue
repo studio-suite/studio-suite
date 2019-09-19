@@ -125,6 +125,17 @@
                             test = false
                         }
                     }
+                    if( test && ! _.isUndefined( vm.schedule.age ) && ! _.isUndefined( vm.schedule.age[0] ) && ! _.isUndefined( vm.schedule.age[1] ) ){
+                        if( i.age[0] === 18 ){
+                            if( vm.schedule.age[1] !== 19 ){
+                                test = false
+                            }
+                        } else {
+                            if( i.age[0] < vm.schedule.age[0] || i.age[0] > vm.schedule.age[0] || i.age[1] > vm.schedule.age[1] || i.age[0] < vm.schedule.age[0] ){
+                                test = false
+                            }
+                        }
+                    }
                     return test
                 })
                 return out
