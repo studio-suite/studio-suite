@@ -134,7 +134,7 @@
 
     export default {
         name: "BookingModal",
-        props: ['classObject', 'visible', 'ts', 'availability', 'tz'],
+        props: ['classObject', 'visible', 'ts', 'availability', 'tz', 'classNextDuration'],
         data: function () {
             return {
                 step: 0,
@@ -167,7 +167,6 @@
             }
         },
         mounted: function () {
-
             if (this.isClassForAdults) {
                 this.step = 1
             } else {
@@ -175,6 +174,19 @@
             }
         },
         computed: {
+            location_address: function(){
+                return `${this.location.address.address1}, ${this.location.address.city}, ${this.location.address.state} ${this.location.address.zip}`
+            },
+            starting_time: function(){
+                return moment.unix(this.ts).tz(this.tz).format()
+            },
+            ending_time: function(){
+                return moment.unix(this.ts + this.classNextDuration * 60).tz(this.tz).format()
+            },
+            duration: function(){
+              let schedule = this.classObject.schedule
+              let dayOfEvent = _.find( schedule.specific, { d: moment.unix(this.ts).tz(this.tz).format('YYYY-MM-DD') } )
+            },
             moment_ts_location: function(){
                 return moment.unix(this.ts).tz(this.tz).format()
             },
@@ -244,6 +256,26 @@
             },
             location: function(){
                 return _.find( this.locations, { id: this.classObject.locationId } )
+            },
+            class_title: function(){
+                let vm = this
+                let title = `${vm.classObject.title} for `
+                if(vm.formSubmit.attendees.length === 1){
+                    title += vm.formSubmit.attendees[0].name
+                } else if( vm.formSubmit.attendees.length === 2 ){
+                    title += `${vm.formSubmit.attendees[0].name} and ${vm.formSubmit.attendees[1].name}`
+                } else if( vm.formSubmit.attendees.length > 2 ){
+                    _.each( vm.formSubmit.attendees, function(att, att_index){
+                        title += att.name
+                        if( att_index === vm.formSubmit.attendees.length - 2 ){
+                            title += ' and '
+                        } else {
+                            title += ', '
+                        }
+                    })
+
+                }
+                return title
             }
         },
         methods: {
@@ -489,10 +521,17 @@
                     if( ! _.isUndefined( vm.classObject.redirect ) && ! _.isEmpty( vm.classObject.redirect ) ){
                         window.location = vm.classObject.redirect
                     } else {
-                        this.$router.push({ name: 'confirmation', params: vm.formSubmit })
+                        this.$router.push({ name: 'confirmation', params: {
+                                ...vm.formSubmit,
+                                starting_time: vm.starting_time,
+                                ending_time: vm.ending_time,
+                                class_title: vm.class_title,
+                                address: vm.location_address,
+                                excerpt: vm.classObject.excerpt,
+                                tz: vm.tz
+                            } })
                     }
-                    this.loaders = false
-
+                    //this.loaders = false
                 }
             },
             booking: function(n){

@@ -6,6 +6,7 @@
             </div>
             <div class="left-col">
                 <h1 class="title">{{classObject.title}}</h1>
+
                 <div class="meta margin-bottom--4">
                     <span class="margin-right--025"><i class="fal fa-users-class"></i> {{classAgeInterval}}</span> <span v-if="classTypes" class="no-wrap"><i class="middot"></i> {{classTypes}}</span>
                 </div>
@@ -68,7 +69,7 @@
                 </div>
             </aside>
         </div>
-        <BookingModal :classObject="classObject" :ts="classNextTs" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="updateAvailability" :tz="tz"></BookingModal>
+        <BookingModal :classObject="classObject" :ts="classNextTs" :classNextDuration="classNextDuration" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="updateAvailability" :tz="tz"></BookingModal>
     </section>
 </template>
 
@@ -100,7 +101,8 @@
                 loaders: false,
                 bookings: [],
                 startDate: moment.tz(this.tz).format(),
-                startSteps: 0
+                startSteps: 0,
+                classNextDuration:''
             }
         },
         watch: {
@@ -223,7 +225,8 @@
                 this.availability[v.ts] = _.isUndefined( this.availability[v.ts] ) ? parseInt( v.qty ) : ( this.availability[v.ts] + parseInt( v.qty ) )
             },
             openModal: function(p){
-                this.classNextTs = p
+                this.classNextTs = p.ts
+                this.classNextDuration = p.dr
                 this.showModal = true
             },
             getInstructor: function (id) {

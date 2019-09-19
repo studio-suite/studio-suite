@@ -96,6 +96,11 @@ module.exports = {
                 src: `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_GMAPS_PUBLIC_API || 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8'}`,
                 defer: true,
                 async: true
+            },
+            {
+                src: 'https://addevent.com/libs/atc/1.6.1/atc.min.js',
+                defer: true,
+                async: true
             }
         ],
         bodyAttrs: {
