@@ -125,7 +125,7 @@
                             test = false
                         }
                     }
-                    if( test && ! _.isUndefined( vm.schedule.age ) && ! _.isUndefined( vm.schedule.age[0] ) && ! _.isUndefined( vm.schedule.age[1] ) ){
+                    /*if( test && ! _.isUndefined( vm.schedule.age ) && ! _.isUndefined( vm.schedule.age[0] ) && ! _.isUndefined( vm.schedule.age[1] ) ){
                         if( i.age[0] === 18 ){
                             if( vm.schedule.age[1] !== 19 ){
                                 test = false
@@ -135,7 +135,7 @@
                                 test = false
                             }
                         }
-                    }
+                    }*/
                     return test
                 })
                 return out
