@@ -99,6 +99,22 @@
                 let out = vm.classes
                 out = _.filter( out, function(i){
                     let test = true
+                    if( vm.schedule.age[0] === 18 && vm.schedule.age[1] === 18  ){
+                        if( i.age[0] !== 18 ){
+                            test = false
+                        }
+                    } else if( vm.schedule.age[0] !== 0 && vm.schedule.age[1] !== 19 ){
+
+                        if( i.age[0] === 18 ){
+                            test = false
+                        } else {
+                            let min = i.age[0] > vm.schedule.age[0] ? vm.schedule.age[0] : i.age[0]
+                            let max = i.age[1] > vm.schedule.age[1] ? i.age[1] : vm.schedule.age[1]
+                            if ( max - min > i.age[1] - i.age[0] + vm.schedule.age[1] - vm.schedule.age[0]) {
+                                test = false
+                            }
+                        }
+                    }
                     if( ! _.isUndefined( vm.filters.age ) && ! _.isNull( vm.filters.age ) ){
                         if( parseInt( vm.filters.age ) === 19 ){
                             if( i.age[0] < 18 || i.age[1] < 18  ){
@@ -125,17 +141,7 @@
                             test = false
                         }
                     }
-                    /*if( test && ! _.isUndefined( vm.schedule.age ) && ! _.isUndefined( vm.schedule.age[0] ) && ! _.isUndefined( vm.schedule.age[1] ) ){
-                        if( i.age[0] === 18 ){
-                            if( vm.schedule.age[1] !== 19 ){
-                                test = false
-                            }
-                        } else {
-                            if( i.age[0] < vm.schedule.age[0] || i.age[0] > vm.schedule.age[0] || i.age[1] > vm.schedule.age[1] || i.age[0] < vm.schedule.age[0] ){
-                                test = false
-                            }
-                        }
-                    }*/
+
                     return test
                 })
                 return out

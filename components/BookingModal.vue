@@ -183,10 +183,6 @@
             ending_time: function(){
                 return moment.unix(this.ts + this.classNextDuration * 60).format()
             },
-            duration: function(){
-              let schedule = this.classObject.schedule
-              let dayOfEvent = _.find( schedule.specific, { d: moment.unix(this.ts).tz(this.tz).format('YYYY-MM-DD') } )
-            },
             moment_ts_location: function(){
                 return moment.unix(this.ts).tz(this.tz).format()
             },

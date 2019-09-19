@@ -24,6 +24,7 @@ export default {
     Logo
   },
     head () {
+      console.log('aaaaa', this.$store.getters.tenant)
       let description = `Book you dance trial class at ${this.$store.getters.tenant.name} by selecting `
         if( this.$store.getters.schedules.length > 1 ){
           description += 'a schedule '

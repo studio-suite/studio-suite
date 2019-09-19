@@ -2,14 +2,14 @@ const pkg = require('./package')
 import axios from 'axios'
 import _ from 'lodash'
 
-let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || 'auth0|5c50a6871a76dc70235185e7' //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
-let VUE_APP_API_URL_SCHEDULES = process.env.VUE_APP_API_BASE || 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod'
+let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || 'auth0|5bdae2a63fd53b44339f6ab4' //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
+let VUE_APP_API_BASE = process.env.VUE_APP_API_BASE || 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod'
 let VUE_APP_ALGOLIA_BOOKINGS_INDEX = process.env.VUE_APP_ALGOLIA_BOOKINGS_INDEX || 'ss_prod_bookings'
-
+let VUE_APP_GMAPS_PUBLIC_API = process.env.VUE_APP_GMAPS_PUBLIC_API || 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8'
 async function getClassesRoutes() {
     let classesAll = []
     let lastId = false
-    let baseUrl = `${VUE_APP_API_URL_SCHEDULES}/get-routes?id=${VUE_APP_TENANT_ID}`
+    let baseUrl = `${VUE_APP_API_BASE}/get-routes?id=${VUE_APP_TENANT_ID}`
     while (!_.isNull(lastId) || lastId === false) {
         let url = !_.isNull(lastId) && lastId !== false ? baseUrl + '&ExclusiveStartKey=' + lastId : baseUrl
         let classes = await axios.get(url).then(function (r) {
@@ -33,7 +33,7 @@ async function getClassesRoutes() {
 async function getSchedulesRoutes() {
     let schedulesAll = []
     let lastId = false
-    let baseUrl = `${VUE_APP_API_URL_SCHEDULES}/get-routes?type=schedule&id=${VUE_APP_TENANT_ID}`
+    let baseUrl = `${VUE_APP_API_BASE}/get-routes?type=schedule&id=${VUE_APP_TENANT_ID}`
     while (!_.isNull(lastId) || lastId === false) {
         let url = !_.isNull(lastId) && lastId !== false ? baseUrl + '&ExclusiveStartKey=' + lastId : baseUrl
         let schedules = await axios.get(url).then(function (r) {
@@ -57,13 +57,6 @@ async function getSchedulesRoutes() {
 async function getRoutes() {
     let classes = await getClassesRoutes()
     let schedules = await getSchedulesRoutes()
-    /*let locations = await axios.get(`${VUE_APP_API_URL_SCHEDULES}/locations?tenantId=${VUE_APP_TENANT_ID}`)
-        locations = _.map(locations.data, function(l){
-            return l.id
-        })*/
-    /*classes = _.filter(classes, function(c){
-        return locations.indexOf( c.locationId ) >= 0
-    })*/
     return _.concat(schedules, classes)
 }
 
@@ -93,7 +86,7 @@ module.exports = {
                 src: 'https://js.stripe.com/v3/'
             },
             {
-                src: `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_GMAPS_PUBLIC_API || 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8'}`,
+                src: `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_GMAPS_PUBLIC_API || VUE_APP_GMAPS_PUBLIC_API}`,
                 defer: true,
                 async: true
             },
@@ -124,10 +117,10 @@ module.exports = {
 
     env: {
         VUE_APP_TENANT_ID: process.env.VUE_APP_TENANT_ID || VUE_APP_TENANT_ID,
-        VUE_APP_API_BASE: process.env.VUE_APP_API_BASE || 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod',
+        VUE_APP_API_BASE: process.env.VUE_APP_API_BASE || VUE_APP_API_BASE,
         VUE_APP_IMGIX_URL: process.env.VUE_APP_IMGIX_URL || 'my-getstudiosuite.imgix.net',
         VUE_APP_BOOKINGS_API_BASE: process.env.VUE_APP_BOOKINGS_API_BASE || 'https://3h737nakvh.execute-api.us-east-2.amazonaws.com/prod',
-        VUE_APP_GMAPS_PUBLIC_API: process.env.VUE_APP_GMAPS_PUBLIC_API || 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8',
+        VUE_APP_GMAPS_PUBLIC_API: process.env.VUE_APP_GMAPS_PUBLIC_API || VUE_APP_GMAPS_PUBLIC_API,
         VUE_APP_ALGOLIA_BOOKINGS_INDEX: process.env.VUE_APP_ALGOLIA_BOOKINGS_INDEX || VUE_APP_ALGOLIA_BOOKINGS_INDEX
     },
 
