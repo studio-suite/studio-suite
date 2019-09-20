@@ -174,14 +174,20 @@
             }
         },
         computed: {
+            format_RFC: function(){
+              return 'ddd, DD MMM YYYY HH:mm:ss ZZ'
+            },
+            format_ADD_EVENT: function(){
+              return 'YYYY-MM-DD[T]HH:mm:ss'
+            },
             location_address: function(){
                 return `${this.location.address.address1}, ${this.location.address.city}, ${this.location.address.state} ${this.location.address.zip}`
             },
             starting_time: function(){
-                return moment.unix(this.ts).format()
+                return moment.unix(this.ts).tz(this.tz).format(this.format_ADD_EVENT)
             },
             ending_time: function(){
-                return moment.unix(this.ts + this.classNextDuration * 60).format()
+                return moment.unix(this.ts + this.classNextDuration * 60).tz(this.tz).format(this.format_ADD_EVENT)
             },
             moment_ts_location: function(){
                 return moment.unix(this.ts).tz(this.tz).format()
