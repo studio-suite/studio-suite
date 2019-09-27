@@ -1,14 +1,20 @@
 <template>
     <div class="booking-box-wrapper">
-        <div class="booking-box__button" v-on:click.prevent="show_booking = !show_booking" v-if="dates.length > 0">
+        <div class="booking-box__button" v-on:click.prevent="show_booking = !show_booking"  :class="{ 'visible': show_booking }" v-if="dates.length > 0">
+
             <span class="booking-box__pre-title">Next Class</span>
-            {{next_class.ts}}
-            <span class="booking-box__date">{{next_class.ts | moment_ts_location( getClassDateFormat(), tz ) }}</span>
-            <span class="booking-box__time">
-                <span>{{ next_class.ts | moment_ts_location( getClassTimeFormat(), tz ) }}</span>
-                <span class="spacer">-</span>
-                <span>{{ ( next_class.ts + ( next_class.dr * 60 ) ) | moment_ts_location( getClassTimeFormat(), tz ) }}</span>
+            <span class="booking-box__date">
+                {{next_class.ts | moment_ts_location( getClassDateFormat(), tz ) }}
+                <span class="booking-box__time">
+                    <span>{{ next_class.ts | moment_ts_location( getClassTimeFormat(), tz ) }}</span>
+                    <span class="spacer">-</span>
+                    <span>{{ ( next_class.ts + ( next_class.dr * 60 ) ) | moment_ts_location( getClassTimeFormat(), tz ) }}</span>
+                </span>
             </span>
+            <template v-if="!show_booking">
+            <a class="booking-box__booking__button" href="#"  :disabled="isSaveDisabled">Book Now</a>
+            </template>
+            <template v-else><i class="fal fa-times"></i></template>
         </div>
         <div class="booking-box" :class="{ 'booking-box--visible': show_booking }">
             <div class="loading" v-if="!availabilityRequest">
@@ -24,12 +30,12 @@
                 </span>
                 <span class="booking-box__price"><template v-if="price  === 0">Free</template><template v-else>{{price | currency(tenantCurrency)}}</template></span>
                 <span class="booking-box__availability"><template v-if="next_class_capacity > 1">{{next_class_capacity}} spots available</template><template v-else-if="next_class_capacity > 0">{{next_class_capacity}} spot available</template><template v-else>No Spots available</template></span>
-                <a class="booking-box__booking-button" href="#" v-on:click.prevent="openModal(next_class.ts)" :disabled="isSaveDisabled">Book Now</a>
+                <a class="booking-box__booking-button" href="#" v-on:click.prevent="openModal(next_class.ts, next_class.dr)" :disabled="isSaveDisabled">Book Now</a>
                 <template v-if="dates.length > 1 && !sold_out">
                     <span class="booking-box__or">or</span>
                     <span class="booking-box__choose" v-on:click.prevent="chooseDate = !chooseDate">Choose a different date</span>
                     <div v-if="chooseDate" class="booking-box__dates-list">
-                        <div v-for="date in dates" class="booking-box__dates-list-item" v-on:click="openModal( date.ts )">
+                        <div v-for="date in dates" class="booking-box__dates-list-item" v-on:click="openModal( date.ts, date.dr )">
                             {{date.ts | moment_ts_location( getClassDateFormat(), tz )}} at {{ date.ts | moment_ts_location( getClassTimeFormat(), tz )}}
                         </div>
                     </div>
@@ -53,9 +59,9 @@
           }
         },
         methods: {
-          openModal: function(ts){
+          openModal: function(ts, dr){
               if( ! this.sold_out && this.dates_type ){
-                  this.$emit('openModal', ts)
+                  this.$emit('openModal', { ts: ts, dr: dr })
               }
           },
             isSaveDisabled: function(){

@@ -6,6 +6,8 @@
     right: 1rem;
     bottom: 0;
     z-index: 10;
+    //padding-top: 1rem;
+    //max-height: 100vh;
   }
 
   .loading{
@@ -70,6 +72,7 @@
 
       & + .booking-box__bg{
         opacity: 0.9;
+        display: block;
       }
     }
 
@@ -82,25 +85,45 @@
       z-index: -1;
       background-color: var(--color-bgContent);
       opacity: 0;
+      display: none;
     }
 
     &__button{
       display: flex;
-      border-radius: 5px;
+      border-radius: 0 5px 5px 5px;
       background-color: var(--color-bgContent);
-      padding: .75rem 1.5rem;
+      padding: .75rem 1rem;
       font-size: 1rem;
       transition: all 120ms ease;
       margin: 0 0 1rem;
-      box-shadow: 0 -1rem 4.5rem var(--color-text-alpha-10);
+      box-shadow: 0 -1rem 4.5rem var(--color-text-alpha-10), 0 2rem 4.5rem var(--color-text-alpha-40);
       flex-wrap: wrap;
       align-items: center;
+      cursor: pointer;
+
+
+      &.visible{
+        .fa-times{
+          font-size: 1.6rem;
+          padding: 0 .25rem;
+        }
+      }
 
       .booking-box{
         &__pre-title{
-          flex-basis: 100%;
-          margin-bottom: .25rem;
-          font-size: .9rem;
+          //flex-basis: 100%;
+          font-size: .785rem;
+          font-weight: 600;
+          position: absolute;
+          bottom: 100%;
+          background-color: var(--color-accent);
+          display: block;
+          opacity: 1;
+          padding: .35rem 1rem;
+          line-height: 1;
+          left: 0;
+          color: white;
+          border-radius: 6px 6px 0 0;
         }
         &__pre-title,
         &__date{
@@ -113,16 +136,33 @@
           font-size: 1rem;
         }
         &__time{
-          display: inline-flex;
+          display: block;
           font-size: .9rem;
+          font-weight: 500;
+          margin-top: .15rem;
         }
+
+      }
+
+      .booking-box__booking__button{
+        font-weight: 600;
+        font-size: .9rem;
+        //color: $color-green;
+        text-decoration: underline;
       }
 
     }
 
+
     &__dates-list{
       font-size: .875rem;
       margin-top: 2rem;
+      max-height: 9rem;
+      overflow-y: scroll;
+
+      @include breakpoint(laptop){
+        max-height: 21rem;
+      }
 
       &-item{
         cursor: pointer;

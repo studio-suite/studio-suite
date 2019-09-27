@@ -6,6 +6,7 @@
             </div>
             <div class="left-col">
                 <h1 class="title">{{classObject.title}}</h1>
+
                 <div class="meta margin-bottom--4">
                     <span class="margin-right--025"><i class="fal fa-users-class"></i> {{classAgeInterval}}</span> <span v-if="classTypes" class="no-wrap"><i class="middot"></i> {{classTypes}}</span>
                 </div>
@@ -60,7 +61,7 @@
                             @openModal="openModal">
                     </BookingBox>
                     <template v-if="!isModal">
-                        <h3>Share</h3>
+                        <h3 class="margin-top--4">Share</h3>
                         <a :href="fb_share_link" class="social-link" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=no,height=600,width=600');return false;"><i class="fab fa-facebook-f"></i></a>
                         <a :href="tw_share_link" class="social-link" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=no,height=600,width=600');return false;"><i class="fab fa-twitter"></i></a>
                     </template>
@@ -68,7 +69,7 @@
                 </div>
             </aside>
         </div>
-        <BookingModal :classObject="classObject" :ts="classNextTs" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="updateAvailability" :tz="tz"></BookingModal>
+        <BookingModal :classObject="classObject" :ts="classNextTs" :classNextDuration="classNextDuration" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="updateAvailability" :tz="tz"></BookingModal>
     </section>
 </template>
 
@@ -100,7 +101,8 @@
                 loaders: false,
                 bookings: [],
                 startDate: moment.tz(this.tz).format(),
-                startSteps: 0
+                startSteps: 0,
+                classNextDuration:''
             }
         },
         watch: {
@@ -223,7 +225,8 @@
                 this.availability[v.ts] = _.isUndefined( this.availability[v.ts] ) ? parseInt( v.qty ) : ( this.availability[v.ts] + parseInt( v.qty ) )
             },
             openModal: function(p){
-                this.classNextTs = p
+                this.classNextTs = p.ts
+                this.classNextDuration = p.dr
                 this.showModal = true
             },
             getInstructor: function (id) {
@@ -329,6 +332,9 @@
                     return vm.classObject.capacity - ( ! _.isUndefined( available ) ? available.count : 0 ) > 0
                 })
                 return filtered
+            },
+            page_url: function(){
+               return `${this.$store.getters.tenantUrl}/${this.classObject.slug}`
             },
             fb_share_link: function(){
                 return 'https://www.facebook.com/sharer.php?' + queryString.stringify({ u: `${this.$store.getters.tenantUrl}/${this.classObject.slug}` })
