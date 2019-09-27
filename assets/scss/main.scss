@@ -17,7 +17,7 @@ a{
 .container{
   width: 100%;
   max-width: 1020px;
-  margin: 3rem auto;
+  margin: 3rem auto 5rem;
 
   @include breakpoint(laptop) {
     margin: 6rem auto;

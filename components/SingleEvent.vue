@@ -61,7 +61,7 @@
                             @openModal="openModal">
                     </BookingBox>
                     <template v-if="!isModal">
-                        <h3>Share</h3>
+                        <h3 class="margin-top--4">Share</h3>
                         <a :href="fb_share_link" class="social-link" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=no,height=600,width=600');return false;"><i class="fab fa-facebook-f"></i></a>
                         <a :href="tw_share_link" class="social-link" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=no,height=600,width=600');return false;"><i class="fab fa-twitter"></i></a>
                     </template>
@@ -332,6 +332,9 @@
                     return vm.classObject.capacity - ( ! _.isUndefined( available ) ? available.count : 0 ) > 0
                 })
                 return filtered
+            },
+            page_url: function(){
+               return `${this.$store.getters.tenantUrl}/${this.classObject.slug}`
             },
             fb_share_link: function(){
                 return 'https://www.facebook.com/sharer.php?' + queryString.stringify({ u: `${this.$store.getters.tenantUrl}/${this.classObject.slug}` })

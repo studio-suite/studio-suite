@@ -28,6 +28,9 @@
             if( ! _.isUndefined( this.classObject.excerpt ) && ! _.isEmpty( this.classObject.excerpt ) ){
                 head.meta.push({ hid: 'og:description', name: 'og:description', content: this.classObject.excerpt })
                 head.meta.push({ hid: 'description', name: 'description', content: this.classObject.excerpt })
+            } else {
+                head.meta.push({ hid: 'og:description', name: 'og:description', content: this.classObject.title })
+                head.meta.push({ hid: 'description', name: 'description', content: this.classObject.title })
             }
 
             if( ! _.isUndefined( this.classObject.image ) && ! _.isEmpty( this.classObject.image ) ){

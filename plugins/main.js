@@ -2,6 +2,10 @@ import Vue from 'vue'
 import _ from "lodash"
 import moment from "moment"
 
+import SocialSharing from "vue-social-sharing";
+
+Vue.use(SocialSharing);
+
 Vue.mixin({
     computed: {
         tenantCurrency: function(){
