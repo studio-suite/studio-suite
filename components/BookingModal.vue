@@ -174,6 +174,9 @@
             }
         },
         computed: {
+            ending: function(){
+              return  parseInt( moment.unix(this.ts + this.classNextDuration * 60).tz(this.tz).format('X') )
+            },
             format_RFC: function(){
               return 'ddd, DD MMM YYYY HH:mm:ss ZZ'
             },
@@ -494,7 +497,11 @@
             },
             requestBooking: function(stok){
                 let vm = this
-                axios.post(`${process.env.VUE_APP_BOOKINGS_API_BASE}/booking?id=${vm.classObject.id}&ts=${vm.ts}&stok=${stok}`, vm.formSubmit, {
+                axios.post(`${process.env.VUE_APP_BOOKINGS_API_BASE}/booking?id=${vm.classObject.id}&ts=${vm.ts}&stok=${stok}`, {
+                    ...vm.formSubmit,
+                    duration: vm.classNextDuration,
+                    ending: vm.ending
+                }, {
                     headers: {
                         'Content-Type': 'application/json'
                     }
