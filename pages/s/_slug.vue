@@ -71,7 +71,6 @@
                     slug: params.slug
                 }
             } catch (e) {
-                console.log('error get', e)
                 return {
                     schedule: payload || _.find( store.getters.schedules, { slug: params.slug.toLowerCase() } ) || {},
                     classes: [],
