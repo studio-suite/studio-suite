@@ -52,7 +52,6 @@
                 classObject: await axios.get(`${process.env.VUE_APP_API_BASE}/get-class?id=${process.env.VUE_APP_TENANT_ID.replace('|','%7C')}&slug=${params.pathMatch}`).then(function (r) {
                     return r.data
                 }).catch(function (r) {
-                    console.log('error get class', r)
                     return {}
                 }),
                 ts: query.ts
