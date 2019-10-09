@@ -1,6 +1,6 @@
 <template>
     <section class="main-wrapper">
-        <SingleEvent :classObject="classObject" :ts="ts" class="container" :isModal="false"></SingleEvent>
+        <SingleEvent :classObject="classObject" :ts="ts" class="container" :isModal="false" :language="classObject.language"></SingleEvent>
     </section>
 </template>
 

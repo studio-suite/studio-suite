@@ -16,7 +16,7 @@
                 <div class="short-description margin-bottom--4" v-if="classObject.excerpt">{{classObject.excerpt}}</div>
                 <div class="content margin-bottom--6" v-if="!isModal && classObject.content" v-html="classObject.content ? marked(classObject.content) : ''"></div>
                 <div class="instructors margin-bottom--6" v-if="classObject.instructorsIds && !isModal">
-                    <h3>Instructors</h3>
+                    <h3>{{ getText('class/singleEvent/title/instructors') }}</h3>
                     <div v-for="instructor in classObject.instructorsIds" :key="instructor" class="instructor" v-if="getInstructor(instructor)">
                         <div class="left">
                             <template v-if="getInstructor(instructor).image">
@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="location" v-if="classLocation" v-show="!isModal">
-                    <h3>Location</h3>
+                    <h3>{{ getText('class/singleEvent/title/location') }}</h3>
                     <div id="map" ref="map" class="map margin-bottom--4"></div>
                     <h4>{{classLocation.name}}</h4>
                     <div class="address">
@@ -56,12 +56,13 @@
                             :availability="availability"
                             :dates_available="classNextAvailableDates"
                             :dates_next="classNextDates"
+                            :language="classObject.language || []"
                             :availabilityRequest="availabilityRequest"
                             :tz="tz"
                             @openModal="openModal">
                     </BookingBox>
                     <template v-if="!isModal">
-                        <h3 class="margin-top--4">Share</h3>
+                        <h3 class="margin-top--4">{{ getText('class/singleEvent/share') }}</h3>
                         <a :href="fb_share_link" class="social-link" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=no,height=600,width=600');return false;"><i class="fab fa-facebook-f"></i></a>
                         <a :href="tw_share_link" class="social-link" onclick="javascript:window.open(this.href, '', 'menubar=no,toolbar=no,resizable=yes,scrollbars=no,height=600,width=600');return false;"><i class="fab fa-twitter"></i></a>
                     </template>
@@ -69,7 +70,7 @@
                 </div>
             </aside>
         </div>
-        <BookingModal :classObject="classObject" :ts="classNextTs" :classNextDuration="classNextDuration" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="updateAvailability" :tz="tz"></BookingModal>
+        <BookingModal :classObject="classObject" :ts="classNextTs" :classNextDuration="classNextDuration" :language="classObject.language" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="updateAvailability" :tz="tz"></BookingModal>
     </section>
 </template>
 
@@ -178,6 +179,7 @@
             isDayBlockedByLocation: function(c, d){
                 let vm = this
                 let locationSchedule = _.find(this.$store.state.locations.list, {id: c.locationId })
+                console.log('location schedule', locationSchedule)
                 try{
                     if( ! _.isUndefined( locationSchedule.schedule ) && ! _.isUndefined( locationSchedule.schedule.empty ) && locationSchedule.schedule.empty.indexOf(d) >= 0 ){
                         return true
@@ -266,6 +268,9 @@
             }
         },
         computed: {
+            language: function(){
+              return this.classObject.language || []
+            },
             tz: function(){
                return ! _.isUndefined( this.classLocation ) && ! _.isUndefined( this.classLocation.timezone ) ? this.classLocation.timezone || 'Europe/London' : 'Europe/London'
             },
@@ -318,9 +323,11 @@
                         return parseInt(d.ts) >= parseInt(vm.ts)
                     })
                 }
+                console.log('dates 4', dates)
                 dates = _.filter( dates, function(dCheck){
                     return ! vm.isDayBlockedByLocation( vm.classObject, dCheck.d ) && ! vm.isDayBlockedBySeason( vm.classObject, dCheck.d )
                 })
+                console.log('dates 5', dates)
                 dates = _.orderBy( dates, ['ts'] )
                 return dates
             },
@@ -350,11 +357,11 @@
                 let out = ''
                 if( _.isArray( age ) ){
                     if (age[0] === age[1] && age[0] === 18) {
-                        out = 'Adults only'
+                        out = this.getText('class/singleEvent/metaAgeAdults')
                     } else if (age[0] === age[1]) {
-                        out = `For childrens aged ${age[1]}`
+                        out = this.getText('class/singleEvent/metaAgeChildrenFixed', { age: age[1] })
                     } else {
-                        out = `For children ages ${age[0]} to ${age[1]}`
+                        out = this.getText('class/singleEvent/metaAgeChildren', { min: age[0], max: age[1] })
                     }
                 }
                 return out
