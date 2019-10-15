@@ -3,9 +3,9 @@
         <modal name="confirmation-modal" height="auto" :adaptive="true" classes="confirmation-modal" @before-close="allowCloseModal">
             <div class="text-align--right"><i class="fal fa-times" v-on:click.prevent="closeModal"></i></div>
             <div class="confirmation">
-                <h2>Registration Confirmation</h2>
+                <h2>{{ getText('confirmation/h2') }}</h2>
                 <img src="~/assets/ok.svg">
-                <p class="text-align--center margin-top--4" v-show="booking"><span v-show="booking.price > 0">Your payment of <strong>{{ booking.attendees.length * booking.price | currency(tenantCurrency) }}</strong> processed successfully.</span> We sent you an email confirmation.</p>
+                <p class="text-align--center margin-top--4" v-show="booking"><span v-show="booking.price > 0" v-html="getText('confirmation/messagePayment', { total: $options.filters.currency(booking.attendees.length * booking.price, tenantCurrency) })"></span> {{ getText('confirmation/message') }}</p>
                 <div title="Add to Calendar" class="addeventatc">
                     Add to Calendar
                     <span class="start">{{ booking.starting_time }}</span>
@@ -33,15 +33,6 @@
         name: "confirmation",
         mounted: function(){
             this.showModal()
-            window.addeventasync = function(){
-                addeventatc.settings({
-                    appleical  : {show:true, text:"Apple Calendar"},
-                    google     : {show:true, text:"Google <em>(online)</em>"},
-                    outlook    : {show:true, text:"Outlook"},
-                    outlookcom : {show:true, text:"Outlook.com <em>(online)</em>"},
-                    yahoo      : {show:false, text:"Yahoo <em>(online)</em>"}
-                });
-            };
         },
         computed: {
           booking: function(){

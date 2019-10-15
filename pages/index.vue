@@ -1,12 +1,12 @@
 <template>
   <section class="main-wrapper">
       <div class="container">
-          <h1>Schedules</h1>
+          <h1>{{ getText('schedule-list/h1') }}</h1>
           <div class="schedules-list">
               <div v-for="s in schedules" class="schedules-list__item" v-on:click.prevent="goToSchedule(s)">
                   <div class="schedules-list__item__inner">
                       <h2>{{s.title}}</h2>
-                      <p class="schedules-list__item__meta"><span>{{getClassTypesString(s.classTypes)}}</span> <span>{{s.age | schedule_age}}</span></p>
+                      <p class="schedules-list__item__meta"><span>{{getClassTypesString(s.classTypes)}}</span> <span>{{ getScheduleAge(s.age)}}</span></p>
                       <i class="far fa-arrow-right fa-2x schedules-list__item__link"></i>
                   </div>
               </div>
@@ -45,19 +45,19 @@ export default {
             ]
         }
     },
-    filters: {
-      schedule_age: function(i){
-          if( ! _.isUndefined(i) ){
-              if( i[0] < 18 && i[1] <=18 ){
-                  return `Ages ${i[0]} to ${i[1]}`
-              } else {
-                  return 'Adults only'
-              }
-          }
-          return 'Any Age'
-      }
-    },
     methods: {
+        getScheduleAge: function(i){
+            if( ! _.isUndefined(i) ){
+                if( i[0] < 18 && i[1] <=18 ){
+                    return this.getText('schedule-list/schedule/ageChildren', { min: i[0], max: i[1] } )
+                } else if( i[0] === 0 && i[1] === 19 ) {
+                    return this.getText('schedule-list/schedule/ageAny')
+                } else {
+                    return this.getText('schedule-list/schedule/ageAdults')
+                }
+            }
+            return 'Any age'
+        },
         goToSchedule: function(i){
             window.location = `/s/${i.slug}`;
           //this.$router.push({ name: 's-slug', params: { slug: i.slug  }})

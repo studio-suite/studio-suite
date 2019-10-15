@@ -2,10 +2,32 @@ const pkg = require('./package')
 import axios from 'axios'
 import _ from 'lodash'
 
-let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || 'auth0|5bdae2a63fd53b44339f6ab4' //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
-let VUE_APP_API_BASE = process.env.VUE_APP_API_BASE || 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod'
-let VUE_APP_ALGOLIA_BOOKINGS_INDEX = process.env.VUE_APP_ALGOLIA_BOOKINGS_INDEX || 'ss_prod_bookings'
-let VUE_APP_GMAPS_PUBLIC_API = process.env.VUE_APP_GMAPS_PUBLIC_API || 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8'
+// Production
+let defaults = {
+    tId: 'auth0|5d7029a8b462840e2ba91210', //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
+    apiBase: 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod',
+    alogliaBIndex: 'ss_prod_bookings',
+    gMapsApi: 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8',
+    imgix: 'my-getstudiosuite.imgix.net',
+    apiBaseBookings: 'https://3h737nakvh.execute-api.us-east-2.amazonaws.com/prod'
+}
+
+/*let defaults = {
+    tId: 'auth0|5bacbeb4654f067ba253ddbd',
+    apiBase: 'https://dz0uo09p5h.execute-api.us-east-1.amazonaws.com/dev',
+    alogliaBIndex: 'ss_dev_bookings',
+    gMapsApi: 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8',
+    imgix: 'myssdev.imgix.net',
+    apiBaseBookings: 'https://tiw7tn4fh6.execute-api.us-east-1.amazonaws.com/dev'
+}*/
+
+let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || defaults.tId
+let VUE_APP_API_BASE = process.env.VUE_APP_API_BASE || defaults.apiBase
+let VUE_APP_ALGOLIA_BOOKINGS_INDEX = process.env.VUE_APP_ALGOLIA_BOOKINGS_INDEX || defaults.alogliaBIndex
+let VUE_APP_GMAPS_PUBLIC_API = process.env.VUE_APP_GMAPS_PUBLIC_API || defaults.gMapsApi
+let VUE_APP_IMGIX_URL = process.env.VUE_APP_IMGIX_URL || defaults.imgix
+let VUE_APP_BOOKINGS_API_BASE = process.env.VUE_APP_BOOKINGS_API_BASE || defaults.apiBaseBookings
+
 async function getClassesRoutes() {
     let classesAll = []
     let lastId = false
@@ -118,8 +140,8 @@ module.exports = {
     env: {
         VUE_APP_TENANT_ID: process.env.VUE_APP_TENANT_ID || VUE_APP_TENANT_ID,
         VUE_APP_API_BASE: process.env.VUE_APP_API_BASE || VUE_APP_API_BASE,
-        VUE_APP_IMGIX_URL: process.env.VUE_APP_IMGIX_URL || 'my-getstudiosuite.imgix.net',
-        VUE_APP_BOOKINGS_API_BASE: process.env.VUE_APP_BOOKINGS_API_BASE || 'https://3h737nakvh.execute-api.us-east-2.amazonaws.com/prod',
+        VUE_APP_IMGIX_URL: process.env.VUE_APP_IMGIX_URL || VUE_APP_IMGIX_URL,
+        VUE_APP_BOOKINGS_API_BASE: process.env.VUE_APP_BOOKINGS_API_BASE || VUE_APP_BOOKINGS_API_BASE,
         VUE_APP_GMAPS_PUBLIC_API: process.env.VUE_APP_GMAPS_PUBLIC_API || VUE_APP_GMAPS_PUBLIC_API,
         VUE_APP_ALGOLIA_BOOKINGS_INDEX: process.env.VUE_APP_ALGOLIA_BOOKINGS_INDEX || VUE_APP_ALGOLIA_BOOKINGS_INDEX
     },

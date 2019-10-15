@@ -1,5 +1,6 @@
 import SchemaObject from "schema-object";
 import scheduleApperance from "@/models/scheduleApperance"
+import languageClass from "@/models/languageClass"
 
 export default new SchemaObject({
     id: String,
@@ -125,5 +126,6 @@ export default new SchemaObject({
         type: scheduleApperance
     },
     created: String,
-    updated: String
+    updated: String,
+    language: [languageClass]
 })

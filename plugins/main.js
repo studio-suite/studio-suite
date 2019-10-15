@@ -1,13 +1,35 @@
 import Vue from 'vue'
 import _ from "lodash"
 import moment from "moment"
-
+import * as Sqrl from 'squirrelly'
 import SocialSharing from "vue-social-sharing";
-
+let MarkdownIt = require('markdown-it'), md = new MarkdownIt();
 Vue.use(SocialSharing);
 
 Vue.mixin({
     computed: {
+        lang: function(){
+            let lang = language
+            let tenantLang = this.$store.getters.tenant.language
+            let vm = this
+            lang = _.map( lang, function(ts){
+                let out = ts
+                if( ! _.isUndefined( tenantLang ) ){
+                    let s = _.find( tenantLang, { i: ts.i } )
+                    if( ! _.isUndefined( s ) ){
+                        out = s
+                    }
+                }
+                if( ! _.isUndefined( vm.language ) && vm.language.length > 0 ){
+                    let s = _.find( vm.language, { i: ts.i } )
+                    if( ! _.isUndefined( s ) ){
+                        out = s
+                    }
+                }
+                return out
+            })
+            return lang
+        },
         tenantCurrency: function(){
             let currencies = {
                 "USD": {
@@ -106,6 +128,11 @@ Vue.mixin({
         }
     },
     methods: {
+        getText: function(id, vals){
+            let txt = _.find( this.lang, { i: id } )
+                txt = ! _.isUndefined(txt) ? txt.l : ''
+            return md.renderInline( Sqrl.Render( txt || '', vals || {}) )
+        },
         getImgSrc: function(params, image){
             const ImgixClient = require('imgix-core-js')
             const client = new ImgixClient({
@@ -157,3 +184,196 @@ Vue.mixin({
         }
     }
 })
+
+let language = [
+
+    // Schedule list
+    {
+        i: 'schedule-list/h1',
+        l: 'Schedules',
+        d: 'Schedule list page title'
+    },
+    {
+        i: 'schedule-list/schedule/ageChildren',
+        l: 'Ages {{ min }} to {{ max }}',
+        d: 'Schedule list age limit for children'
+    },
+    {
+        i: 'schedule-list/schedule/ageAdults',
+        l: 'Adults only',
+        d: 'Schedule list age limit for adults'
+    },
+    {
+        i: 'schedule-list/schedule/ageAny',
+        l: 'Any age',
+        d: 'Schedule list age limit for any age'
+    },
+
+    // Schedule
+    {
+        i: 'schedule/details',
+        l: 'Details',
+        d: 'Schedule details button'
+    },
+    {
+        i: 'schedule/book',
+        l: 'Book',
+        d: 'Schedule booking button'
+    },
+
+
+    // Class single
+    {
+        i: 'class/singleEvent/metaAgeAdults',
+        l: 'Adults only',
+        d: 'Age meta label for adults'
+    },
+    {
+        i: 'class/singleEvent/metaAgeChildrenFixed',
+        l: 'For children aged {{ age }}',
+        d: 'Age meta label for children of an exact age'
+    },
+    {
+        i: 'class/singleEvent/metaAgeChildren',
+        l: 'For children ages {{ min }} to {{ max }}',
+        d: 'Age meta label for children of an exact age'
+    },
+    {
+        i: 'class/singleEvent/title/instructors',
+        l: 'Instructors',
+        d: 'Title of the instructors section'
+    },
+    {
+        i: 'class/singleEvent/title/location',
+        l: 'Location',
+        d: 'Title of the location section'
+    },
+    {
+        i: 'class/singleEvent/share',
+        l: 'Share',
+        d: 'Sharing label'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/nextClass',
+        l: 'Next Class',
+        d: 'Booking box next class label'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/bookNowButton',
+        l: 'Book Now',
+        d: 'Booking box button label'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/priceFree',
+        l: 'Free',
+        d: 'Booking box free label'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/spotsAvailableMany',
+        l: '{{ spots }} spots available',
+        d: 'Booking box spots available label for multiple spots'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/spotsAvailableNone',
+        l: 'No Spots available',
+        d: 'Booking box no spots available label'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/spotsAvailableOne',
+        l: 'One spot available',
+        d: 'Booking box one spot available label'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/chooseDifferentDate',
+        l: 'Choose a different date',
+        d: 'Booking box choose a different date label'
+    },
+
+
+    // Modal Step 1
+    {
+        i: 'class/singleEvent/bookingBox/bookingModal/step1Title',
+        l: 'Trial Class Registration',
+        d: 'Booking modal step one title'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/bookingModal/step1Subtitle',
+        l: 'Hurry up! Only {{ spots }} spots left!',
+        d: 'Booking modal step one subtitle multiple spots available'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/bookingModal/step1SubtitleOne',
+        l: 'Hurry up! Only one spot left!',
+        d: 'Booking modal step one subtitle one spot available'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/bookingModal/step1ChildName',
+        l: 'Child first name & birthdate',
+        d: 'Booking modal step one label for child name and birthdate'
+    },
+    // Modal Step 2
+    {
+        i: 'class/singleEvent/bookingBox/bookingModal/step2Title',
+        l: 'Trial Class Registration',
+        d: 'Booking modal step two title'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/bookingModal/step2Subtitle',
+        l: 'Please fill out the form below',
+        d: 'Booking modal step two subtitle'
+    },
+    // Modal Step 3
+    {
+        i: 'class/singleEvent/bookingBox/bookingModal/step3Title',
+        l: 'Trial Class Registration',
+        d: 'Booking modal step three title'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/bookingModal/step3SubtitlePayment',
+        l: 'Please provide payment details below',
+        d: 'Booking modal step three subtitle when need payment'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/bookingModal/step3Subtitle',
+        l: 'Please review your registration',
+        d: 'Booking modal step three subtitle'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/bookingModal/step3PaymentMessageOne',
+        l: 'You are about to pay **{{ total }}** for **{{ attendee }}** to attend **{{ class_title }}** at {{ time }}',
+        d: 'Booking modal step three payment message one attendee'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/bookingModal/step3PaymentMessageTwo',
+        l: 'You are about to pay **{{ total }}** for **{{ attendees }}** to attend **{{ class_title }}** at {{ time }}',
+        d: 'Booking modal step three payment message multiple attendees'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/bookingModal/step3MessageOne',
+        l: 'You are about to register for **{{ attendee }}** to attend **{{ class_title }}** at {{ time }}',
+        d: 'Booking modal step three message one attendee'
+    },
+    {
+        i: 'class/singleEvent/bookingBox/bookingModal/step3MessageTwo',
+        l: 'You are about to register for **{{ attendees }}** to attend **{{ class_title }}** at {{ time }}',
+        d: 'Booking modal step three message multiple attendees'
+    },
+
+
+    // Confirmation
+    {
+        i: 'confirmation/h2',
+        l: 'Registration Confirmation',
+        d: 'Confirmation page title'
+    },
+    {
+        i: 'confirmation/message',
+        l: 'We sent you an email confirmation.',
+        d: 'Confirmation page message'
+    },
+    {
+        i: 'confirmation/messagePayment',
+        l: 'Your payment of **{{ total }}** processed successfully.',
+        d: 'Confirmation page payment message'
+    }
+]
