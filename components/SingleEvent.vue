@@ -16,7 +16,7 @@
                 <div class="short-description margin-bottom--4" v-if="classObject.excerpt">{{classObject.excerpt}}</div>
                 <div class="content margin-bottom--6" v-if="!isModal && classObject.content" v-html="classObject.content ? marked(classObject.content) : ''"></div>
                 <div class="instructors margin-bottom--6" v-if="classObject.instructorsIds && !isModal">
-                    <h3>{{ getText('class/singleEvent/title/instructors') }}</h3>
+                    <h3 v-html="getText('class/singleEvent/title/instructors')"></h3>
                     <div v-for="instructor in classObject.instructorsIds" :key="instructor" class="instructor" v-if="getInstructor(instructor)">
                         <div class="left">
                             <template v-if="getInstructor(instructor).image">
@@ -37,7 +37,7 @@
                     </div>
                 </div>
                 <div class="location" v-if="classLocation" v-show="!isModal">
-                    <h3>{{ getText('class/singleEvent/title/location') }}</h3>
+                    <h3 v-html="getText('class/singleEvent/title/location')"></h3>
                     <div id="map" ref="map" class="map margin-bottom--4"></div>
                     <h4>{{classLocation.name}}</h4>
                     <div class="address">
