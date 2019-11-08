@@ -179,7 +179,6 @@
             isDayBlockedByLocation: function(c, d){
                 let vm = this
                 let locationSchedule = _.find(this.$store.state.locations.list, {id: c.locationId })
-                console.log('location schedule', locationSchedule)
                 try{
                     if( ! _.isUndefined( locationSchedule.schedule ) && ! _.isUndefined( locationSchedule.schedule.empty ) && locationSchedule.schedule.empty.indexOf(d) >= 0 ){
                         return true
@@ -323,11 +322,9 @@
                         return parseInt(d.ts) >= parseInt(vm.ts)
                     })
                 }
-                console.log('dates 4', dates)
                 dates = _.filter( dates, function(dCheck){
                     return ! vm.isDayBlockedByLocation( vm.classObject, dCheck.d ) && ! vm.isDayBlockedBySeason( vm.classObject, dCheck.d )
                 })
-                console.log('dates 5', dates)
                 dates = _.orderBy( dates, ['ts'] )
                 return dates
             },
