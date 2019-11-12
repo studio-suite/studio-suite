@@ -13,7 +13,7 @@ import _ from 'lodash'
 }*/
 
 let defaults = {
-    tId: 'auth0|5bacbeb4654f067ba253ddbd',
+    tId: 'auth0|5d94a1face05e40e0d3963a7', //radu 'auth0|5bacbeb4654f067ba253ddbd',
     apiBase: 'https://dz0uo09p5h.execute-api.us-east-1.amazonaws.com/dev',
     alogliaBIndex: 'ss_dev_bookings',
     gMapsApi: 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8',

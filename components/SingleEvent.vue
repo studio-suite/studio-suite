@@ -59,6 +59,7 @@
                             :language="classObject.language || []"
                             :availabilityRequest="availabilityRequest"
                             :tz="tz"
+                            :ts="ts"
                             @openModal="openModal">
                     </BookingBox>
                     <template v-if="!isModal">
@@ -145,6 +146,7 @@
                 new google.maps.Marker({position: uluru, map: map});
             }
             vm.startDate = !_.isUndefined( vm.ts ) && ! _.isNull(vm.ts) ? moment.unix(parseInt(vm.ts)).tz(vm.tz).format() : vm.startDate
+            console.log('start date', vm.startDate)
             if( ! _.isEmpty( vm.classNextDates ) ){
                 let tss = _.map( vm.classNextDates, function(i){
                     return i.ts
@@ -281,8 +283,8 @@
                 let endDate = moment.tz(startDate, vm.tz).add(14, 'days')
                 if( !_.isUndefined( schedule ) && !_.isUndefined( schedule.days ) && ! _.isEmpty( schedule.days ) ){
                     _.each( schedule.days, function(i){
-                        let tempDate = moment.tz(startDate, vm.tz)
                         _.each( i.i, function(int){
+                            let tempDate = moment.tz(startDate, vm.tz)
                             while( tempDate.isSameOrBefore(endDate) ){
                                 let inc_factor = tempDate.day() > i.d ? i.d + 7 : i.d
                                 let temp_date = moment.tz(tempDate, vm.tz).set({hour:0,minute:0,second:0,millisecond:0}).day(inc_factor).add(int.s, 'minutes')
