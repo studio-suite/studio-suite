@@ -3,23 +3,23 @@ import axios from 'axios'
 import _ from 'lodash'
 
 // Production
-let defaults = {
+/*let defaults = {
     tId: 'auth0|5bdae2a63fd53b44339f6ab4', //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
     apiBase: 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod',
     alogliaBIndex: 'ss_prod_bookings',
     gMapsApi: 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8',
     imgix: 'my-getstudiosuite.imgix.net',
     apiBaseBookings: 'https://3h737nakvh.execute-api.us-east-2.amazonaws.com/prod'
-}
+}*/
 
-/*let defaults = {
-    tId: 'auth0|5bacbeb4654f067ba253ddbd',
+let defaults = {
+    tId: 'auth0|5d94a1face05e40e0d3963a7', //radu 'auth0|5bacbeb4654f067ba253ddbd',
     apiBase: 'https://dz0uo09p5h.execute-api.us-east-1.amazonaws.com/dev',
     alogliaBIndex: 'ss_dev_bookings',
     gMapsApi: 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8',
     imgix: 'myssdev.imgix.net',
     apiBaseBookings: 'https://tiw7tn4fh6.execute-api.us-east-1.amazonaws.com/dev'
-}*/
+}
 
 let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || defaults.tId
 let VUE_APP_API_BASE = process.env.VUE_APP_API_BASE || defaults.apiBase

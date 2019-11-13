@@ -73,7 +73,7 @@
               return moment.unix(v).tz(t).format(f)
           }
         },
-        props: [ 'dates_next', 'dates_available', 'capacity', 'classNextDates', 'price', 'availability', 'availabilityRequest', 'tz', 'language' ],
+        props: [ 'dates_next', 'dates_available', 'capacity', 'classNextDates', 'price', 'availability', 'availabilityRequest', 'tz', 'language', 'ts' ],
         computed: {
             sold_out: function(){
               return  ! _.isUndefined( this.dates_available ) && _.isEmpty( this.dates_available )
@@ -85,6 +85,14 @@
               return this.dates_type ? this.dates_available : this.dates_next
             },
             next_class: function(){
+                if( ! _.isUndefined( this.ts ) && this.ts > moment.tz(this.tz).unix() ){
+                    console.log('are')
+                    let next = _.find(this.dates, { ts: this.ts })
+                    if( ! _.isUndefined( next ) ){
+                        return next
+                    }
+                }
+                console.log('de scos', this.dates, moment.unix(this.ts).tz(this.tz).unix())
                 return ! _.isUndefined( this.dates ) && ! _.isUndefined( this.dates[0] ) ? this.dates[0] : false
             },
             next_class_capacity: function(){
