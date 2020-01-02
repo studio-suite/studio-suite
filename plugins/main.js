@@ -340,22 +340,22 @@ let language = [
     },
     {
         i: 'class/singleEvent/bookingBox/bookingModal/step3PaymentMessageOne',
-        l: 'You are about to pay **{{ total }}** for **{{ attendee }}** to attend **{{ class_title }}** at {{ time }}',
+        l: 'You are about to pay **{{ total }}** for **{{ attendee }}** to attend **{{ class_title }}** on {{ time }}',
         d: 'Booking modal step three payment message one attendee'
     },
     {
         i: 'class/singleEvent/bookingBox/bookingModal/step3PaymentMessageTwo',
-        l: 'You are about to pay **{{ total }}** for **{{ attendees }}** to attend **{{ class_title }}** at {{ time }}',
+        l: 'You are about to pay **{{ total }}** for **{{ attendees }}** to attend **{{ class_title }}** on {{ time }}',
         d: 'Booking modal step three payment message multiple attendees'
     },
     {
         i: 'class/singleEvent/bookingBox/bookingModal/step3MessageOne',
-        l: 'You are about to register for **{{ attendee }}** to attend **{{ class_title }}** at {{ time }}',
+        l: 'You are about to register **{{ attendee }}** to attend **{{ class_title }}** on {{ time }}',
         d: 'Booking modal step three message one attendee'
     },
     {
         i: 'class/singleEvent/bookingBox/bookingModal/step3MessageTwo',
-        l: 'You are about to register for **{{ attendees }}** to attend **{{ class_title }}** at {{ time }}',
+        l: 'You are about to register **{{ attendees }}** to attend **{{ class_title }}** on {{ time }}',
         d: 'Booking modal step three message multiple attendees'
     },
 

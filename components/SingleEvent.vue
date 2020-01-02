@@ -146,7 +146,6 @@
                 new google.maps.Marker({position: uluru, map: map});
             }
             vm.startDate = !_.isUndefined( vm.ts ) && ! _.isNull(vm.ts) ? moment.unix(parseInt(vm.ts)).tz(vm.tz).format() : vm.startDate
-            console.log('start date', vm.startDate)
             if( ! _.isEmpty( vm.classNextDates ) ){
                 let tss = _.map( vm.classNextDates, function(i){
                     return i.ts

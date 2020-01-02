@@ -86,13 +86,11 @@
             },
             next_class: function(){
                 if( ! _.isUndefined( this.ts ) && this.ts > moment.tz(this.tz).unix() ){
-                    console.log('are')
                     let next = _.find(this.dates, { ts: this.ts })
                     if( ! _.isUndefined( next ) ){
                         return next
                     }
                 }
-                console.log('de scos', this.dates, moment.unix(this.ts).tz(this.tz).unix())
                 return ! _.isUndefined( this.dates ) && ! _.isUndefined( this.dates[0] ) ? this.dates[0] : false
             },
             next_class_capacity: function(){
