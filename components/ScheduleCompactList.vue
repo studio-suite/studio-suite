@@ -3,8 +3,8 @@
         <div v-for="(day_classes, index) in classes_by_day" class="classes_by_day__day">
             <div class="classes_by_day__date">
                 <div>
-                    <span>{{ index | moment('D') }}</span>
-                    {{ index | moment('ddd') }}
+                    <span>{{ index | moment_location('D', getTimezone(day_classes[0].locationId) ) }}</span>
+                    {{ index | moment_location('ddd', getTimezone(day_classes[0].locationId) ) }}
                 </div>
             </div>
             <div class="class_list">
@@ -45,7 +45,7 @@
           classes_by_day: function(){
               let vm = this
               return _.groupBy( this.classes, function(i){
-                  return moment.tz(i.starting_time, vm.getTimezone(i.locationId)).utcOffset(0).format('YYYY-MM-DDT00:00:00Z')
+                  return moment.tz(i.starting_time, vm.getTimezone(i.locationId)).format('YYYY-MM-DD')
               })
           }
         },
