@@ -3,23 +3,23 @@ import axios from 'axios'
 import _ from 'lodash'
 
 // Production
-let defaults = {
+/*let defaults = {
     tId: 'auth0|5c75db1874bff473fe3f3912', //'auth0|5db0a4c9e3191b0c63334a80', //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
     apiBase: 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod',
     alogliaBIndex: 'ss_prod_bookings',
     gMapsApi: 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8',
     imgix: 'my-getstudiosuite.imgix.net',
     apiBaseBookings: 'https://3h737nakvh.execute-api.us-east-2.amazonaws.com/prod'
-}
+}*/
 
-/*let defaults = {
+let defaults = {
     tId: 'auth0|5bacbeb4654f067ba253ddbd', //radu 'auth0|5bacbeb4654f067ba253ddbd',
     apiBase: 'https://dz0uo09p5h.execute-api.us-east-1.amazonaws.com/dev',
     alogliaBIndex: 'ss_dev_bookings',
     gMapsApi: 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8',
     imgix: 'myssdev.imgix.net',
     apiBaseBookings: 'https://tiw7tn4fh6.execute-api.us-east-1.amazonaws.com/dev'
-}*/
+}
 
 let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || defaults.tId
 let VUE_APP_API_BASE = process.env.VUE_APP_API_BASE || defaults.apiBase
@@ -76,10 +76,35 @@ async function getSchedulesRoutes() {
     return schedulesAll
 }
 
+async function getMagnetsRoutes() {
+    let schedulesAll = []
+    let lastId = false
+    let baseUrl = `${VUE_APP_API_BASE}/get-routes?type=magnet&id=${VUE_APP_TENANT_ID}`
+    while (!_.isNull(lastId) || lastId === false) {
+        let url = !_.isNull(lastId) && lastId !== false ? baseUrl + '&ExclusiveStartKey=' + lastId : baseUrl
+        let schedules = await axios.get(url).then(function (r) {
+            if (!_.isUndefined(r.data.LastEvaluatedKey)) {
+                lastId = r.data.LastEvaluatedKey.id
+            } else {
+                lastId = null
+            }
+            return _.map(r.data.Items, function (i) {
+                return {
+                    route: `/m/${i.slug}`,
+                    payload: i
+                }
+            })
+        })
+        schedulesAll = _.concat(schedulesAll, schedules)
+    }
+    return schedulesAll
+}
+
 async function getRoutes() {
     let classes = await getClassesRoutes()
     let schedules = await getSchedulesRoutes()
-    return _.concat(schedules, classes)
+    let magnets = await getMagnetsRoutes()
+    return _.concat(schedules, classes, magnets)
 }
 
 module.exports = {

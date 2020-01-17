@@ -9,12 +9,14 @@ export default {
             if( ! _.isUndefined(tenant.data.logo) && !_.isEmpty(tenant.data.logo) ){
                 await dispatch('getLogo', tenant.data.logo)
             }
+
             await dispatch('getIntegrations')
             await dispatch('schedules/list')
             await dispatch('class_types/list')
             await dispatch('instructors/list')
             await dispatch('locations/list')
             await dispatch('seasons/list')
+            await dispatch('magnets/list')
         } catch (e) {
             console.log(e)
         }

@@ -12,6 +12,7 @@ import instructors from './instructors'
 import locations from './locations'
 import seasons from './seasons'
 import classes from './classes'
+import magnets from './magnets'
 
 import _ from 'lodash'
 
@@ -72,8 +73,14 @@ const store = () => {
             schedules: function(state, getters){
                 return getters['schedules/all']
             },
+            magnets: function(state, getters){
+                return getters['magnets/all']
+            },
             tenant: function(state){
                 return state.tenant
+            },
+            tenantId: function(state){
+                return state.tenant.id
             },
             ga: function(state){
                 return state.ga
@@ -95,7 +102,8 @@ const store = () => {
             instructors,
             locations,
             seasons,
-            classes
+            classes,
+            magnets
         }
     })
 }

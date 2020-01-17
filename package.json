@@ -22,6 +22,7 @@
     "lodash": "^4.17.15",
     "markdown-it": "^10.0.0",
     "marked": "^0.7.0",
+    "contrast": "^1.0.1",
     "moment": "^2.24.0",
     "moment-timezone": "^0.5.27",
     "nuxt": "^2.11.0",
@@ -35,7 +36,7 @@
     "vue-social-sharing": "^2.4.7"
   },
   "devDependencies": {
-    "node-sass": "^4.13.0",
+    "node-sass": "^4.13.1",
     "nodemon": "^1.19.4",
     "sass-loader": "^7.3.1"
   }
