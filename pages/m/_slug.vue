@@ -38,6 +38,11 @@
                 head.meta.push({ hid: 'description', name: 'description', content: this.magnet.excerpt })
             }
 
+            if( ! _.isUndefined( this.magnet.image ) && ! _.isEmpty( this.magnet.image ) ){
+                head.meta.push({ hid: 'og-image', name: 'og:image', content: this.getImgSrc({w: 1200, h: 630, fit: 'crop', crop: 'edges' }, this.magnet.image ) })
+                head.meta.push({ hid: 'og-image-alt', name: 'og:image:alt', content: this.magnet.title })
+            }
+
             return head
         },
         components: {

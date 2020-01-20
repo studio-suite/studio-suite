@@ -385,7 +385,7 @@
                         this.$router.push({ name: 'success', params: vm.formSubmit })
                     }
                 }
-                this.loaders = false
+                //this.loaders = false
             },
         }
     }

@@ -11,7 +11,7 @@ export default ({ app, store }) => {
     fbq('init', store.getters.fb);
     app.router.afterEach((to, from) => {
         fbq('track', 'PageView');
-        if( to.name === 'confirmation' ){
+        if( to.name === 'confirmation' || to.name === 'success' ){
             fbq('track', 'Lead');
         }
     })
