@@ -177,7 +177,9 @@ Vue.mixin({
                 })
             })
             classTypes = _.map(classTypes, function (i) {
-                return !_.isUndefined(i) && !_.isUndefined(i.name) ? i.name : ''
+                let ct = !_.isUndefined(i) && !_.isUndefined(i.name) ? i.name : ''
+                ct.trim()
+                return ct
             })
 
             return _.join(classTypes, ", ")
