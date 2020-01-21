@@ -131,7 +131,7 @@
                     out.lastName = this.form.lastName
                 }
                 if( this.magnet.fields.phone ) {
-                    out.lastName = this.form.phone
+                    out.phone = this.form.phone
                 }
                 out.email = this.form.email
                 return out
@@ -386,6 +386,14 @@
                     }
                 }
                 //this.loaders = false
+            },
+            attendees: {
+                handler: function () {
+                    if ( ! _.isEmpty(this.errors) ) {
+                        this.validateChildren()
+                    }
+                },
+                deep: true
             },
         }
     }
