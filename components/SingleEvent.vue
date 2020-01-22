@@ -60,6 +60,7 @@
                             :availabilityRequest="availabilityRequest"
                             :tz="tz"
                             :ts="ts"
+                            :is_event="is_event"
                             @openModal="openModal">
                     </BookingBox>
                     <template v-if="!isModal">
@@ -71,7 +72,7 @@
                 </div>
             </aside>
         </div>
-        <BookingModal :classObject="classObject" :ts="classNextTs" :classNextDuration="classNextDuration" :language="classObject.language" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="updateAvailability" :tz="tz"></BookingModal>
+        <BookingModal :classObject="classObject" :ts="classNextTs" :classNextDuration="classNextDuration" :language="classObject.language" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="updateAvailability" :tz="tz" :is_event="is_event"></BookingModal>
     </section>
 </template>
 
@@ -268,6 +269,9 @@
             }
         },
         computed: {
+            is_event: function(){
+              return this.classObject.event
+            },
             language: function(){
               return this.classObject.language || []
             },

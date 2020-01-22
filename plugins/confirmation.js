@@ -5,6 +5,9 @@ export default ({ app, store }) => {
         if( to.name === 'confirmation' && ( _.isUndefined( to.params ) || _.isNull( to.params ) || _.isEmpty( to.params )  ) ){
             next('/')
         }
+        if( to.name === 'success' && ( _.isUndefined( to.params ) || _.isNull( to.params ) || _.isEmpty( to.params )  ) ){
+            next('/')
+        }
         next()
     })
 }

@@ -9,11 +9,11 @@
 
             <!-- C H I L D R E N -->
             <div v-if="step === 0">
-                <h2 v-html="getText('class/singleEvent/bookingBox/bookingModal/step1Title')"></h2>
-                <h3 class="margin-bottom--5" v-html="capacity > 1 ? getText('class/singleEvent/bookingBox/bookingModal/step1Subtitle', { spots: capacity }) : getText('class/singleEvent/bookingBox/bookingModal/step1SubtitleOne' )"></h3>
+                <h2 v-html="getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step1Title'))"></h2>
+                <h3 class="margin-bottom--5" v-html="capacity > 1 ? getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step1Subtitle'), { spots: capacity }) : getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step1SubtitleOne') )"></h3>
                 <div class="attendees">
                     <div class="attendee" v-for="(att, ind) in attendees">
-                        <label><em v-html="getText('class/singleEvent/bookingBox/bookingModal/step1ChildName')"></em> <span class="remove-attendee" v-if="ind > 0" v-on:click.prevent="attendees.splice(ind, 1)"><i class="far fa-user-minus margin-right--05"></i> Remove</span></label>
+                        <label><em v-html="getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step1ChildName'))"></em> <span class="remove-attendee" v-if="ind > 0" v-on:click.prevent="attendees.splice(ind, 1)"><i class="far fa-user-minus margin-right--05"></i> Remove</span></label>
                         <input type="text" v-model="att.name" placeholder="Your child’s first name here" class="name" :class="checkForErrors(`attendees.${ind}.name`)"/>
                         <div class="year" :class="checkForErrors(`attendees.${ind}.dob.y`)">
                             <select v-model="att.dob.y" :class="checkForErrors(`attendees.${ind}.dob.y`)"  title="Choose child year of birth">
@@ -54,8 +54,8 @@
 
             <!-- P A R E N T -->
             <div v-if="step === 1">
-                <h2 v-html="getText('class/singleEvent/bookingBox/bookingModal/step2Title')"></h2>
-                <h3 class="margin-bottom--5" v-html="getText('class/singleEvent/bookingBox/bookingModal/step2Subtitle')"></h3>
+                <h2 v-html="getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step2Title'))"></h2>
+                <h3 class="margin-bottom--5" v-html="getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step2Subtitle'))"></h3>
                 <label>First name</label>
                 <input type="text" v-model="form.firstName" placeholder="Your first name here" :class="checkForErrors(`form.firstName`)"/>
                 <label class="margin-top--2">Last name</label>
@@ -71,10 +71,10 @@
 
             <!-- P A Y M E N T -->
             <div v-if="step === 2">
-                <h2 v-html="getText('class/singleEvent/bookingBox/bookingModal/step3Title')"></h2>
-                <h3 class="margin-bottom--5" v-html="classObject.price > 0 ? getText('class/singleEvent/bookingBox/bookingModal/step3SubtitlePayment') : getText('class/singleEvent/bookingBox/bookingModal/step3Subtitle')"></h3>
-                <p class="summary-p" v-if="classObject.price > 0" v-html=" formSubmit.attendees.length === 1 ? getText('class/singleEvent/bookingBox/bookingModal/step3PaymentMessageOne', { total: $options.filters.currency(formSubmit.attendees.length * formSubmit.price), attendee: formSubmit.attendees[0].name, class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) }) : getText('class/singleEvent/bookingBox/bookingModal/step3PaymentMessageTwo', { total: $options.filters.currency(formSubmit.attendees.length * formSubmit.price), attendees: $options.filters.attendees(formSubmit.attendees), class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) }) "></p>
-                <p class="summary-p" v-else v-html=" formSubmit.attendees.length === 1 ? getText('class/singleEvent/bookingBox/bookingModal/step3MessageOne', { attendee: formSubmit.attendees[0].name, class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) }) : getText('class/singleEvent/bookingBox/bookingModal/step3MessageTwo', { attendees: $options.filters.attendees(formSubmit.attendees), class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) })"></p>
+                <h2 v-html="getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3Title'))"></h2>
+                <h3 class="margin-bottom--5" v-html="classObject.price > 0 ? getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3SubtitlePayment')) : getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3Subtitle'))"></h3>
+                <p class="summary-p" v-if="classObject.price > 0" v-html=" formSubmit.attendees.length === 1 ? getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3PaymentMessageOne'), { total: $options.filters.currency(formSubmit.attendees.length * formSubmit.price), attendee: formSubmit.attendees[0].name, class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) }) : getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3PaymentMessageTwo'), { total: $options.filters.currency(formSubmit.attendees.length * formSubmit.price), attendees: $options.filters.attendees(formSubmit.attendees), class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) }) "></p>
+                <p class="summary-p" v-else v-html=" formSubmit.attendees.length === 1 ? getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3MessageOne'), { attendee: formSubmit.attendees[0].name, class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) }) : getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3MessageTwo'), { attendees: $options.filters.attendees(formSubmit.attendees), class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) })"></p>
                 <form method="post" id="payment-form" ref="paymentForm" class="margin-top--3" v-if="classObject.price > 0">
                     <div class="form-row">
                         <label for="card-element">Credit or debit card</label>
@@ -114,7 +114,7 @@
 
     export default {
         name: "BookingModal",
-        props: ['classObject', 'visible', 'ts', 'availability', 'tz', 'classNextDuration', 'language'],
+        props: ['classObject', 'visible', 'ts', 'availability', 'tz', 'classNextDuration', 'language', 'is_event'],
         data: function () {
             return {
                 step: 0,
