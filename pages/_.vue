@@ -1,6 +1,6 @@
 <template>
     <section class="main-wrapper">
-        <SingleEvent :classObject="classObject" :ts="ts" class="container" :isModal="false" :language="classObject.language"></SingleEvent>
+        <SingleEvent :classObject="classObject" :ts="ts" class="container" :isModal="false" :language="classObject.language" :rs="rs"></SingleEvent>
     </section>
 </template>
 
@@ -45,16 +45,22 @@
                     this.ts = parseInt( this.$route.query.ts )
                 }
             }
+            if( ! _.isUndefined( this.$route.query ) && ! _.isUndefined( this.$route.query.rs ) ){
+                if( _.isUndefined( this.rs ) || _.isNull( this.rs ) ){
+                    this.rs = this.$route.query.rs
+                }
+            }
         },
         async asyncData({params, error, payload, query}) {
-            if (payload) return { classObject: payload, ts: query.ts }
+            if (payload) return { classObject: payload, ts: query.ts, rs: query.rs }
             else return {
                 classObject: await axios.get(`${process.env.VUE_APP_API_BASE}/get-class?id=${process.env.VUE_APP_TENANT_ID.replace('|','%7C')}&slug=${params.pathMatch}`).then(function (r) {
                     return r.data
                 }).catch(function (r) {
                     return {}
                 }),
-                ts: query.ts
+                ts: query.ts,
+                rs: query.rs
             }
         }
 

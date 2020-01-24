@@ -128,6 +128,12 @@ Vue.mixin({
         }
     },
     methods: {
+        checkEventLabel: function(l){
+            if( this.is_event){
+                l = l.replace( 'class/', 'event/' )
+            }
+            return l
+        },
         getText: function(id, vals){
             let txt = _.find( this.lang, { i: id } )
                 txt = ! _.isUndefined(txt) ? txt.l : ''
@@ -177,7 +183,9 @@ Vue.mixin({
                 })
             })
             classTypes = _.map(classTypes, function (i) {
-                return !_.isUndefined(i) && !_.isUndefined(i.name) ? i.name : ''
+                let ct = !_.isUndefined(i) && !_.isUndefined(i.name) ? i.name : ''
+                ct.trim()
+                return ct
             })
 
             return _.join(classTypes, ", ")
@@ -375,5 +383,103 @@ let language = [
         i: 'confirmation/messagePayment',
         l: 'Your payment of **{{ total }}** processed successfully.',
         d: 'Confirmation page payment message'
+    },
+
+
+
+    // Event single
+    {
+        i: 'event/singleEvent/metaAgeAdults',
+        l: 'Adults only',
+        d: 'Age meta label for adults'
+    },
+    {
+        i: 'event/singleEvent/metaAgeChildrenFixed',
+        l: 'For children aged {{ age }}',
+        d: 'Age meta label for children of an exact age'
+    },
+    {
+        i: 'event/singleEvent/metaAgeChildren',
+        l: 'For children ages {{ min }} to {{ max }}',
+        d: 'Age meta label for children of an exact age'
+    },
+    {
+        i: 'event/singleEvent/title/instructors',
+        l: 'Instructors',
+        d: 'Title of the instructors section'
+    },
+    {
+        i: 'event/singleEvent/title/location',
+        l: 'Location',
+        d: 'Title of the location section'
+    },
+    {
+        i: 'event/singleEvent/share',
+        l: 'Share',
+        d: 'Sharing label'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/nextClass',
+        l: 'Starts On',
+        d: 'Booking box next event label'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/bookNowButton',
+        l: 'Register',
+        d: 'Booking box button label'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/priceFree',
+        l: 'Free',
+        d: 'Booking box free label'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/spotsAvailableMany',
+        l: '{{ spots }} spots available',
+        d: 'Booking box spots available label for multiple spots'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/spotsAvailableNone',
+        l: 'No Spots available',
+        d: 'Booking box no spots available label'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/spotsAvailableOne',
+        l: 'One spot available',
+        d: 'Booking box one spot available label'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/chooseDifferentDate',
+        l: 'Choose a different date',
+        d: 'Booking box choose a different date label'
+    },
+
+
+    // Modal Step 1
+    {
+        i: 'event/singleEvent/bookingBox/bookingModal/step1Title',
+        l: 'Fill Out This Form',
+        d: 'Booking modal step one title'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/bookingModal/step1Subtitle',
+        l: 'Almost there! Fill out this form to get started',
+        d: 'Booking modal step one subtitle multiple spots available'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/bookingModal/step1ChildName',
+        l: 'Child first name & birthdate',
+        d: 'Booking modal step one label for child name and birthdate'
+    },
+    // Modal Step 2
+    {
+        i: 'event/singleEvent/bookingBox/bookingModal/step2Title',
+        l: 'Fill Out This Form',
+        d: 'Booking modal step two title'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/bookingModal/step2Subtitle',
+        l: 'Now, please submit your contact details below',
+        d: 'Booking modal step two subtitle'
     }
 ]
