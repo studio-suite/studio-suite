@@ -114,7 +114,7 @@
 
     export default {
         name: "BookingModal",
-        props: ['classObject', 'visible', 'ts', 'availability', 'tz', 'classNextDuration', 'language', 'is_event'],
+        props: ['classObject', 'visible', 'ts', 'availability', 'tz', 'classNextDuration', 'language', 'is_event', 'prefill'],
         data: function () {
             return {
                 step: 0,
@@ -354,7 +354,7 @@
                             phone: {
                                 type: 'string',
                                 required: true,
-                                min: 3
+                                min: 6
                             },
                             email: {
                                 type: 'email',
@@ -559,6 +559,20 @@
                 },
                 deep: true
             },
+            'form.phone': _.debounce(function(r, o){
+                if( r !== o ){
+                    let phone = r
+                    phone = phone.replace( / /g, '')
+                    phone = phone.replace( /\(/g, '')
+                    phone = phone.replace( /\)/g, '')
+                    phone = phone.replace( /-/g, '')
+                    phone = phone.replace( /\+/g, '')
+                    phone = phone.replace( /\./g, '')
+                    phone = phone.replace( /[\D]/g, '' )
+                    phone = `+${phone}`
+                    this.form.phone = phone
+                }
+            }, 200),
             visible: function (n) {
                 if (n) {
                     this.step = this.isClassForAdults ? 1 : 0
@@ -568,6 +582,23 @@
                     this.booking = null
                     this.bookingConfirmation = null
                     this.loaders = false
+                    if( ! _.isUndefined(this.prefill) && ! _.isNull(this.prefill) ){
+                        if( ! _.isUndefined( this.prefill.customer.firstName ) ){
+                            this.form.firstName = this.prefill.customer.firstName
+                        }
+                        if( ! _.isUndefined( this.prefill.customer.lastName ) ){
+                            this.form.lastName = this.prefill.customer.lastName
+                        }
+                        if( ! _.isUndefined( this.prefill.customer.phone ) ){
+                            this.form.phone = this.prefill.customer.phone
+                        }
+                        if( ! _.isUndefined( this.prefill.customer.email ) ){
+                            this.form.email = this.prefill.customer.email
+                        }
+                        if( ! _.isUndefined( this.prefill.attendees) ){
+                            this.attendees = this.prefill.attendees
+                        }
+                    }
                     this.showModal()
                 } else {
                     this.hideModal()

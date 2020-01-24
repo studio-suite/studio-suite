@@ -72,7 +72,7 @@
                 </div>
             </aside>
         </div>
-        <BookingModal :classObject="classObject" :ts="classNextTs" :classNextDuration="classNextDuration" :language="classObject.language" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="updateAvailability" :tz="tz" :is_event="is_event"></BookingModal>
+        <BookingModal :prefill="prefill_modal" :classObject="classObject" :ts="classNextTs" :classNextDuration="classNextDuration" :language="classObject.language" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="updateAvailability" :tz="tz" :is_event="is_event"></BookingModal>
     </section>
 </template>
 
@@ -92,7 +92,7 @@
             BookingModal,
             BookingBox
         },
-        props: [ 'classObject', 'isModal', 'ts' ],
+        props: [ 'classObject', 'isModal', 'ts', 'rs' ],
         data: function(){
             return {
                 classNextTs: '',
@@ -105,7 +105,8 @@
                 bookings: [],
                 startDate: moment.tz(this.tz).format(),
                 startSteps: 0,
-                classNextDuration:''
+                classNextDuration:'',
+                booking_rs: null
             }
         },
         watch: {
@@ -155,7 +156,14 @@
             } else {
                 vm.startDate = moment.tz(vm.startDate, vm.tz).add(14, 'days').format()
             }
-
+            if( ! _.isUndefined( this.rs ) && this.rs.length > 10 ){
+                axios.get(`${process.env.VUE_APP_API_BASE}/get-booking?id=${vm.rs}`).then(function (r) {
+                    if( r.status === 200 && ! _.isUndefined( r.data ) && ! _.isNull( r.data ) ){
+                        vm.booking_rs = r.data
+                    }
+                }).catch(function (r) {
+                })
+            }
         },
         methods: {
             getBookings: function(classId, min, max){
@@ -269,6 +277,13 @@
             }
         },
         computed: {
+            prefill_modal: function(){
+              let out = null
+                if( ! _.isNull( this.booking_rs ) && ! _.isUndefined( this.booking_rs.classId ) && this.booking_rs.classId === this.classObject.id ){
+                    out = this.booking_rs
+                }
+              return out
+            },
             is_event: function(){
               return this.classObject.event
             },
