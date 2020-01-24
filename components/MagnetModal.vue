@@ -8,10 +8,12 @@
             </div>
 
             <div v-if="step === 0">
-                <h2 v-html="getText('class/singleEvent/bookingBox/bookingModal/step2Title')"></h2>
-                <h3 class="margin-bottom--5" v-html="getText('class/singleEvent/bookingBox/bookingModal/step2Subtitle')"></h3>
+                <h2>Fill Out This Form</h2>
+                <h3 class="margin-bottom--5">Almost there! Fill out this form to get started
+
+                </h3>
                 <div class="attendee" v-for="(att, ind) in attendees">
-                    <label><em v-html="getText('class/singleEvent/bookingBox/bookingModal/step1ChildName')"></em> <span class="remove-attendee" v-if="ind > 0" v-on:click.prevent="attendees.splice(ind, 1)"><i class="far fa-user-minus margin-right--05"></i> Remove</span></label>
+                    <label><em>Child first name & birthdate</em> <span class="remove-attendee" v-if="ind > 0" v-on:click.prevent="attendees.splice(ind, 1)"><i class="far fa-user-minus margin-right--05"></i> Remove</span></label>
                     <input type="text" v-model="att.name" placeholder="Your child’s first name here" class="name" :class="checkForErrors(`attendees.${ind}.name`)"/>
                     <div class="year" :class="checkForErrors(`attendees.${ind}.dob.y`)">
                         <select v-model="att.dob.y" :class="checkForErrors(`attendees.${ind}.dob.y`)"  title="Choose child year of birth">
@@ -53,8 +55,8 @@
             </div>
 
             <div v-else-if="step === 1">
-                <h2 v-html="getText('class/singleEvent/bookingBox/bookingModal/step2Title')"></h2>
-                <h3 class="margin-bottom--5" v-html="getText('class/singleEvent/bookingBox/bookingModal/step2Subtitle')"></h3>
+                <h2>Fill Out This Form</h2>
+                <h3 class="margin-bottom--5">Now, please submit your contact details below</h3>
                 <template v-if="magnet.fields.firstName">
                     <label>First name</label>
                     <input type="text" v-model="form.firstName" placeholder="Your first name here" :class="checkForErrors(`form.firstName`)"/>

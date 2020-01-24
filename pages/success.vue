@@ -3,9 +3,9 @@
         <modal name="confirmation-modal" height="auto" :adaptive="true" classes="confirmation-modal" @before-close="allowCloseModal">
             <div class="text-align--right"><i class="fal fa-times" v-on:click.prevent="closeModal"></i></div>
             <div class="confirmation">
-                <h2>{{ getText('confirmation/h2') }}</h2>
+                <h2>Thank you! Check your inbox.</h2>
                 <img src="~/assets/ok.svg">
-                <p class="text-align--center margin-top--4" v-show="booking">{{ getText('confirmation/message') }}</p>
+                <p class="text-align--center margin-top--4" v-show="booking">We sent you an email, but it may take a couple of minutes to show up.</p>
             </div>
         </modal>
     </div>
@@ -32,11 +32,11 @@
         },
         methods: {
             closeModal: function(){
-                this.$router.go(-1)
+                this.$router.push('/')
             },
             allowCloseModal: function(e){
                 e.stop()
-                this.$router.go(-1)
+                this.$router.push('/')
             },
             showModal: function () {
                 this.$modal.show('confirmation-modal');
