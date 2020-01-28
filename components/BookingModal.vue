@@ -72,10 +72,10 @@
             <!-- P A Y M E N T -->
             <div v-if="step === 2">
                 <h2 v-html="getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3Title'))"></h2>
-                <h3 class="margin-bottom--5" v-html="classObject.price > 0 ? getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3SubtitlePayment')) : getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3Subtitle'))"></h3>
-                <p class="summary-p" v-if="classObject.price > 0" v-html=" formSubmit.attendees.length === 1 ? getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3PaymentMessageOne'), { total: $options.filters.currency(formSubmit.attendees.length * formSubmit.price), attendee: formSubmit.attendees[0].name, class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) }) : getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3PaymentMessageTwo'), { total: $options.filters.currency(formSubmit.attendees.length * formSubmit.price), attendees: $options.filters.attendees(formSubmit.attendees), class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) }) "></p>
+                <h3 class="margin-bottom--5" v-html="needs_payment ? getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3SubtitlePayment')) : getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3Subtitle'))"></h3>
+                <p class="summary-p" v-if="needs_payment" v-html=" formSubmit.attendees.length === 1 ? getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3PaymentMessageOne'), { total: $options.filters.currency(amount_to_pay), attendee: formSubmit.attendees[0].name, class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) }) : getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3PaymentMessageTwo'), { total: $options.filters.currency(amount_to_pay), attendees: $options.filters.attendees(formSubmit.attendees), class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) }) "></p>
                 <p class="summary-p" v-else v-html=" formSubmit.attendees.length === 1 ? getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3MessageOne'), { attendee: formSubmit.attendees[0].name, class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) }) : getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3MessageTwo'), { attendees: $options.filters.attendees(formSubmit.attendees), class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) })"></p>
-                <form method="post" id="payment-form" ref="paymentForm" class="margin-top--3" v-if="classObject.price > 0">
+                <form method="post" id="payment-form" ref="paymentForm" class="margin-top--3" v-if="needs_payment">
                     <div class="form-row">
                         <label for="card-element">Credit or debit card</label>
                         <div id="card-element" ref="cardElement"></div>
@@ -92,7 +92,7 @@
             <div v-if="step === 3" class="confirmation">
                 <h2>Registration Confirmation</h2>
                 <img src="~/assets/ok.svg">
-                <p class="text-align--center margin-top--4"><template v-if="classObject.price > 0">Your payment of <strong>{{ formSubmit.attendees.length * formSubmit.price | currency(tenantCurrency) }}</strong> processed successfully.</template> We sent you an email confirmation.</p>
+                <p class="text-align--center margin-top--4"><template v-if="needs_payment">Your payment of <strong>{{ amount_to_pay | currency(tenantCurrency) }}</strong> processed successfully.</template> We sent you an email confirmation.</p>
             </div>
 
             <!-- N O   M O R E   S P O T S -->
@@ -114,7 +114,7 @@
 
     export default {
         name: "BookingModal",
-        props: ['classObject', 'visible', 'ts', 'availability', 'tz', 'classNextDuration', 'language', 'is_event', 'prefill'],
+        props: ['classObject', 'visible', 'ts', 'availability', 'tz', 'classNextDuration', 'language', 'is_event', 'prefill', 'rs', 'booking_rs'],
         data: function () {
             return {
                 step: 0,
@@ -220,6 +220,7 @@
                 out.lastName = this.form.lastName
                 out.phone = this.form.phone
                 out.email = this.form.email
+                out.rs = this.rs
                 return out
             },
             age_min: function(){
@@ -268,6 +269,33 @@
 
                 }
                 return title
+            },
+            has_stripe: function(){
+                let vm = this
+                return ! _.isNull( vm.$store.getters.stripePublicApiKey ) && ! _.isEmpty( vm.$store.getters.stripePublicApiKey )
+            },
+            needs_payment: function(){
+                let vm = this
+                try{
+                    return vm.booking_rs.amount < vm.classObject.price * vm.attendees.length
+                } catch (e) {
+                    return vm.classObject.price > 0
+                }
+            },
+            total: function(){
+                return this.attendees.length * this.classObject.price
+            },
+            amount_to_pay: function(){
+                return this.total - this.credit
+            },
+            credit: function(){
+                try{
+                    let credit = this.booking_rs.amount || 0
+                        credit += this.booking_rs.credit || 0
+                    return credit
+                } catch (e) {
+                    return 0
+                }
             }
         },
         methods: {
@@ -455,7 +483,7 @@
             },
             completeBooking: function () {
                 let vm = this
-                if( vm.classObject.price > 0 ){
+                if( vm.needs_payment ){
                     let form = vm.$refs.paymentForm;
                     form.dispatchEvent(new Event('submit'))
                 } else {
@@ -606,7 +634,7 @@
             },
             step: function (n) {
                 let vm = this
-                if (n === 2 && ! _.isNull( vm.$store.getters.stripePublicApiKey ) && ! _.isEmpty( vm.$store.getters.stripePublicApiKey ) && vm.classObject.price > 0 ) {
+                if (n === 2 && vm.has_stripe && vm.needs_payment ) {
                     this.$nextTick(function () {
                         let stripe = Stripe( vm.$store.getters.stripePublicApiKey )
                         let elements = stripe.elements({ fonts: [{ cssSrc: "https://fonts.googleapis.com/css?family=Muli:300,400,600,700,800,900" }]})

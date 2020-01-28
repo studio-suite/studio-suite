@@ -104,7 +104,10 @@ async function getRoutes() {
     let classes = await getClassesRoutes()
     let schedules = await getSchedulesRoutes()
     let magnets = await getMagnetsRoutes()
-    return _.concat(schedules, classes, magnets)
+    let out = _.filter( _.concat(schedules, classes, magnets), function(v){
+        return v.route.length < 100
+    })
+    return out
 }
 
 module.exports = {

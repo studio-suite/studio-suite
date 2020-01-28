@@ -72,7 +72,7 @@
                 </div>
             </aside>
         </div>
-        <BookingModal :prefill="prefill_modal" :classObject="classObject" :ts="classNextTs" :classNextDuration="classNextDuration" :language="classObject.language" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="updateAvailability" :tz="tz" :is_event="is_event"></BookingModal>
+        <BookingModal :rs="rs" :booking_rs="booking_rs" :prefill="prefill_modal" :classObject="classObject" :ts="classNextTs" :classNextDuration="classNextDuration" :language="classObject.language" :availability="availability" :visible="showModal" @closeModal="showModal = false" @blockDate="updateAvailability" :tz="tz" :is_event="is_event"></BookingModal>
     </section>
 </template>
 
