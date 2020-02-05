@@ -393,11 +393,13 @@
   color: $color-gray;
 
   strong{
-    display: inline-block;
+    display: inline;
     position: relative;
     color: $color-black;
+    text-decoration: underline;
+    text-underline-position: under;
 
-    &::before{
+    /*&::before{
       content: '';
       display: block;
       position: absolute;
@@ -405,6 +407,6 @@
       right: 0;
       bottom: -1px;
       border-bottom: 1px solid;
-    }
+    }*/
   }
 }

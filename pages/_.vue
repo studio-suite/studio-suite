@@ -45,13 +45,11 @@
                     this.ts = parseInt( this.$route.query.ts )
                 }
             }
-            console.log('testttt', this.$route.query, this.rs)
             if( ! _.isUndefined( this.$route.query ) && ! _.isUndefined( this.$route.query.rs ) ){
                 if( _.isUndefined( this.rs ) || _.isNull( this.rs ) ){
                     this.rs = this.$route.query.rs
                 }
             }
-            console.log('testttt rs', this.rs)
         },
         async asyncData({params, error, payload, query}) {
             if (payload) return { classObject: payload, ts: query.ts, rs: query.rs }

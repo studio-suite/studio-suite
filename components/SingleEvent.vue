@@ -221,14 +221,14 @@
                 if( ! _.isUndefined( c.seasonsIds ) && ! _.isEmpty( c.seasonsIds ) ){
                     let seasons = JSON.parse( JSON.stringify( vm.$store.state.seasons.list ) )
                     let ids = JSON.parse( JSON.stringify( c.seasonsIds ) )
-                        ids = _.filter( ids, function(i){
-                            return _.map(seasons, function(s){
-                                return s.id
-                            }).indexOf(i) >= 0
-                        })
+                    ids = _.filter( ids, function(i){
+                        return _.map(seasons, function(s){
+                            return s.id
+                        }).indexOf(i) >= 0
+                    })
                     _.each( ids, function(season){
                         let validSeason = _.find( vm.$store.state.seasons.list, { id: season } )
-                        if( ! _.isUndefined( validSeason ) && ( moment.tz(validSeason.range[0], vm.tz).isAfter(d) && moment.tz(validSeason.range[1], vm.tz).isBefore(d) ) ){
+                        if( ! _.isUndefined( validSeason ) && ( moment.tz(validSeason.range[0], vm.getTimezone(c.locationId)).isAfter(d) || moment.tz(validSeason.range[1], vm.getTimezone(c.locationId)).isBefore(d) ) ){
                             blocked++
                         }
                     })
