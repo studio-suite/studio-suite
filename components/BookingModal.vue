@@ -597,7 +597,7 @@
                     phone = phone.replace( /\+/g, '')
                     phone = phone.replace( /\./g, '')
                     phone = phone.replace( /[\D]/g, '' )
-                    phone = `+${phone}`
+                    //phone = `+${phone}`
                     this.form.phone = phone
                 }
             }, 200),
