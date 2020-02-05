@@ -137,6 +137,11 @@
             },
             ts: function(n){
                 this.startDate = !_.isUndefined( n ) && ! _.isNull(n) ? moment.unix(parseInt(n)).tz(this.tz).format() : this.startDate
+            },
+            rs: function(n){
+                if( ! _.isUndefined( n ) ){
+                    this.getReschedule(n)
+                }
             }
         },
         mounted: function(){
@@ -157,15 +162,20 @@
                 vm.startDate = moment.tz(vm.startDate, vm.tz).add(14, 'days').format()
             }
             if( ! _.isUndefined( this.rs ) && this.rs.length > 10 ){
-                axios.get(`${process.env.VUE_APP_API_BASE}/get-booking?id=${vm.rs}`).then(function (r) {
+                this.getReschedule(vm.rs)
+            }
+        },
+        methods: {
+            getReschedule: function(rs){
+                let vm = this
+                axios.get(`${process.env.VUE_APP_API_BASE}/get-booking?id=${rs}`).then(function (r) {
                     if( r.status === 200 && ! _.isUndefined( r.data ) && ! _.isNull( r.data ) ){
                         vm.booking_rs = r.data
                     }
                 }).catch(function (r) {
+                    console.log('cannot get rescheduled booking', r)
                 })
-            }
-        },
-        methods: {
+            },
             getBookings: function(classId, min, max){
                 let vm = this
                 vm.loaders = true
@@ -211,14 +221,14 @@
                 if( ! _.isUndefined( c.seasonsIds ) && ! _.isEmpty( c.seasonsIds ) ){
                     let seasons = JSON.parse( JSON.stringify( vm.$store.state.seasons.list ) )
                     let ids = JSON.parse( JSON.stringify( c.seasonsIds ) )
-                        ids = _.filter( ids, function(i){
-                            return _.map(seasons, function(s){
-                                return s.id
-                            }).indexOf(i) >= 0
-                        })
+                    ids = _.filter( ids, function(i){
+                        return _.map(seasons, function(s){
+                            return s.id
+                        }).indexOf(i) >= 0
+                    })
                     _.each( ids, function(season){
                         let validSeason = _.find( vm.$store.state.seasons.list, { id: season } )
-                        if( ! _.isUndefined( validSeason ) && ( moment.tz(validSeason.range[0], vm.tz).isAfter(d) && moment.tz(validSeason.range[1], vm.tz).isBefore(d) ) ){
+                        if( ! _.isUndefined( validSeason ) && ( moment.tz(validSeason.range[0], vm.getTimezone(c.locationId)).isAfter(d) || moment.tz(validSeason.range[1], vm.getTimezone(c.locationId)).isBefore(d) ) ){
                             blocked++
                         }
                     })
