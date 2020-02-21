@@ -372,12 +372,12 @@
                             firstName: {
                                 type: 'string',
                                 required: true,
-                                min: 3
+                                min: 2
                             },
                             lastName: {
                                 type: 'string',
                                 required: true,
-                                min: 3
+                                min: 2
                             },
                             phone: {
                                 type: 'string',
