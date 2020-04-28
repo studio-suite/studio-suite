@@ -248,15 +248,14 @@
                 let vm = this
                 let locationSchedule = _.find(this.$store.state.locations.list, {id: c.locationId })
                 try{
-
                     if( ! _.isUndefined( locationSchedule ) && ! _.isUndefined( locationSchedule.schedule ) && ! _.isUndefined( locationSchedule.schedule.empty ) && locationSchedule.schedule.empty.indexOf(d) >= 0 ){
                         return true
                     }
-                    let validSpecific = ! _.isUndefined( locationSchedule.specific ) ? _.find( locationSchedule.specific,  {d: parseInt(moment.tz(d, vm.getTimezone(c.locationId)).format('e')) }) : undefined
+                    let validSpecific = ! _.isUndefined( locationSchedule.specific ) ? _.find( locationSchedule.specific,  { d: moment.tz(d, vm.getTimezone(c.locationId)).format('YYYY-MM-DD') } )  : undefined
                         validSpecific = !_.isUndefined( validSpecific ) ? vm.fitsIntervals( d, validSpecific.i, c.schedule.specific ) : validSpecific
                     let validDays = _.find( locationSchedule.schedule.days, {d: parseInt(moment.tz(d, vm.getTimezone(c.locationId)).format('e')) } )
                         validDays = !_.isUndefined( validDays ) ? vm.fitsIntervals( d, validSpecific.i, c.schedule.days ) : validDays
-                    return !_.isUndefined(validDays) || _.isUndefined( validDays ) && !_.isUndefined( validSpecific )
+                    return _.isUndefined( validDays ) && _.isUndefined( validSpecific )
                 } catch (e) {
                     return false
                 }
