@@ -604,9 +604,9 @@
             visible: function (n) {
                 if (n) {
                     this.step = this.isClassForAdults ? 1 : 0
-                    this.form = JSON.parse( JSON.stringify( this.default_form ) ),
-                    this.attendees = JSON.parse( JSON.stringify( this.default_attendees ) ),
-                    this.stok = null,
+                    this.form = JSON.parse( JSON.stringify( this.default_form ) )
+                    this.attendees = JSON.parse( JSON.stringify( this.default_attendees ) )
+                    this.stok = null
                     this.booking = null
                     this.bookingConfirmation = null
                     this.loaders = false
@@ -635,6 +635,14 @@
             step: function (n) {
                 let vm = this
                 if (n === 2 && vm.has_stripe && vm.needs_payment ) {
+                    vm.attendees = [{
+                        name: vm.formSubmit.firstName,
+                        dob: {
+                            y: 1900,
+                            m: 1,
+                            d: 1
+                        }
+                    }]
                     this.$nextTick(function () {
                         let stripe = Stripe( vm.$store.getters.stripePublicApiKey )
                         let elements = stripe.elements({ fonts: [{ cssSrc: "https://fonts.googleapis.com/css?family=Muli:300,400,600,700,800,900" }]})
@@ -700,8 +708,8 @@
                         name: vm.formSubmit.firstName,
                         dob: {
                             y: 1900,
-                            m:1,
-                            d:1
+                            m: 1,
+                            d: 1
                         }
                     }]
                 }
