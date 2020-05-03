@@ -51,6 +51,7 @@
             <aside class="right-col">
                 <div class="sticker">
                     <BookingBox
+                            v-if="canBook(classObject)"
                             :price="classObject.price"
                             :capacity="classObject.capacity"
                             :availability="availability"
@@ -166,6 +167,9 @@
             }
         },
         methods: {
+            canBook: function(c){
+                return parseInt( moment.tz(c.starting_time, this.getTimezone(c.locationId)).format('X') ) > parseInt( moment().tz(this.getTimezone(c.locationId)).format('X') )
+            },
             getReschedule: function(rs){
                 let vm = this
                 axios.get(`${process.env.VUE_APP_API_BASE}/get-booking?id=${rs}`).then(function (r) {

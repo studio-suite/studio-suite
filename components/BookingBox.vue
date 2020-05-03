@@ -15,7 +15,7 @@
             </template>
             <template v-else><i class="fal fa-times"></i></template>
         </div>
-        <div class="booking-box" :class="{ 'booking-box--visible': show_booking }">
+        <div class="booking-box" :class="{ 'booking-box--visible': show_booking }" >
             <div class="loading" v-if="!availabilityRequest">
                 <div class="loader"></div>
             </div>

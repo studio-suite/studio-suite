@@ -26,7 +26,7 @@
             <div v-if="schedule.modal !== 2" class="class__buttons">
                 <div>
                     <a :href="`/${c.slug}?ts=${getClassTs(c.starting_time, c.locationId)}`" v-if="schedule.appearance.show_excerpt" class="btn-class-details" >{{ getText('schedule/details') }}</a>
-                    <a href="#" class="btn-class-book" v-on:click.prevent="openModal(c, c.starting_time)">{{ getText('schedule/book') }}</a>
+                    <a v-if="canBook(c)" href="#" class="btn-class-book" v-on:click.prevent="openModal(c, c.starting_time)">{{ getText('schedule/book') }}</a>
                 </div>
             </div>
         </article>
@@ -60,6 +60,9 @@
             getTimezone: function(id){
                 let l = _.find( this.$store.getters.locations, { id: id } )
                 return l.timezone || 'Europe/London'
+            },
+            canBook: function(c){
+                return parseInt( moment.tz(c.starting_time, this.getTimezone(c.locationId)).format('X') ) > parseInt( moment().tz(this.getTimezone(c.locationId)).format('X') )
             }
         }
     }
