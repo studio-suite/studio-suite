@@ -41,6 +41,7 @@
                 </template>
                 <div class="booking-box__sold-out" v-if="sold_out"><i class="fal fa-user-lock"></i></div>
             </template>
+            <template v-if="availabilityRequest && dates.length === 0"><br><i class="fal fa-calendar-times fa-3x"></i><br><br>There are no available dates</template>
         </div>
         <div class="booking-box__bg" v-on:click.prevent="show_booking = false"></div>
     </div>

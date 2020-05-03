@@ -9,11 +9,11 @@
 
             <!-- C H I L D R E N -->
             <div v-if="step === 0">
-                <h2 v-html="getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step1Title'))"></h2>
-                <h3 class="margin-bottom--5" v-html="capacity > 1 ? getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step1Subtitle'), { spots: capacity }) : getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step1SubtitleOne') )"></h3>
+                <h2 v-html="labels.step_1.h2"></h2>
+                <h3 class="margin-bottom--5" v-html="labels.step_1.h3"></h3>
                 <div class="attendees">
                     <div class="attendee" v-for="(att, ind) in attendees">
-                        <label><em v-html="getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step1ChildName'))"></em> <span class="remove-attendee" v-if="ind > 0" v-on:click.prevent="attendees.splice(ind, 1)"><i class="far fa-user-minus margin-right--05"></i> Remove</span></label>
+                        <label><em v-html="labels.step_1.child_name"></em> <span class="remove-attendee" v-if="ind > 0" v-on:click.prevent="attendees.splice(ind, 1)"><i class="far fa-user-minus margin-right--05"></i> Remove</span></label>
                         <input type="text" v-model="att.name" placeholder="Your child’s first name here" class="name" :class="checkForErrors(`attendees.${ind}.name`)"/>
                         <div class="year" :class="checkForErrors(`attendees.${ind}.dob.y`)">
                             <select v-model="att.dob.y" :class="checkForErrors(`attendees.${ind}.dob.y`)"  title="Choose child year of birth">
@@ -54,8 +54,8 @@
 
             <!-- P A R E N T -->
             <div v-if="step === 1">
-                <h2 v-html="getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step2Title'))"></h2>
-                <h3 class="margin-bottom--5" v-html="getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step2Subtitle'))"></h3>
+                <h2 v-html="labels.step_2.h2"></h2>
+                <h3 class="margin-bottom--5" v-html="labels.step_2.h3"></h3>
                 <label>First name</label>
                 <input type="text" v-model="form.firstName" placeholder="Your first name here" :class="checkForErrors(`form.firstName`)"/>
                 <label class="margin-top--2">Last name</label>
@@ -71,10 +71,10 @@
 
             <!-- P A Y M E N T -->
             <div v-if="step === 2">
-                <h2 v-html="getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3Title'))"></h2>
-                <h3 class="margin-bottom--5" v-html="needs_payment ? getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3SubtitlePayment')) : getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3Subtitle'))"></h3>
-                <p class="summary-p" v-if="needs_payment" v-html=" formSubmit.attendees.length === 1 ? getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3PaymentMessageOne'), { total: $options.filters.currency(amount_to_pay), attendee: formSubmit.attendees[0].name, class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) }) : getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3PaymentMessageTwo'), { total: $options.filters.currency(amount_to_pay), attendees: $options.filters.attendees(formSubmit.attendees), class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) }) "></p>
-                <p class="summary-p" v-else v-html=" formSubmit.attendees.length === 1 ? getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3MessageOne'), { attendee: formSubmit.attendees[0].name, class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) }) : getText(checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3MessageTwo'), { attendees: $options.filters.attendees(formSubmit.attendees), class_title: classObject.title, time: $options.filters.moment_ts_location(ts, summaryDateFormat, tz) })"></p>
+                <h2 v-html="labels.step_3.h2"></h2>
+                <h3 class="margin-bottom--5" v-html="labels.step_3.h3"></h3>
+                <p class="summary-p" v-if="needs_payment" v-html="labels.step_3.payment"></p>
+                <p class="summary-p" v-else v-html="labels.step_3.free"></p>
                 <form method="post" id="payment-form" ref="paymentForm" class="margin-top--3" v-if="needs_payment">
                     <div class="form-row">
                         <label for="card-element">Credit or debit card</label>
@@ -98,7 +98,7 @@
             <!-- N O   M O R E   S P O T S -->
             <div v-if="step === 4">
                 <h2>Registration Failed</h2>
-                <p class="margin-top--4 text-align--center"><strong>Unfortunately there are no more spots avaialble</strong>. Please close this window and choose a different date.</p>
+                <p class="margin-top--4 text-align--center"><strong>Unfortunately there are no more spots available</strong>. Please close this window and choose a different date.</p>
                 <a href="#" class="close-button" v-on:click.prevent="closeModal">Choose different date</a>
             </div>
 
@@ -161,6 +161,41 @@
             }
         },
         computed: {
+            labels: function(){
+                let vm = this
+
+                let data_one_attendee = {
+                    total: vm.$options.filters.currency(vm.amount_to_pay),
+                    attendee: vm.formSubmit.attendees[0].name,
+                    class_title: vm.classObject.title,
+                    time: vm.$options.filters.moment_ts_location(vm.ts, vm.summaryDateFormat, vm.tz)
+                }
+                let data_many_attendees = {
+                    total: vm.$options.filters.currency(vm.amount_to_pay),
+                    attendees: vm.$options.filters.attendees(vm.formSubmit.attendees),
+                    class_title: vm.classObject.title,
+                    time: vm.$options.filters.moment_ts_location(vm.ts, vm.summaryDateFormat, vm.tz)
+                }
+
+                let out = {
+                    step_1: {
+                        h2: vm.getText(vm.checkEventLabel('class/singleEvent/bookingBox/bookingModal/step1Title')),
+                        h3: vm.capacity > 1 ? vm.getText(vm.checkEventLabel('class/singleEvent/bookingBox/bookingModal/step1Subtitle'), { spots: vm.capacity }) : vm.getText(vm.checkEventLabel('class/singleEvent/bookingBox/bookingModal/step1SubtitleOne') ),
+                        child_name: vm.getText(vm.checkEventLabel('class/singleEvent/bookingBox/bookingModal/step1ChildName'))
+                    },
+                    step_2: {
+                        h2: vm.getText(vm.checkEventLabel('class/singleEvent/bookingBox/bookingModal/step2Title')),
+                        h3: vm.getText(vm.checkEventLabel('class/singleEvent/bookingBox/bookingModal/step2Subtitle'))
+                    },
+                    step_3: {
+                        h2: vm.getText(vm.checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3Title')),
+                        h3: vm.needs_payment ? vm.getText(vm.checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3SubtitlePayment')) : vm.getText(vm.checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3Subtitle')),
+                        payment: vm.formSubmit.attendees.length === 1 ? vm.getText(vm.checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3PaymentMessageOne'), data_one_attendee ) : vm.getText(vm.checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3PaymentMessageTwo'), data_many_attendees ),
+                        free: vm.formSubmit.attendees.length === 1 ? vm.getText(vm.checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3MessageOne'), data_one_attendee) : vm.getText(vm.checkEventLabel('class/singleEvent/bookingBox/bookingModal/step3MessageTwo'), data_many_attendees )
+                    }
+                }
+                return out
+            },
             ending: function(){
               return  parseInt( moment.unix(this.ts + this.classNextDuration * 60).tz(this.tz).format('X') )
             },

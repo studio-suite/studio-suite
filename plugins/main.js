@@ -467,10 +467,16 @@ let language = [
         d: 'Booking modal step one subtitle multiple spots available'
     },
     {
+        i: 'event/singleEvent/bookingBox/bookingModal/step1SubtitleOne',
+        l: 'Hurry up! Only one spot left!',
+        d: 'Booking modal step one subtitle one spot available'
+    },
+    {
         i: 'event/singleEvent/bookingBox/bookingModal/step1ChildName',
         l: 'Child first name & birthdate',
         d: 'Booking modal step one label for child name and birthdate'
     },
+
     // Modal Step 2
     {
         i: 'event/singleEvent/bookingBox/bookingModal/step2Title',
@@ -481,5 +487,41 @@ let language = [
         i: 'event/singleEvent/bookingBox/bookingModal/step2Subtitle',
         l: 'Now, please submit your contact details below',
         d: 'Booking modal step two subtitle'
-    }
+    },
+
+    {
+        i: 'event/singleEvent/bookingBox/bookingModal/step3Title',
+        l: 'Event Registration',
+        d: 'Booking modal step three title'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/bookingModal/step3SubtitlePayment',
+        l: 'Please provide payment details below',
+        d: 'Booking modal step three subtitle when need payment'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/bookingModal/step3Subtitle',
+        l: 'Please review your registration',
+        d: 'Booking modal step three subtitle'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/bookingModal/step3PaymentMessageOne',
+        l: 'You are about to pay **{{ total }}** for **{{ attendee }}** to attend **{{ class_title }}** on {{ time }}',
+        d: 'Booking modal step three payment message one attendee'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/bookingModal/step3PaymentMessageTwo',
+        l: 'You are about to pay **{{ total }}** for **{{ attendees }}** to attend **{{ class_title }}** on {{ time }}',
+        d: 'Booking modal step three payment message multiple attendees'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/bookingModal/step3MessageOne',
+        l: 'You are about to register **{{ attendee }}** to attend **{{ class_title }}** on {{ time }}',
+        d: 'Booking modal step three message one attendee'
+    },
+    {
+        i: 'event/singleEvent/bookingBox/bookingModal/step3MessageTwo',
+        l: 'You are about to register **{{ attendees }}** to attend **{{ class_title }}** on {{ time }}',
+        d: 'Booking modal step three message multiple attendees'
+    },
 ]
