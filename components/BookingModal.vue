@@ -670,14 +670,16 @@
             step: function (n) {
                 let vm = this
                 if (n === 2 && vm.has_stripe && vm.needs_payment ) {
-                    vm.attendees = [{
-                        name: vm.formSubmit.firstName,
-                        dob: {
-                            y: 1900,
-                            m: 1,
-                            d: 1
-                        }
-                    }]
+                    if( vm.attendees.length === 0 ){
+                        vm.attendees = [{
+                            name: vm.formSubmit.firstName,
+                            dob: {
+                                y: 1900,
+                                m: 1,
+                                d: 1
+                            }
+                        }]
+                    }
                     this.$nextTick(function () {
                         let stripe = Stripe( vm.$store.getters.stripePublicApiKey )
                         let elements = stripe.elements({ fonts: [{ cssSrc: "https://fonts.googleapis.com/css?family=Muli:300,400,600,700,800,900" }]})
