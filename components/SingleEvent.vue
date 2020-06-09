@@ -51,6 +51,7 @@
             <aside class="right-col">
                 <div class="sticker">
                     <BookingBox
+                            v-if="canBook(ts)"
                             :price="classObject.price"
                             :capacity="classObject.capacity"
                             :availability="availability"
@@ -123,6 +124,7 @@
             },
             classNextDates: function(n){
                 let vm = this
+                window.console.log('pe aici', n)
                 if( _.isEmpty(n) && vm.startSteps < 20 ){
                     vm.startDate = moment.tz(vm.startDate, vm.tz).add(14, 'days').format()
                     vm.startSteps++
@@ -133,6 +135,8 @@
                     if( ! _.isEmpty( tss ) ){
                         vm.getBookings( this.classObject.id, _.min( tss ), _.max( tss ) )
                     }
+                } else {
+                    vm.availabilityRequest = true
                 }
             },
             ts: function(n){
@@ -166,6 +170,10 @@
             }
         },
         methods: {
+            canBook: function(){
+                let vm = this
+                return true//parseInt( moment.unix(vm.classNextDates.length > 0 ? vm.classNextDates[0].ts : 1 ).tz( vm.tz).format('X') ) > parseInt( moment().tz(vm.tz).format('X') )
+            },
             getReschedule: function(rs){
                 let vm = this
                 axios.get(`${process.env.VUE_APP_API_BASE}/get-booking?id=${rs}`).then(function (r) {
@@ -177,6 +185,7 @@
                 })
             },
             getBookings: function(classId, min, max){
+                window.console.log('cere')
                 let vm = this
                 vm.loaders = true
                 let client = algoliasearch( '04QHF1E2Q9', this.$store.getters.tenant.algoliaPublicApiKey );

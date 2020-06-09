@@ -28,8 +28,7 @@
                     { hid: 'og:url', name: 'og:url', content: `https://${this.$store.getters.tenant.domain}.studiosuite.io/m/${this.magnet.slug}` },
                 ],
                 bodyAttrs: {
-                    class: 'magnet-page',
-                    style: `background-image: url(${this.getImgSrc({w: 2560 }, this.magnet.image)})`
+                    class: 'magnet-page'
                 }
             }
 
@@ -39,6 +38,7 @@
             }
 
             if( ! _.isUndefined( this.magnet.image ) && ! _.isEmpty( this.magnet.image ) ){
+                head.bodyAttrs.style = `background-image: url(${this.getImgSrc({w: 2560 }, this.magnet.image)})`
                 head.meta.push({ hid: 'og-image', name: 'og:image', content: this.getImgSrc({w: 1200, h: 630, fit: 'crop', crop: 'edges' }, this.magnet.image ) })
                 head.meta.push({ hid: 'og-image-alt', name: 'og:image:alt', content: this.magnet.title })
             }
