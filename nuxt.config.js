@@ -111,11 +111,7 @@ async function getRoutes() {
 }
 
 module.exports = {
-    mode: 'universal',
-
-    /*
-    ** Headers of the page
-    */
+    target: 'static',
     head: {
         title: pkg.name,
         htmlAttrs: {
@@ -134,11 +130,6 @@ module.exports = {
         script: [
             {
                 src: 'https://js.stripe.com/v3/'
-            },
-            {
-                src: `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_GMAPS_PUBLIC_API || VUE_APP_GMAPS_PUBLIC_API}`,
-                defer: true,
-                async: true
             },
             {
                 src: 'https://addevent.com/libs/atc/1.6.1/atc.min.js',
@@ -178,14 +169,14 @@ module.exports = {
     ** Plugins to load before mounting the App
     */
     plugins: [
-        {src: '~/plugins/main.js', ssr: true},
-        {src: '~/plugins/vue-select.js', ssr: false},
-        {src: '~/plugins/currency', ssr: true},
-        {src: '~plugins/vue-js-modal', ssr: true},
-        { src: '~plugins/ga.js', ssr: false },
-        { src: '~plugins/fb.js', ssr: false },
-        { src: '~plugins/css.js', ssr: true },
-        { src: '~plugins/confirmation.js', ssr: true }
+        {src: '~/plugins/main.js'},
+        {src: '~/plugins/vue-select.js', mode: 'client'},
+        {src: '~/plugins/currency'},
+        {src: '~plugins/vue-js-modal'},
+        { src: '~plugins/ga.js', mode: 'client' },
+        { src: '~plugins/fb.js', mode: 'client' },
+        { src: '~plugins/css.js' },
+        { src: '~plugins/confirmation.js' }
     ],
 
     /*

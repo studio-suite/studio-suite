@@ -36,5 +36,8 @@ export default {
         } catch (e) {
             console.log(e)
         }
+    },
+    setGoogleMapsReady: function({commit}){
+        commit('SET_GOOGLE_MAPS_READY')
     }
 }

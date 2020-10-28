@@ -4,7 +4,8 @@ const state = () => {
         logo: {},
         stripePublic: null,
         ga: null,
-        fb: null
+        fb: null,
+        isGoogleLoaded: false
     }
 }
 

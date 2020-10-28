@@ -8,7 +8,7 @@
                 <h1 class="title">{{classObject.title}}</h1>
 
                 <div class="meta margin-bottom--4">
-                    <span class="margin-right--025"><i class="fal fa-users-class"></i> {{classAgeInterval}}</span> <span v-if="classTypes" class="no-wrap"><i class="middot"></i> {{classTypes}}</span>
+                    <span class="margin-right--025"><i class="fal fa-users-class"></i> {{classAgeInterval}}</span> <span v-if="classTypes"><i class="middot"></i> {{classTypes}}</span>
                 </div>
                 <div v-if="classObject.image" class="image margin-bottom--4">
                     <img :src="getImgSrc({w: 1300}, classObject.image)" :alt="classObject.title">
@@ -20,7 +20,7 @@
                     <div v-for="instructor in classObject.instructorsIds" :key="instructor" class="instructor" v-if="getInstructor(instructor)">
                         <div class="left">
                             <template v-if="getInstructor(instructor).image">
-                                <div class="avatar"><img :src="getImgSrc({w: 280, h: 280, crop: 'faces', fit: 'facearea'}, getInstructor(instructor).image)"></div>
+                                <div class="avatar"><img :src="getImgSrc({w: 280, h: 280, crop: 'faces', fit: 'crop'}, getInstructor(instructor).image)"></div>
                             </template>
                             <template v-else>
                                 <div v-text="getInstructorInitials(instructor)" class="initials"></div>
@@ -93,7 +93,7 @@
             BookingModal,
             BookingBox
         },
-        props: [ 'classObject', 'isModal', 'ts', 'rs' ],
+        props: [ 'classObject', 'isModal', 'ts', 'rs', 'isGoogleLoaded'],
         data: function(){
             return {
                 classNextTs: '',
@@ -140,23 +140,21 @@
                 }
             },
             ts: function(n){
-                this.startDate = !_.isUndefined( n ) && ! _.isNull(n) ? moment.unix(parseInt(n)).tz(this.tz).format() : this.startDate
+                this.startDate = !_.isUndefined( n ) && ! _.isNull(n) && this.ts >= moment().tz(this.tz).unix() ? moment.unix(parseInt(n)).tz(this.tz).format() : this.startDate
             },
             rs: function(n){
                 if( ! _.isUndefined( n ) ){
                     this.getReschedule(n)
                 }
+            },
+            isGoogleLoaded: function(){
+                this.initMap()
             }
         },
         mounted: function(){
             let vm = this
-            let coords = this.classLocationCoords()
-            if( coords !== false && this.isModal !== true && ! _.isUndefined( google ) && _.isArray( coords ) && coords.length === 2 ){
-                let uluru = { lat: coords[0], lng: coords[1] };
-                let map = new google.maps.Map( vm.$refs.map, { zoom: 16, center: uluru });
-                new google.maps.Marker({position: uluru, map: map});
-            }
-            vm.startDate = !_.isUndefined( vm.ts ) && ! _.isNull(vm.ts) ? moment.unix(parseInt(vm.ts)).tz(vm.tz).format() : vm.startDate
+            this.initMap()
+            vm.startDate = !_.isUndefined( vm.ts ) && ! _.isNull(vm.ts) && vm.ts >= moment().tz(vm.tz).unix() ? moment.unix(parseInt(vm.ts)).tz(vm.tz).format() : vm.startDate
             if( ! _.isEmpty( vm.classNextDates ) ){
                 let tss = _.map( vm.classNextDates, function(i){
                     return i.ts
@@ -170,6 +168,15 @@
             }
         },
         methods: {
+            initMap: function(){
+                let vm = this
+                let coords = this.classLocationCoords()
+                if( coords !== false && this.isModal !== true && this.isGoogleLoaded && _.isArray( coords ) && coords.length === 2 ){
+                    let uluru = { lat: coords[0], lng: coords[1] };
+                    let map = new google.maps.Map( vm.$refs.map, { zoom: 16, center: uluru });
+                    new google.maps.Marker({position: uluru, map: map});
+                }
+            },
             canBook: function(){
                 let vm = this
                 return true//parseInt( moment.unix(vm.classNextDates.length > 0 ? vm.classNextDates[0].ts : 1 ).tz( vm.tz).format('X') ) > parseInt( moment().tz(vm.tz).format('X') )
@@ -280,8 +287,6 @@
                 let vm = this
                 return _.join( _.map( vm.getInstructorName(id).split(' '), function(i){ return i[0] }), ' ')
             },
-
-
             classLocationCoords: function(){
                 let vm = this
                 if( !_.isUndefined( this.classLocation ) && ! _.isUndefined( this.classLocation.coords ) && this.classLocation.coords.indexOf('|') >= 0 ){

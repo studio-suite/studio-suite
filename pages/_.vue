@@ -1,6 +1,6 @@
 <template>
     <section class="main-wrapper">
-        <SingleEvent :classObject="classObject" :ts="ts" class="container" :isModal="false" :language="classObject.language" :rs="rs"></SingleEvent>
+        <SingleEvent :classObject="classObject" :ts="ts" class="container" :isModal="false" :language="classObject.language" :rs="rs" :isGoogleLoaded="isGoogleLoaded"></SingleEvent>
     </section>
 </template>
 
@@ -13,6 +13,11 @@
         name: "class-slug",
         components: {
             SingleEvent
+        },
+        computed:{
+            isGoogleLoaded: function(){
+                return this.$store.getters.isGoogleLoaded
+            }
         },
         head () {
             let head = {

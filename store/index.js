@@ -47,6 +47,9 @@ const store = () => {
                 if( ! _.isUndefined( fb )){
                     state.fb = fb.apiKey
                 }
+            },
+            SET_GOOGLE_MAPS_READY: function(state){
+                state.isGoogleLoaded = true
             }
         },
         getters: {
@@ -93,6 +96,9 @@ const store = () => {
             },
             stripePublicApiKey: function(state){
                 return state.stripePublic
+            },
+            isGoogleLoaded: function(state){
+                return state.isGoogleLoaded
             }
         },
         modules:{
