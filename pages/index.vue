@@ -62,10 +62,10 @@ export default {
             window.location = `/s/${i.slug}`;
           //this.$router.push({ name: 's-slug', params: { slug: i.slug  }})
         },
-      getClassTypesString: function(i){
+      getClassTypesString: function(ij){
           let out = 'All class types'
-          if( _.isUndefined(i) ){
-              let class_types = _.map(this.$store.state.class_types.list, function(i){ return i.name })
+          if( ! _.isUndefined(ij) && ij.length > 0 && ij[0] !== '*' ){
+              let class_types = _.map(_.orderBy( _.filter( this.$store.state.class_types.list, function(i){ return ij.indexOf(i.id) >= 0 }), ['name'] ), function(i){ return i.name })
               if( class_types.length > 2 ){
                   let left = class_types.length - 2
                   out = class_types.splice(0, 2).join(', ') + ` + ${left} others`

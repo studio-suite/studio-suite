@@ -67,12 +67,15 @@
             },
             classes_list: function(){
                 let classes = []
-                let count = 100
                 let vm = this
-                for( let day = moment(vm.schedule_start); day.isBefore(vm.schedule_stop); day.add(1, 'days') ){
-                    let date = day.format('YYYY-MM-DD')
+                for( let day = moment(vm.schedule_start).hour(12).minutes(30); day.isBefore(vm.schedule_stop); day.add(1, 'days') ){
+                    let date = day.format('YYYY-MM-DD HH:mm:ss')
+                    let count = 100
                     _.each(vm.available_classes, function(i){
-                        if( ! vm.isClassBlocked(i, date) && ! vm.isDayBlockedBySeason(i, date) && ! vm.isDayBlockedByLocation(i, date) && count > 0 ){
+                        let blockedByClass = vm.isClassBlocked(i, date)
+                        let blockedBySeason = vm.isDayBlockedBySeason(i, date)
+                        let blockedByLocation = vm.isDayBlockedByLocation(i, date)
+                        if( ! blockedByClass && ! blockedBySeason && ! blockedByLocation && count > 0 ){
                             let instances = vm.buildInstances( i, date )
                             if( ! _.isUndefined( instances ) ){
                                 _.each(instances, function(ii){
@@ -84,9 +87,7 @@
                             }
                         }
                     })
-
                 }
-
                 classes = _.orderBy( classes, ['starting_time'] )
 
                 // Filter by day of the week
@@ -108,10 +109,8 @@
                     })
                 }
 
-
-
                 // Limit classes by number
-                vm.schedule.limitType === 1 ? classes.splice(0, vm.schedule.limit || 9999999) : classes
+                classes = parseInt( vm.schedule.limitType ) === 1 ? classes.splice(0, vm.schedule.limit || 9999999) : classes
                 return classes
             },
             schedule_classes: function(){
@@ -180,13 +179,13 @@
                 }
             },
             buildInstances: function(classObj, date){
-                let tz = _.find( this.$store.getters.locations, { id: classObj.locationId } )
-                    tz = ! _.isUndefined( tz ) ? tz.timezone : 'Europe/London'
+                let location = _.find( this.$store.getters.locations, { id: classObj.locationId } )
+                let tz = ! _.isUndefined( location ) ? location.timezone : 'Europe/London'
                 let instances = []
                 let dayIntervals =  _.find(classObj.schedule.days, {d: parseInt(moment.tz(date, tz).format('e'))})
                     dayIntervals = ! _.isUndefined( dayIntervals ) ? [ dayIntervals ] : []
-                if( ! _.isUndefined( classObj.schedule ) && ! _.isUndefined( classObj.schedule.specific ) && ! _.isEmpty( classObj.schedule.specific ) ){
-                    let matched = _.find( classObj.schedule.specific, { d: date } )
+                if( ! _.isUndefined( classObj.schedule ) && ! _.isUndefined( classObj.schedule.specific ) && classObj.schedule.specific.length > 0 ){
+                    let matched = _.find( classObj.schedule.specific, { d: moment.tz(date, tz).format('YYYY-MM-DD') } )
                     if( ! _.isUndefined( matched ) ){
                         dayIntervals = []
                         dayIntervals = _.concat( dayIntervals, matched )
@@ -226,37 +225,48 @@
             fitsIntervals: function(d, interval, intervals ){
                 let vm = this
                 if( !_.isUndefined( intervals ) ){
-                    _.each(intervals, function(i){
-                        if( vm.startsInInterval(interval, i) ){
-                            return true
-                        }
-                    })
-                } else {
-                    return undefined
+                    console.log('has intervals')
+                    return _.isUndefined( _.find( intervals, function (i) {
+                       return  vm.startsInInterval(interval, i)
+                    }))
                 }
+                return false
             },
             isClassBlocked: function(c, d){
                 if(  ! _.isUndefined(c.schedule) && ! _.isUndefined( c.schedule.empty ) && c.schedule.empty.indexOf(d) >= 0 ){
                     return true
                 }
                 let validDays = ! _.isUndefined( c.schedule ) ? _.find( c.schedule.days, {d: parseInt(moment.tz(d, this.getTimezone(c.locationId)).format('e')) } ) : undefined
-                let specificDays =  _.isUndefined( c.schedule ) || _.isUndefined( c.schedule.specific ) ? undefined : _.find( c.schedule.specific, { d: d } )
+                let specificDays =  _.isUndefined( c.schedule ) || _.isUndefined( c.schedule.specific ) ? undefined : _.find( c.schedule.specific, { d: moment.tz(d, this.getTimezone(c.locationId)).format('YYYY-MM-DD') } )
                 let out = _.isUndefined( validDays ) && _.isUndefined( specificDays )
                 return out
             },
             isDayBlockedByLocation: function(c, d){
                 let vm = this
-                let locationSchedule = _.find(this.$store.state.locations.list, {id: c.locationId })
+                let location = _.find(this.$store.state.locations.list, {id: c.locationId })
                 try{
-                    if( ! _.isUndefined( locationSchedule ) && ! _.isUndefined( locationSchedule.schedule ) && ! _.isUndefined( locationSchedule.schedule.empty ) && locationSchedule.schedule.empty.indexOf(d) >= 0 ){
+                    let block = false
+                    let date_for_days = parseInt(moment.tz(d, vm.getTimezone(location.id)).format('e'))
+                    let date_for_specific = moment.tz(d, vm.getTimezone(location.id)).format('YYYY-MM-DD')
+                    if( ! _.isUndefined( location.schedule.empty ) && location.schedule.empty.indexOf(date_for_specific) >= 0 ){
                         return true
                     }
-                    let validSpecific = ! _.isUndefined( locationSchedule.specific ) ? _.find( locationSchedule.specific,  { d: moment.tz(d, vm.getTimezone(c.locationId)).format('YYYY-MM-DD') } )  : undefined
-                        validSpecific = !_.isUndefined( validSpecific ) ? vm.fitsIntervals( d, validSpecific.i, c.schedule.specific ) : validSpecific
-                    let validDays = _.find( locationSchedule.schedule.days, {d: parseInt(moment.tz(d, vm.getTimezone(c.locationId)).format('e')) } )
-                        validDays = !_.isUndefined( validDays ) ? vm.fitsIntervals( d, validSpecific.i, c.schedule.days ) : validDays
-                    return _.isUndefined( validDays ) && _.isUndefined( validSpecific )
+                    let location_specific = ! _.isUndefined( location.schedule.specific ) ? _.find( location.schedule.specific,  { d: date_for_specific } )  : undefined
+                    let location_days = ! _.isUndefined( location.schedule.days ) ? _.find( location.schedule.days, {d: date_for_days } ) : undefined
+                    let class_specific = ! _.isUndefined( c.schedule.specific ) ? _.find( c.schedule.specific, { d: date_for_specific } ) : undefined
+                    let class_days = ! _.isUndefined( c.schedule.days ) ? _.find( c.schedule.days, { d: date_for_days } ) : undefined
+                    let class_intervals = class_specific || class_days
+                    let location_intervals = location_specific || location_days
+                    if( !_.isUndefined( location_intervals ) && !_.isUndefined( location_intervals.i ) && location_intervals.i.length > 0 ){
+                        if( ! _.isUndefined( class_intervals ) && ! _.isUndefined( class_intervals.i ) && class_intervals.i.length > 0 ){
+                            _.each( class_intervals.i, function(interval){
+                                block = !block ? vm.fitsIntervals( d, interval, location_intervals.i ) : block
+                            })
+                        }
+                    }
+                    return block
                 } catch (e) {
+                    console.error(e)
                     return false
                 }
             },

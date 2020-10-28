@@ -19,6 +19,19 @@
     import moment from 'moment'
 
     export default {
+        head(){
+            let head = {
+                script: []
+            }
+            head.script.push({
+                hid: 'google-maps',
+                src: `https://maps.googleapis.com/maps/api/js?key=${process.env.VUE_APP_GMAPS_PUBLIC_API || VUE_APP_GMAPS_PUBLIC_API}`,
+                defer: true,
+                async: true,
+                callback: () => { this.$store.dispatch('setGoogleMapsReady') }
+            })
+            return head
+        },
         computed: {
             year: function () {
                 return moment().format('YYYY')
