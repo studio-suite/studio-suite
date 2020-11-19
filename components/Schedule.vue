@@ -207,6 +207,12 @@
                         ending_time: moment.tz(date, tz).hours( Math.floor( i.e / 60 ) ).set('minutes', i.e % 60 ).set('seconds', 0).set('milliseconds', 0).format() //`${date}T${ending_time}Z`,
                     }
                 })
+                // Filter for past instance
+                instances = _.filter( instances, function(i){
+                  return moment.tz(i.starting_time, tz).isSameOrAfter( moment().tz(tz) )
+                })
+
+                // Filter for fully booked
                 instances = _.filter(instances, function(i){
                     if( ! _.isUndefined( classObj.fully_booked ) ){
                         let ts = moment.tz(i.starting_time, tz).format('X').toString()
