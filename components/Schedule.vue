@@ -207,6 +207,12 @@
                         ending_time: moment.tz(date, tz).hours( Math.floor( i.e / 60 ) ).set('minutes', i.e % 60 ).set('seconds', 0).set('milliseconds', 0).format() //`${date}T${ending_time}Z`,
                     }
                 })
+                // Filter for past instance
+                instances = _.filter( instances, function(i){
+                  return moment.tz(i.starting_time, tz).isSameOrAfter( moment().tz(tz) )
+                })
+
+                // Filter for fully booked
                 instances = _.filter(instances, function(i){
                     if( ! _.isUndefined( classObj.fully_booked ) ){
                         let ts = moment.tz(i.starting_time, tz).format('X').toString()
@@ -233,7 +239,7 @@
                 return false
             },
             isClassBlocked: function(c, d){
-                if(  ! _.isUndefined(c.schedule) && ! _.isUndefined( c.schedule.empty ) && c.schedule.empty.indexOf(d) >= 0 ){
+                if(  ! _.isUndefined(c.schedule) && ! _.isUndefined( c.schedule.empty ) && c.schedule.empty.indexOf(d.split(' ')[0]) >= 0 ){
                     return true
                 }
                 let validDays = ! _.isUndefined( c.schedule ) ? _.find( c.schedule.days, {d: parseInt(moment.tz(d, this.getTimezone(c.locationId)).format('e')) } ) : undefined
@@ -245,7 +251,7 @@
                 let vm = this
                 let location = _.find(this.$store.state.locations.list, {id: c.locationId })
                 try{
-                    let block = false
+                    let block = true
                     let date_for_days = parseInt(moment.tz(d, vm.getTimezone(location.id)).format('e'))
                     let date_for_specific = moment.tz(d, vm.getTimezone(location.id)).format('YYYY-MM-DD')
                     if( ! _.isUndefined( location.schedule.empty ) && location.schedule.empty.indexOf(date_for_specific) >= 0 ){
@@ -253,14 +259,14 @@
                     }
                     let location_specific = ! _.isUndefined( location.schedule.specific ) ? _.find( location.schedule.specific,  { d: date_for_specific } )  : undefined
                     let location_days = ! _.isUndefined( location.schedule.days ) ? _.find( location.schedule.days, {d: date_for_days } ) : undefined
-                    let class_specific = ! _.isUndefined( c.schedule.specific ) ? _.find( c.schedule.specific, { d: date_for_specific } ) : undefined
-                    let class_days = ! _.isUndefined( c.schedule.days ) ? _.find( c.schedule.days, { d: date_for_days } ) : undefined
-                    let class_intervals = class_specific || class_days
                     let location_intervals = location_specific || location_days
                     if( !_.isUndefined( location_intervals ) && !_.isUndefined( location_intervals.i ) && location_intervals.i.length > 0 ){
+                      let class_specific = ! _.isUndefined( c.schedule.specific ) ? _.find( c.schedule.specific, { d: date_for_specific } ) : undefined
+                      let class_days = ! _.isUndefined( c.schedule.days ) ? _.find( c.schedule.days, { d: date_for_days } ) : undefined
+                      let class_intervals = class_specific || class_days
                         if( ! _.isUndefined( class_intervals ) && ! _.isUndefined( class_intervals.i ) && class_intervals.i.length > 0 ){
                             _.each( class_intervals.i, function(interval){
-                                block = !block ? vm.fitsIntervals( d, interval, location_intervals.i ) : block
+                                block = block ? vm.fitsIntervals( d, interval, location_intervals.i ) : !block
                             })
                         }
                     }
