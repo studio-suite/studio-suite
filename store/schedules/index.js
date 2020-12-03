@@ -14,14 +14,117 @@ const getters = {
     }
 }
 
+const listSchedulesByTenant = `
+            query listSchedulesByTenant($limit: Int, $nextToken: String, $tenantID: String){
+                listSchedulesByTenant(
+                    limit: $limit,
+                    nextToken: $nextToken,
+                    tenantID: $tenantID
+                ){
+                    items{
+                        id
+                        title
+                        slug
+                        style
+                        status
+                        start
+                        startSpecific
+                        startDays
+                        stop
+                        stopDays
+                        stopSpecific
+                        limit
+                        limitType
+                        classTypes
+                        instructors
+                        locations
+                        age
+                        filterClassTypes
+                        filterInstructors
+                        filterLocations
+                        filterAge
+                        filterDays
+                        filterTimes
+                        modal
+                        modalOptions{
+                            classTypes
+                            instructors
+                            ages
+                            days
+                            locations
+                            times
+                        }
+                        appearance{
+                            show_title
+                            show_ending
+                            show_duration
+                            show_excerpt
+                            show_instructors
+                            show_classTypes
+                            show_empty
+                            show_weekdays
+                            labelNothingToShow
+                            labelFilterClassTypes
+                            labelFilterInstructors
+                            labelFilterLocations
+                            labelFilterDays
+                            labelFilterAge
+                            labelFilterTimes
+                            colorText
+                            colorBg
+                            colorPrimary
+                            colorDays0
+                            colorDays1
+                            colorDays2
+                            colorDays3
+                            colorDays4
+                            colorDays5
+                            colorDays6
+                        }
+                        created
+                        updated
+                        headline
+                        description
+                        language{
+                            i
+                            l
+                        }
+                    },
+                    nextToken
+                 }
+            }
+        `;
+
 const actions = {
     list: async function({commit}){
         try{
-            let schedules = await axios.get(`${process.env.VUE_APP_API_BASE}/schedules?tenantId=${process.env.VUE_APP_TENANT_ID}`)
-            commit('SET', schedules.data )
+          let operation = {
+            query: listSchedulesByTenant,
+            operationName: 'listSchedulesByTenant',
+            variables: {
+              tenantID: process.env.VUE_APP_TENANT_ID
+            }
+          };
+          const headers = {
+            'Content-Type': 'application/json',
+            'x-api-key': process.env.VUE_APP_APPSYNC_KEY,
+          }
+          let list = await axios({
+            method: 'POST',
+            url: process.env.VUE_APP_APPSYNC_URL,
+            data: JSON.stringify(operation),
+            headers: headers
+          })
+            commit('SET', list.data.data.listSchedulesByTenant.items )
 
         } catch (e) {
             console.log(e)
+            await axios.get(`${process.env.VUE_APP_API_BASE}/schedules?tenantId=${process.env.VUE_APP_TENANT_ID}`).then(function(schedules){
+              commit('SET', schedules.data )
+            }).catch(function(e){
+              console.log(e)
+            })
+
         }
     },
     get: async function({commit, getters}, slug){

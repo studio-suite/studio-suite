@@ -15,9 +15,9 @@
                 </div>
                 <div class="short-description margin-bottom--4" v-if="classObject.excerpt">{{classObject.excerpt}}</div>
                 <div class="content margin-bottom--6" v-if="!isModal && classObject.content" v-html="classObject.content ? marked(classObject.content) : ''"></div>
-                <div class="instructors margin-bottom--6" v-if="classObject.instructorsIds && !isModal">
+                <div class="instructors margin-bottom--6" v-if="class_instructors.length > 0 && !isModal">
                     <h3 v-html="getText('class/singleEvent/title/instructors')"></h3>
-                    <div v-for="instructor in classObject.instructorsIds" :key="instructor" class="instructor" v-if="getInstructor(instructor)">
+                    <div v-for="instructor in class_instructors" :key="instructor" class="instructor" v-if="getInstructor(instructor)">
                         <div class="left">
                             <template v-if="getInstructor(instructor).image">
                                 <div class="avatar"><img :src="getImgSrc({w: 280, h: 280, crop: 'faces', fit: 'crop'}, getInstructor(instructor).image)"></div>
@@ -124,7 +124,6 @@
             },
             classNextDates: function(n){
                 let vm = this
-                window.console.log('pe aici', n)
                 if( _.isEmpty(n) && vm.startSteps < 20 ){
                     vm.startDate = moment.tz(vm.startDate, vm.tz).add(14, 'days').format()
                     vm.startSteps++
@@ -192,7 +191,6 @@
                 })
             },
             getBookings: function(classId, min, max){
-                window.console.log('cere')
                 let vm = this
                 vm.loaders = true
                 let client = algoliasearch( '04QHF1E2Q9', this.$store.getters.tenant.algoliaPublicApiKey );
@@ -301,6 +299,16 @@
             }
         },
         computed: {
+          class_instructors: function(){
+            try{
+              let vm = this
+              return _.filter( this.classObject.instructorsIds, function(id){
+                return ! _.isUndefined( _.find( vm.$store.getters.instructors, { id } ) )
+              })
+            } catch (e){
+              return []
+            }
+          },
             prefill_modal: function(){
               let out = null
                 if( ! _.isNull( this.booking_rs ) && ! _.isUndefined( this.booking_rs.classId ) && this.booking_rs.classId === this.classObject.id ){

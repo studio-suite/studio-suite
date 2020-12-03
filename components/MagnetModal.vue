@@ -216,7 +216,6 @@
                         'Content-Type': 'application/json'
                     }
                 }).then(function (r) {
-                    console.log('rrr', r)
                     if(r.status === 200 && !_.isNull(r.data)){
                         vm.confirmation = 1
                     } else if( r.status === 200 && _.isNull(r.data) ){

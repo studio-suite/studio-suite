@@ -54,8 +54,7 @@ const store = () => {
         },
         getters: {
             logo: function(state){
-
-                if( _.isUndefined( state.tenant ) || _.isUndefined( state.tenant.logo ) || state.tenant.logo.length === 0 ) return false
+                if( _.isUndefined( state.tenant ) || _.isUndefined( state.tenant.logo ) || _.isNull( state.tenant.logo ) || state.tenant.logo.length === 0 ) return false
                 return {
                     url: state.tenant.logo,
                     aspect: state.logo.PixelHeight > state.logo.PixelWidth ? 'portrait' : ( state.logo.PixelHeight === state.logo.PixelWidth ? 'square' : 'landscape' )

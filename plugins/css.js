@@ -31,7 +31,7 @@ function populateCss(css, colors){
 }
 
 export default async (ctx) => {
-    let { app } = ctx
+    let { app, store } = ctx
     let baseUrl = process.env.VUE_APP_API_BASE || 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod';
     let tenantId = process.env.VUE_APP_TENANT_ID || 'auth0|5bdae2a63fd53b44339f6ab4'
         tenantId = tenantId.replace('|','%7C')
@@ -42,15 +42,22 @@ export default async (ctx) => {
         accent: '#5258FF'
     }
     let css = ''
-    axios.get( `${baseUrl}/get-colors?id=${tenantId}` ).then(function(r){
+
+    try{
+      colors = store.getters.tenant.colors
+      console.log('colors', store.getters.tenant)
+      css = populateCss(css, colors)
+      app.head.style.push({ cssText: css.replace(' ',''), type: 'text/css' })
+    } catch (e){
+      axios.get( `${baseUrl}/get-colors?id=${tenantId}` ).then(function(r){
         if( r.status === 200 ){
-            colors = r.data
+          colors = r.data
         }
         css = populateCss(css, colors)
         app.head.style.push({ cssText: css.replace(' ',''), type: 'text/css' })
-    }).catch(function(e){
+      }).catch(function(e){
         css = populateCss(css, colors)
         app.head.style.push({ cssText: css.replace(' ',''), type: 'text/css' })
-    })
-
+      })
+    }
 }

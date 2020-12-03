@@ -18,7 +18,9 @@ let defaults = {
     alogliaBIndex: 'ss_dev_bookings',
     gMapsApi: 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8',
     imgix: 'myssdev.imgix.net',
-    apiBaseBookings: 'https://tiw7tn4fh6.execute-api.us-east-1.amazonaws.com/dev'
+    apiBaseBookings: 'https://tiw7tn4fh6.execute-api.us-east-1.amazonaws.com/dev',
+    appsync: 'https://5ls7y5fabva3belrt3pkkikffy.appsync-api.us-east-1.amazonaws.com/graphql',
+    appsync_key: 'da2-crrgk3yxwvcpnld5n2w2rxg5om'
 }
 
 let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || defaults.tId
@@ -27,87 +29,239 @@ let VUE_APP_ALGOLIA_BOOKINGS_INDEX = process.env.VUE_APP_ALGOLIA_BOOKINGS_INDEX 
 let VUE_APP_GMAPS_PUBLIC_API = process.env.VUE_APP_GMAPS_PUBLIC_API || defaults.gMapsApi
 let VUE_APP_IMGIX_URL = process.env.VUE_APP_IMGIX_URL || defaults.imgix
 let VUE_APP_BOOKINGS_API_BASE = process.env.VUE_APP_BOOKINGS_API_BASE || defaults.apiBaseBookings
+let VUE_APP_APPSYNC_URL = VUE_APP_API_BASE.indexOf('prod') >= 0 ? process.env.VUE_APP_APPSYNC_URL || defaults.appsync : defaults.appsync
+let VUE_APP_APPSYNC_KEY = VUE_APP_API_BASE.indexOf('prod') >= 0 ? process.env.VUE_APP_APPSYNC_KEY || defaults.appsync_key : defaults.appsync_key
 
-async function getClassesRoutes() {
-    let classesAll = []
-    let lastId = false
-    let baseUrl = `${VUE_APP_API_BASE}/get-routes?id=${VUE_APP_TENANT_ID}`
-    while (!_.isNull(lastId) || lastId === false) {
-        let url = !_.isNull(lastId) && lastId !== false ? baseUrl + '&ExclusiveStartKey=' + lastId : baseUrl
-        let classes = await axios.get(url).then(function (r) {
-            if (!_.isUndefined(r.data.LastEvaluatedKey)) {
-                lastId = r.data.LastEvaluatedKey.id
-            } else {
-                lastId = null
+const operations = {
+  listClassesByTenant: `
+            query listClassesByTenant($limit: Int, $nextToken: String, $tenantID: String){
+              listClassesByTenant(
+                  limit: $limit,
+                  nextToken: $nextToken,
+                  tenantID: $tenantID
+              ){
+                items{
+                    id
+                    title
+                    excerpt
+                    content
+                    image
+                    created
+                    updated
+                    locationId
+                    roomId
+                    capacity
+                    age
+                    status
+                    instructorsIds
+                    classTypesIds
+                    seasonsIds
+                    language{
+                        i
+                        l
+                    }
+                    schedule{
+                        days{
+                            d
+                            i{
+                                s
+                                e
+                            }
+                        }
+                        empty
+                        specific{
+                            d
+                            i{
+                                s
+                                e
+                            }
+                        }
+                    }
+                    price
+                    color
+                    slug
+                    dripTags{
+                        trigger
+                        action
+                        tags
+                    }
+                    redirect
+                    event
+                    zoomId
+                },
+                nextToken
+              }
             }
-            return _.map(r.data.Items, function (i) {
-                return {
-                    route: `/${i.slug}`,
-                    payload: i
-                }
-            })
-        })
-        classesAll = _.concat(classesAll, classes)
-    }
-    return classesAll
+        `,
+  listSchedulesByTenant: `
+            query listSchedulesByTenant($limit: Int, $nextToken: String, $tenantID: String){
+                listSchedulesByTenant(
+                    limit: $limit,
+                    nextToken: $nextToken,
+                    tenantID: $tenantID
+                ){
+                    items{
+                        id
+                        title
+                        slug
+                        style
+                        status
+                        start
+                        startSpecific
+                        startDays
+                        stop
+                        stopDays
+                        stopSpecific
+                        limit
+                        limitType
+                        classTypes
+                        instructors
+                        locations
+                        age
+                        filterClassTypes
+                        filterInstructors
+                        filterLocations
+                        filterAge
+                        filterDays
+                        filterTimes
+                        modal
+                        modalOptions{
+                            classTypes
+                            instructors
+                            ages
+                            days
+                            locations
+                            times
+                        }
+                        appearance{
+                            show_title
+                            show_ending
+                            show_duration
+                            show_excerpt
+                            show_instructors
+                            show_classTypes
+                            show_empty
+                            show_weekdays
+                            labelNothingToShow
+                            labelFilterClassTypes
+                            labelFilterInstructors
+                            labelFilterLocations
+                            labelFilterDays
+                            labelFilterAge
+                            labelFilterTimes
+                            colorText
+                            colorBg
+                            colorPrimary
+                            colorDays0
+                            colorDays1
+                            colorDays2
+                            colorDays3
+                            colorDays4
+                            colorDays5
+                            colorDays6
+                        }
+                        created
+                        updated
+                        headline
+                        description
+                        language{
+                            i
+                            l
+                        }
+                    },
+                    nextToken
+                 }
+            }
+        `,
+  listMagnetsByTenant: `
+            query listMagnetsByTenant($limit: Int, $nextToken: String, $tenantID: String){
+                listMagnetsByTenant(
+                    limit: $limit,
+                    nextToken: $nextToken,
+                    tenantID: $tenantID
+                ){
+                    items{
+                        tenantId
+                        id
+                        title
+                        slug
+                        status
+                        actions
+                        submissions
+                        fields{
+                          children
+                          phone
+                          firstName
+                          lastName
+                        }
+                        language{
+                          i
+                          l
+                        }
+                    },
+                    nextToken
+                 }
+            }
+        `
 }
-
-async function getSchedulesRoutes() {
-    let schedulesAll = []
-    let lastId = false
-    let baseUrl = `${VUE_APP_API_BASE}/get-routes?type=schedule&id=${VUE_APP_TENANT_ID}`
-    while (!_.isNull(lastId) || lastId === false) {
-        let url = !_.isNull(lastId) && lastId !== false ? baseUrl + '&ExclusiveStartKey=' + lastId : baseUrl
-        let schedules = await axios.get(url).then(function (r) {
-            if (!_.isUndefined(r.data.LastEvaluatedKey)) {
-                lastId = r.data.LastEvaluatedKey.id
-            } else {
-                lastId = null
-            }
-            return _.map(r.data.Items, function (i) {
-                return {
-                    route: `/s/${i.slug}`,
-                    payload: i
-                }
-            })
-        })
-        schedulesAll = _.concat(schedulesAll, schedules)
+async function getDynamicRoutes(operationName){
+  let listAll = []
+  let lastId = false
+  while (!_.isNull(lastId) || lastId === false) {
+    let operation = {
+      query: operations[operationName],
+      operationName: operationName,
+      variables: {
+        tenantID: VUE_APP_TENANT_ID
+      }
+    };
+    if( !_.isNull(lastId) && lastId !== false ){
+      operation.variables.input.nextToken = lastId
     }
-    return schedulesAll
-}
-
-async function getMagnetsRoutes() {
-    let schedulesAll = []
-    let lastId = false
-    let baseUrl = `${VUE_APP_API_BASE}/get-routes?type=magnet&id=${VUE_APP_TENANT_ID}`
-    while (!_.isNull(lastId) || lastId === false) {
-        let url = !_.isNull(lastId) && lastId !== false ? baseUrl + '&ExclusiveStartKey=' + lastId : baseUrl
-        let schedules = await axios.get(url).then(function (r) {
-            if (!_.isUndefined(r.data.LastEvaluatedKey)) {
-                lastId = r.data.LastEvaluatedKey.id
-            } else {
-                lastId = null
-            }
-            return _.map(r.data.Items, function (i) {
-                return {
-                    route: `/m/${i.slug}`,
-                    payload: i
-                }
-            })
-        })
-        schedulesAll = _.concat(schedulesAll, schedules)
+    const headers = {
+      'Content-Type': 'application/json',
+      'x-api-key': VUE_APP_APPSYNC_KEY,
     }
-    return schedulesAll
+    let list = await axios({
+      method: 'POST',
+      url: VUE_APP_APPSYNC_URL,
+      data: JSON.stringify(operation),
+      headers: headers
+    }).then(function (r) {
+      if ( !_.isUndefined(r.data.data[operationName] ) && !_.isUndefined(r.data.data[operationName].nextToken)) {
+        lastId = r.data.data[operationName].nextToken
+      } else {
+        lastId = null
+      }
+      let prefix = '';
+      if( operationName === 'listSchedulesByTenant' ){
+        prefix = '/s'
+      } else if( operationName === 'listMagnetsByTenant' ){
+        prefix = '/m'
+      }
+
+      return _.map(r.data.data[operationName].items, function (i) {
+        return {
+          route: `${prefix}/${i.slug}`,
+          payload: i
+        }
+      })
+    }).catch(function(e){
+      return []
+    });
+    listAll = _.concat(listAll, list)
+  }
+
+  return listAll
 }
 
 async function getRoutes() {
-    let classes = await getClassesRoutes()
-    let schedules = await getSchedulesRoutes()
-    let magnets = await getMagnetsRoutes()
-    let out = _.filter( _.concat(schedules, classes, magnets), function(v){
-        return v.route.length < 100
+    let classes = await getDynamicRoutes('listClassesByTenant')
+    let schedules = await getDynamicRoutes('listSchedulesByTenant')
+    let magnets = await getDynamicRoutes('listMagnetsByTenant')
+    return _.filter( _.concat(schedules, classes, magnets), function(v){
+      return v.route.length < 100
     })
-    return out
 }
 
 module.exports = {
@@ -162,7 +316,9 @@ module.exports = {
         VUE_APP_IMGIX_URL: process.env.VUE_APP_IMGIX_URL || VUE_APP_IMGIX_URL,
         VUE_APP_BOOKINGS_API_BASE: process.env.VUE_APP_BOOKINGS_API_BASE || VUE_APP_BOOKINGS_API_BASE,
         VUE_APP_GMAPS_PUBLIC_API: process.env.VUE_APP_GMAPS_PUBLIC_API || VUE_APP_GMAPS_PUBLIC_API,
-        VUE_APP_ALGOLIA_BOOKINGS_INDEX: process.env.VUE_APP_ALGOLIA_BOOKINGS_INDEX || VUE_APP_ALGOLIA_BOOKINGS_INDEX
+        VUE_APP_ALGOLIA_BOOKINGS_INDEX: process.env.VUE_APP_ALGOLIA_BOOKINGS_INDEX || VUE_APP_ALGOLIA_BOOKINGS_INDEX,
+        VUE_APP_APPSYNC_URL: process.env.VUE_APP_APPSYNC_URL || VUE_APP_APPSYNC_URL,
+        VUE_APP_APPSYNC_KEY: process.env.VUE_APP_APPSYNC_KEY || VUE_APP_APPSYNC_KEY
     },
 
     /*
