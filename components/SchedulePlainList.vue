@@ -58,8 +58,12 @@
                 })
             },
             getTimezone: function(id){
+              try{
                 let l = _.find( this.$store.getters.locations, { id: id } )
                 return l.timezone || 'Europe/London'
+              } catch (e){
+                return 'Europe/London'
+              }
             },
             canBook: function(c){
                 return parseInt( moment.tz(c.starting_time, this.getTimezone(c.locationId)).format('X') ) > parseInt( moment().tz(this.getTimezone(c.locationId)).format('X') )
