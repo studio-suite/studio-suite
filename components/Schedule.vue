@@ -1,9 +1,7 @@
 <template>
     <div class="schedule" :class="schedule_classes">
         <div v-show="ready">
-            <SchedulePlainList v-if="schedule.style === 0" :classes="classes_list" :schedule="schedule" @openClassModal="openClassModal"></SchedulePlainList>
-            <ScheduleCompactList v-if="schedule.style === 1" :classes="classes_list" :schedule="schedule" @openClassModal="openClassModal"></ScheduleCompactList>
-            <ScheduleWeekly v-if="schedule.style === 2" :classes="classes_list" :schedule="schedule" :start="schedule_start" :stop="schedule_stop" @openClassModal="openClassModal"></ScheduleWeekly>
+            <component :is="schedule_style" :classes="classes_list" :schedule="schedule" @openClassModal="openClassModal" :start="schedule_start" :stop="schedule_stop"></component>
         </div>
         <div v-show="!ready"></div>
         <ClassModal :visible="showModal" :ts="ts" :classId="classId" @closeModal="showModal = false"></ClassModal>
@@ -13,21 +11,17 @@
 <script>
     import _ from 'lodash'
     import moment from 'moment-timezone';
-    import SchedulePlainList from '@/components/SchedulePlainList'
-    import ScheduleCompactList from '@/components/ScheduleCompactList'
-    import ScheduleWeekly from '@/components/ScheduleWeekly'
-    import ClassModal from '@/components/ClassModal'
-
+    //const AsyncComponent = () => import('~/AsyncComponent.vue');
     import algoliasearch from 'algoliasearch'
 
     export default {
         name: "Schedule",
         props: ['schedule', 'filters', 'classes'],
         components: {
-            SchedulePlainList,
-            ScheduleCompactList,
-            ScheduleWeekly,
-            ClassModal
+            SchedulePlainList: () => import('~/components/SchedulePlainList'),
+            ScheduleCompactList: () => import('~/components/ScheduleCompactList'),
+            ScheduleWeekly: () => import( '~/components/ScheduleWeekly' ),
+            ClassModal: () => import('~/components/ClassModal')
         },
         data: function(){
           return {
@@ -42,6 +36,19 @@
           }
         },
         computed: {
+            schedule_style: function (){
+              try{
+                if( this.schedule.style === 1 ){
+                  return 'ScheduleCompactList'
+                }
+                if( this.schedule.style === 2 ){
+                  return 'ScheduleWeekly'
+                }
+                return 'SchedulePlainList'
+              } catch (e){
+                return 'SchedulePlainList'
+              }
+            },
             available_classes: function(){
                 let vm = this
                 let classes = _.map( vm.classes, function(i){
@@ -231,7 +238,6 @@
             fitsIntervals: function(d, interval, intervals ){
                 let vm = this
                 if( !_.isUndefined( intervals ) ){
-                    console.log('has intervals')
                     return _.isUndefined( _.find( intervals, function (i) {
                        return  vm.startsInInterval(interval, i)
                     }))
@@ -304,8 +310,12 @@
                 return blocked === vm.$store.state.seasons.list.length
             },
             getTimezone: function(id){
-                let l = _.find( this.$store.getters.locations, { id: id } )
-                return l.timezone || 'Europe/London'
+                try{
+                  let l = _.find( this.$store.getters.locations, { id: id } )
+                  return l.timezone || 'Europe/London'
+                } catch (e){
+                  return 'Europe/London'
+                }
             }
         }
     }

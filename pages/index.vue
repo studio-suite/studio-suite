@@ -59,8 +59,8 @@ export default {
             return 'Any age'
         },
         goToSchedule: function(i){
-            window.location = `/s/${i.slug}`;
-          //this.$router.push({ name: 's-slug', params: { slug: i.slug  }})
+            //window.location = `/s/${i.slug}`;
+            this.$router.push({ name: 's-slug', params: { slug: i.slug  }})
         },
       getClassTypesString: function(ij){
           let out = 'All class types'

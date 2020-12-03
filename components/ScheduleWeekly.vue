@@ -67,8 +67,12 @@
                 })
             },
             getTimezone: function(id){
+              try{
                 let l = _.find( this.$store.getters.locations, { id: id } )
                 return l.timezone || 'Europe/London'
+              } catch (e){
+                return 'Europe/London'
+              }
             },
             getClassTs: function(sdate, lId){
                 return parseInt( moment.tz(sdate, this.getTimezone(lId)).format('X') )

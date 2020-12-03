@@ -52,12 +52,12 @@
             try{
                 let tenantId = process.env.VUE_APP_TENANT_ID.replace('|','%7c')
                 return {
-                    magnet: payload || _.find( store.getters.magnets, { slug: params.slug.toLowerCase() } ) || {},
+                    magnet: payload || {},
                     slug: params.slug
                 }
             } catch (e) {
                 return {
-                    magnet: payload || _.find( store.getters.magnets, { slug: params.slug.toLowerCase() } ) || {},
+                    magnet: payload || {},
                     slug: params.slug
                 }
             }
