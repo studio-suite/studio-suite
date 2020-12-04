@@ -56,8 +56,12 @@
             Schedule
         },
         asyncData: async function({params, payload, store }){
-          let schedule = payload.schedule || _.find( store.getters.schedules, { slug: params.slug.toLowerCase() } ) || {}
-          let classes = payload.classes || []
+          let schedule = {}
+          let classes =  []
+          if( ! _.isUndefined( payload ) && ! _.isNull( payload ) ){
+            schedule = payload.schedule || _.find( store.getters.schedules, { slug: params.slug.toLowerCase() } ) || {}
+            classes = payload.classes || []
+          }
             try{
                 if( classes.length === 0 ){
                   console.log('ask remote')

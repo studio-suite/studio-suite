@@ -1,5 +1,5 @@
 import SchemaObject from "schema-object";
-import languageClass from "@/models/languageClass";
+import languageClass from "./languageClass";
 
 const CTA = new SchemaObject({
     label: {

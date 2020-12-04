@@ -1,6 +1,6 @@
 import SchemaObject from "schema-object";
-import scheduleApperance from "@/models/scheduleApperance"
-import languageClass from "@/models/languageClass"
+import scheduleApperance from "./scheduleApperance"
+import languageClass from "./languageClass"
 
 export default new SchemaObject({
     id: String,

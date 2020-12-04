@@ -117,7 +117,7 @@
                 }
 
                 // Limit classes by number
-                classes = parseInt( vm.schedule.limitType ) === 1 ? classes.splice(0, vm.schedule.limit || 9999999) : classes
+                classes = classes.splice(0, parseInt( vm.schedule.limitType ) === 1  ? vm.schedule.limit : 300 )
                 return classes
             },
             schedule_classes: function(){
@@ -128,14 +128,14 @@
                 return out
             },
             schedule_start: function(){
-                if( this.schedule.start === 1 ) return moment(this.schedule.startSpecific).format('YYYY-MM-DD')
-                if( this.schedule.start === 2 ) return moment().add( this.schedule.startDays, 'days').format('YYYY-MM-DD')
+                if( this.schedule.start === 1 && ! _.isUndefined( this.schedule.startSpecific ) && this.schedule.startSpecific.length > 5 ) return moment(this.schedule.startSpecific).format('YYYY-MM-DD')
+                if( this.schedule.start === 2 ) return moment().add( this.schedule.startDays || 14, 'days').format('YYYY-MM-DD')
                 return moment().format('YYYY-MM-DD')
             },
             schedule_stop: function(){
                 if( this.schedule.style === 2 ) return moment(this.schedule_start).add(7, 'days').format('YYYY-MM-DD')
-                if( this.schedule.stop === 1 ) return moment(this.schedule.stopSpecific).add(1, 'day').format('YYYY-MM-DD')
-                return moment().add(this.schedule.stopDays, 'days').format('YYYY-MM-DD')
+                if( this.schedule.stop === 1 && ! _.isUndefined( this.schedule.stopSpecific ) && this.schedule.stopSpecific.length > 5 ) return moment(this.schedule.stopSpecific).add(1, 'day').format('YYYY-MM-DD')
+                return moment().add(this.schedule.stopDays || 14, 'days').format('YYYY-MM-DD')
             }
         },
         mounted: function(){
