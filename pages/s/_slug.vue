@@ -56,24 +56,30 @@
             Schedule
         },
         asyncData: async function({params, payload, store }){
+          let schedule = payload.schedule || _.find( store.getters.schedules, { slug: params.slug.toLowerCase() } ) || {}
+          let classes = payload.classes || []
             try{
-                let tenantId = process.env.VUE_APP_TENANT_ID.replace('|','%7c')
-                let r = await axios({
+                if( classes.length === 0 ){
+                  console.log('ask remote')
+                  let tenantId = process.env.VUE_APP_TENANT_ID.replace('|','%7c')
+                  let r = await axios({
                     method: 'GET',
                     url: `${process.env.VUE_APP_API_BASE}/classes?tenantId=${tenantId}&scheduleSlug=${params.slug}`,
                     headers: {
-                        'Content-Type': 'application/json'
+                      'Content-Type': 'application/json'
                     }
-                })
+                  })
+                  classes = r.data
+                }
                 return {
-                    schedule: payload || _.find( store.getters.schedules, { slug: params.slug.toLowerCase() } ) || {},
-                    classes: r.data || [],
+                    schedule: schedule,
+                    classes: classes,
                     slug: params.slug
                 }
             } catch (e) {
                 return {
-                    schedule: payload || _.find( store.getters.schedules, { slug: params.slug.toLowerCase() } ) || {},
-                    classes: [],
+                    schedule: schedule,
+                    classes: classes,
                     slug: params.slug
                 }
             }

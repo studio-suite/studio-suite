@@ -3,7 +3,7 @@ import axios from 'axios'
 import _ from 'lodash'
 
 // Production
-let defaults = {
+/*let defaults = {
     tId: 'auth0|5c910f5dd115ab0768642e37', //'auth0|5db0a4c9e3191b0c63334a80', //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
     apiBase: 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod',
     alogliaBIndex: 'ss_prod_bookings',
@@ -12,9 +12,9 @@ let defaults = {
     apiBaseBookings: 'https://3h737nakvh.execute-api.us-east-2.amazonaws.com/prod',
     appsync: 'https://k4axocopm5hv5fqtqh7n63uope.appsync-api.us-east-2.amazonaws.com/graphql',
     appsync_key: 'da2-o3tmtisngjhenac7zsvd75o5i4'
-}
+}*/
 
-/*let defaults = {
+let defaults = {
     tId: 'auth0|5bacbeb4654f067ba253ddbd', //radu 'auth0|5bacbeb4654f067ba253ddbd',
     apiBase: 'https://dz0uo09p5h.execute-api.us-east-1.amazonaws.com/dev',
     alogliaBIndex: 'ss_dev_bookings',
@@ -23,7 +23,7 @@ let defaults = {
     apiBaseBookings: 'https://tiw7tn4fh6.execute-api.us-east-1.amazonaws.com/dev',
     appsync: 'https://5ls7y5fabva3belrt3pkkikffy.appsync-api.us-east-1.amazonaws.com/graphql',
     appsync_key: 'da2-crrgk3yxwvcpnld5n2w2rxg5om'
-}*/
+}
 
 let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || defaults.tId
 let VUE_APP_API_BASE = process.env.VUE_APP_API_BASE || defaults.apiBase
@@ -33,7 +33,7 @@ let VUE_APP_IMGIX_URL = process.env.VUE_APP_IMGIX_URL || defaults.imgix
 let VUE_APP_BOOKINGS_API_BASE = process.env.VUE_APP_BOOKINGS_API_BASE || defaults.apiBaseBookings
 let VUE_APP_APPSYNC_URL = VUE_APP_API_BASE.indexOf('prod') >= 0 ? process.env.VUE_APP_APPSYNC_URL || defaults.appsync : defaults.appsync
 let VUE_APP_APPSYNC_KEY = VUE_APP_API_BASE.indexOf('prod') >= 0 ? process.env.VUE_APP_APPSYNC_KEY || defaults.appsync_key : defaults.appsync_key
-
+import StudioClass from "./models/Class";
 const operations = {
   listClassesByTenant: `
             query listClassesByTenant($limit: Int, $nextToken: String, $tenantID: String){
@@ -273,10 +273,53 @@ async function getDynamicRoutes(operationName){
 
   return listAll
 }
-
 async function getRoutes() {
     let classes = await getDynamicRoutes('listClassesByTenant')
+        classes = _.map( classes, function(c){
+          return {
+            route: c.route,
+            payload: new StudioClass(c.payload).toObject()
+          }
+        })
+        classes = _.filter( classes, function(c){
+          return c.payload.status || false
+        })
     let schedules = await getDynamicRoutes('listSchedulesByTenant')
+        schedules = _.map( schedules, function(s){
+          return {
+            route: s.route,
+            payload: {
+              schedule: s.payload,
+              classes: _.map( _.filter( classes, function({payload}){
+                let out = []
+                let c = payload
+                let schedule = s.payload
+                c.classTypesIds = c.classTypesIds || []
+                c.instructorsIds = c.instructorsIds || []
+                c.locationId = c.locationId || ''
+                if( ! _.isUndefined( schedule ) && ! _.isUndefined( schedule.classTypes ) && schedule.classTypes.length > 0 && schedule.classTypes[0] !== '*'  ){
+                  out.push(_.intersection( c.classTypesIds, schedule.classTypes ).length > 0)
+                }
+                if( ! _.isUndefined( schedule ) && ! _.isUndefined( schedule.instructors ) && schedule.instructors.length > 0 && schedule.instructors[0] !== '*'  ){
+                  out.push(_.intersection( c.instructorsIds, schedule.instructors ).length > 0 )
+                }
+                if( ! _.isUndefined( schedule ) && ! _.isUndefined( schedule.locations ) && schedule.locations.length > 0 && schedule.locations[0] !== '*'  ){
+                  out.push( schedule.locations.indexOf( c.locationId ) >= 0 )
+                }
+                if( ! _.isUndefined( schedule ) && ! _.isUndefined( schedule.age ) && schedule.age.length === 2 && schedule.age[0] !== 0 && schedule.age[1] !== 19){
+                  let min = c.age[0] > schedule.age[0] ? schedule.age[0] : c.age[0]
+                  let max = c.age[1] > schedule.age[1] ? c.age[1] : schedule.age[1]
+                  if ( max - min > c.age[1] - c.age[0] + schedule.age[1] - schedule.age[0] ) {
+                    out.push(false);
+                  }
+                }
+                return out.indexOf(false) === -1
+              }), function(c){
+                return c.payload
+              })
+            }
+          }
+        })
     let magnets = await getDynamicRoutes('listMagnetsByTenant')
     return _.filter( _.concat(schedules, classes, magnets), function(v){
       return v.route.length < 100
