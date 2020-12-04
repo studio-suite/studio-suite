@@ -3,16 +3,18 @@ import axios from 'axios'
 import _ from 'lodash'
 
 // Production
-/*let defaults = {
-    tId: 'auth0|5dcc3fed24c6030e771ea60b', //'auth0|5db0a4c9e3191b0c63334a80', //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
+let defaults = {
+    tId: 'auth0|5c910f5dd115ab0768642e37', //'auth0|5db0a4c9e3191b0c63334a80', //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
     apiBase: 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod',
     alogliaBIndex: 'ss_prod_bookings',
     gMapsApi: 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8',
     imgix: 'my-getstudiosuite.imgix.net',
-    apiBaseBookings: 'https://3h737nakvh.execute-api.us-east-2.amazonaws.com/prod'
-}*/
+    apiBaseBookings: 'https://3h737nakvh.execute-api.us-east-2.amazonaws.com/prod',
+    appsync: 'https://k4axocopm5hv5fqtqh7n63uope.appsync-api.us-east-2.amazonaws.com/graphql',
+    appsync_key: 'da2-o3tmtisngjhenac7zsvd75o5i4'
+}
 
-let defaults = {
+/*let defaults = {
     tId: 'auth0|5bacbeb4654f067ba253ddbd', //radu 'auth0|5bacbeb4654f067ba253ddbd',
     apiBase: 'https://dz0uo09p5h.execute-api.us-east-1.amazonaws.com/dev',
     alogliaBIndex: 'ss_dev_bookings',
@@ -21,7 +23,7 @@ let defaults = {
     apiBaseBookings: 'https://tiw7tn4fh6.execute-api.us-east-1.amazonaws.com/dev',
     appsync: 'https://5ls7y5fabva3belrt3pkkikffy.appsync-api.us-east-1.amazonaws.com/graphql',
     appsync_key: 'da2-crrgk3yxwvcpnld5n2w2rxg5om'
-}
+}*/
 
 let VUE_APP_TENANT_ID = process.env.VUE_APP_TENANT_ID || defaults.tId
 let VUE_APP_API_BASE = process.env.VUE_APP_API_BASE || defaults.apiBase
@@ -182,22 +184,39 @@ const operations = {
                 ){
                     items{
                         tenantId
+                        tenantId
                         id
                         title
                         slug
+                        excerpt
+                        content
+                        image
+                        created
+                        updated
                         status
-                        actions
-                        submissions
-                        fields{
-                          children
-                          phone
-                          firstName
-                          lastName
-                        }
+                        redirect
                         language{
-                          i
-                          l
+                            i
+                            l
                         }
+                        cta{
+                            label
+                            color
+                        }
+                        actions
+                        webhooks{
+                            url
+                            status
+                        }
+                        fields{
+                            children
+                            phone
+                            firstName
+                            lastName
+                        }
+                        pdf
+                        payload
+                        submissions
                     },
                     nextToken
                  }
