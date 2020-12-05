@@ -9,8 +9,8 @@ const state = () => {
 }
 
 const getters = {
-    all: function(state){
-        return state.list
+    all: function(st){
+        return st.list
     }
 }
 
@@ -133,8 +133,8 @@ const actions = {
 }
 
 const mutations = {
-    SET: function (state, s) {
-        state.list = _.map( s, function(i){
+    SET: function (st, s) {
+        st.list = _.map( _.filter( s, { status : true} ), function(i){
             return new Schedule(i).toObject()
         })
     }
