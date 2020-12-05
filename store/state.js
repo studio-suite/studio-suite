@@ -5,7 +5,8 @@ const state = () => {
         stripePublic: null,
         ga: null,
         fb: null,
-        isGoogleLoaded: false
+        isGoogleLoaded: false,
+        integrations: false
     }
 }
 

@@ -4,7 +4,7 @@ import _ from 'lodash'
 
 // Production
 let defaults = {
-    tId: 'auth0|5c75db1874bff473fe3f3912', //auth0|5c75db1874bff473fe3f3912 //'auth0|5db0a4c9e3191b0c63334a80', //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
+    tId: 'auth0|5f3b5c520560f40038525e7f', //auth0|5c75db1874bff473fe3f3912 //'auth0|5db0a4c9e3191b0c63334a80', //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
     apiBase: 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod',
     alogliaBIndex: 'ss_prod_bookings',
     gMapsApi: 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8',
@@ -31,8 +31,8 @@ let VUE_APP_ALGOLIA_BOOKINGS_INDEX = process.env.VUE_APP_ALGOLIA_BOOKINGS_INDEX 
 let VUE_APP_GMAPS_PUBLIC_API = process.env.VUE_APP_GMAPS_PUBLIC_API || defaults.gMapsApi
 let VUE_APP_IMGIX_URL = process.env.VUE_APP_IMGIX_URL || defaults.imgix
 let VUE_APP_BOOKINGS_API_BASE = process.env.VUE_APP_BOOKINGS_API_BASE || defaults.apiBaseBookings
-let VUE_APP_APPSYNC_URL = VUE_APP_API_BASE.indexOf('prod') >= 0 ? process.env.VUE_APP_APPSYNC_URL || defaults.appsync : defaults.appsync
-let VUE_APP_APPSYNC_KEY = VUE_APP_API_BASE.indexOf('prod') >= 0 ? process.env.VUE_APP_APPSYNC_KEY || defaults.appsync_key : defaults.appsync_key
+let VUE_APP_APPSYNC_URL = VUE_APP_API_BASE.indexOf('prod') >= 0 ? ( process.env.VUE_APP_APPSYNC_URL || defaults.appsync ) : defaults.appsync
+let VUE_APP_APPSYNC_KEY = VUE_APP_API_BASE.indexOf('prod') >= 0 ? ( process.env.VUE_APP_APPSYNC_KEY || defaults.appsync_key ) : defaults.appsync_key
 import StudioClass from "./models/Class";
 import Schedule from "./models/Schedule";
 import Magnet from "./models/Magnet";
@@ -225,6 +225,35 @@ const operations = {
             }
         `
 }
+const getTenantById = `
+  query getTenantById($id: ID!){
+    getTenantById( id: $id ){
+      id
+      name
+      domain
+      logo
+      dateFormat
+      currency{
+        code
+        format
+      }
+      colors{
+        bg
+        bgContent
+        text
+        accent
+      }
+      created
+      updated
+      siteId
+      language{
+        i
+        l
+      }
+      algoliaPublicApiKey
+    }
+  }
+`
 async function getDynamicRoutes(operationName){
   let listAll = []
   let lastId = false
@@ -277,17 +306,18 @@ async function getDynamicRoutes(operationName){
 }
 async function getRoutes() {
     let classes = await getDynamicRoutes('listClassesByTenant')
-        classes = _.map( classes, function(c){
+        classes = _.map( _.filter( classes, function(c){
+          return c.payload.status || false
+        }), function(c){
           return {
             route: c.route,
             payload: new StudioClass(c.payload).toObject()
           }
         })
-        classes = _.filter( classes, function(c){
-          return c.payload.status || false
-        })
     let schedules = await getDynamicRoutes('listSchedulesByTenant')
-        schedules = _.map( schedules, function(s){
+        schedules = _.map( _.filter( schedules, function(schedule){
+          return schedule.payload.status
+        }), function(s){
           return {
             route: s.route,
             payload: {
@@ -323,7 +353,9 @@ async function getRoutes() {
           }
         })
     let magnets = await getDynamicRoutes('listMagnetsByTenant')
-        magnets = _.map( magnets, function(m){
+        magnets = _.map( _.filter( magnets, function(magnet){
+          return magnet.payload.status
+        }), function(m){
           return {
             route: m.route,
             payload: new Magnet(m.payload).toObject()
@@ -387,8 +419,8 @@ module.exports = {
         VUE_APP_BOOKINGS_API_BASE: process.env.VUE_APP_BOOKINGS_API_BASE || VUE_APP_BOOKINGS_API_BASE,
         VUE_APP_GMAPS_PUBLIC_API: process.env.VUE_APP_GMAPS_PUBLIC_API || VUE_APP_GMAPS_PUBLIC_API,
         VUE_APP_ALGOLIA_BOOKINGS_INDEX: process.env.VUE_APP_ALGOLIA_BOOKINGS_INDEX || VUE_APP_ALGOLIA_BOOKINGS_INDEX,
-        VUE_APP_APPSYNC_URL: VUE_APP_API_BASE.indexOf('prod') >= 0 ? process.env.VUE_APP_APPSYNC_URL || VUE_APP_APPSYNC_URL : VUE_APP_APPSYNC_URL,
-        VUE_APP_APPSYNC_KEY: VUE_APP_API_BASE.indexOf('prod') >= 0 ? process.env.VUE_APP_APPSYNC_KEY || VUE_APP_APPSYNC_KEY : VUE_APP_APPSYNC_KEY
+        VUE_APP_APPSYNC_URL: VUE_APP_API_BASE.indexOf('prod') >= 0 ? ( process.env.VUE_APP_APPSYNC_URL || VUE_APP_APPSYNC_URL ) : VUE_APP_APPSYNC_URL,
+        VUE_APP_APPSYNC_KEY: VUE_APP_API_BASE.indexOf('prod') >= 0 ? ( process.env.VUE_APP_APPSYNC_KEY || VUE_APP_APPSYNC_KEY ) : VUE_APP_APPSYNC_KEY
     },
 
     /*

@@ -1,6 +1,6 @@
 import Vuex from 'vuex'
 import Vue from 'vue'
-
+import Tenant from '@/models/Tenant'
 Vue.use(Vuex)
 
 import state from './state'
@@ -22,13 +22,13 @@ const store = () => {
         actions,
         mutations: {
             SET_TENANT: function(state, t){
-                state.tenant = t
+                state.tenant = new Tenant(t).toObject()
             },
             SET_LOGO: function(state, l){
                 state.logo = l
             },
             SET_INTEGRATIONS: function(state, i){
-
+                state.integrations = true
                 let stripe = _.find( i, function(s){
                     return s.type === 'stripe'
                 })
@@ -98,7 +98,10 @@ const store = () => {
             },
             isGoogleLoaded: function(state){
                 return state.isGoogleLoaded
-            }
+            },
+          integrations: function (state){
+              return state.integrations
+          }
         },
         modules:{
             namespaced: true,
