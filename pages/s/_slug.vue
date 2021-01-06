@@ -61,6 +61,8 @@
           if( ! _.isUndefined( payload ) && ! _.isNull( payload ) ){
             schedule = payload.schedule || _.find( store.getters.schedules, { slug: params.slug.toLowerCase() } ) || {}
             classes = payload.classes || []
+          } else {
+              schedule = _.find( store.getters.schedules, { slug: params.slug.toLowerCase() } ) || {}
           }
             try{
                 if( classes.length === 0 ){

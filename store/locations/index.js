@@ -53,6 +53,7 @@ const listLocationsByTenant = `
                       email
                       phone
                       url
+                      coords
                   },
                   nextToken
                  }

@@ -38,5 +38,9 @@ export default new SchemaObject({
     url: {
         type: String,
         default: ''
+    },
+    coords: {
+        type: String,
+        default: ''
     }
 })

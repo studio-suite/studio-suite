@@ -272,7 +272,7 @@
                       let class_intervals = class_specific || class_days
                         if( ! _.isUndefined( class_intervals ) && ! _.isUndefined( class_intervals.i ) && class_intervals.i.length > 0 ){
                             _.each( class_intervals.i, function(interval){
-                                block = block ? vm.fitsIntervals( d, interval, location_intervals.i ) : !block
+                                block = block ? vm.fitsIntervals( d, interval, location_intervals.i ) : block
                             })
                         }
                     }

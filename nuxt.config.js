@@ -4,7 +4,7 @@ import _ from 'lodash'
 
 // Production
 let defaults = {
-    tId: 'auth0|5f3b5c520560f40038525e7f', //auth0|5c75db1874bff473fe3f3912 //'auth0|5db0a4c9e3191b0c63334a80', //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
+    tId: 'auth0|5cf161e87cb7e4103840b659', //auth0|5c75db1874bff473fe3f3912 //'auth0|5db0a4c9e3191b0c63334a80', //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
     apiBase: 'https://8homamhaq0.execute-api.us-east-2.amazonaws.com/prod',
     alogliaBIndex: 'ss_prod_bookings',
     gMapsApi: 'AIzaSyDvQBQ_diMzJUxTJDJMRj03rVZYpSu6PW8',
