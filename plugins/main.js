@@ -20,7 +20,8 @@ Vue.mixin({
                         out = s
                     }
                 }
-                if( ! _.isUndefined( vm.language ) && vm.language.length > 0 ){
+                console.log('sssssss', vm.language)
+                if( ! _.isUndefined( vm.language ) && ! _.isNull( vm.language ) && vm.language.length > 0 ){
                     let s = _.find( vm.language, { i: ts.i } )
                     if( ! _.isUndefined( s ) ){
                         out = s
