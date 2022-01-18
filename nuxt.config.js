@@ -2,6 +2,8 @@ const pkg = require('./package')
 import axios from 'axios'
 import _ from 'lodash'
 
+// Push update from 18.01.2021
+
 // Production
 let defaults = {
     tId: 'auth0|5cc321c2e80cf00f2a28336b', //auth0|5c75db1874bff473fe3f3912 //'auth0|5db0a4c9e3191b0c63334a80', //'auth0|5c8fdce594ed5d2e1df165d2' //'auth0|5c8fdce594ed5d2e1df165d2' // //radu 'auth0|5bdae2a63fd53b44339f6ab4' //austin'auth0|5c50a6871a76dc70235185e7'
