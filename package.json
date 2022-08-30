@@ -24,7 +24,7 @@
     "markdown-it": "^10.0.0",
     "marked": "^0.7.0",
     "moment": "^2.29.1",
-    "moment-timezone": "^0.5.31",
+    "moment-timezone": "^0.5.35",
     "nuxt": "^2.14.7",
     "nuxt-facebook-pixel-module": "^1.3.0",
     "nuxt-webfontloader": "^1.1.0",
